@@ -1,1 +1,1 @@
-[loc-phan.com](https://loc-phan.com)
+[loc-phan.com](http://www.loc-phan.com/)
