@@ -1623,3 +1623,74 @@
 	height: 35px;
 	color: inherit;
 }
+
+.project-container {
+	box-shadow:
+}
+
+.project-item-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.project-screenshot-container {
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	z-index: 5;
+	border-radius: 7px;
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+}
+
+.project-screenshot-container:hover {
+	transform: scale(1.01);
+}
+
+.project-screenshot {
+	width: 100%;
+}
+
+.screenshot-gradient {
+	min-width: 100%;
+	min-height: 100%;
+	background: radial-gradient(circle, rgba(255,255,255,0), rgba(185, 185, 185, 0.1));
+	z-index: 2;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: all 0.2s ease-in-out;
+}
+
+.screenshot-view {
+	display: none;
+	color: white;
+	border: 1px solid white;
+	border-radius: 4px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 3;
+}
+
+.project-text {
+	padding: 0 20px;
+}
+
+.project-title {
+	color: #787878;
+	margin: 0;
+	padding: 0;
+	font-weight: 700;
+	font-size: 120%;
+}
+
+.project-description {
+	color: #787878;
+	font-size: 90%;
+	margin: 0;
+	padding: 0;
+	font-weight: 300;
+}
