@@ -1711,3 +1711,28 @@
 	padding: 0;
 	font-weight: 300;
 }
+
+.about-me-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.about-me-info>span {
+	font-size: 80%;
+}
+
+.about-me-pic {
+	width: 200px;
+	margin: 20px 20px 20px 0;
+	border-radius: 14px;
+}
+
+.about-me-text {
+	padding: 0 20px;
+}
+
+.about-me-text>p {
+	margin: 0;
+	padding: 10px 0;
+}
