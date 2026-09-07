@@ -657,6 +657,49 @@ body::after {
 
 main, .nav, .foot, .menu { position: relative; z-index: 2; }
 
+.notice {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  max-width: calc(100vw - 2 * var(--gut));
+  padding: .55rem .55rem .55rem 1.05rem;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: 0 14px 40px -16px rgb(0 0 0 / .4);
+  font-size: var(--t-sm);
+  color: var(--text-2);
+}
+.notice p { margin: 0; }
+.notice button {
+  flex: none;
+  padding: .5em .9em;
+  border-radius: 999px;
+  font: 500 var(--t-sm)/1 var(--body);
+  color: var(--ink);
+  background: var(--text);
+}
+.notice__x {
+  display: grid;
+  place-items: center;
+  width: 30px; height: 30px;
+  padding: 0;
+  background: none;
+  color: var(--text-3);
+}
+.notice__x svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.notice__x:hover { color: var(--text); }
+@media (max-width: 620px) {
+  .notice { flex-wrap: wrap; justify-content: center; border-radius: var(--r-md); padding-left: 1rem; text-align: center; }
+}
+
 /* Scroll progress */
 .progress {
   position: fixed;
@@ -916,6 +959,10 @@ html:not(.js) .loader, .loader[data-off] { display: none; }
   stroke-linecap: round;
   transition: opacity .4s var(--ease), transform .5s var(--spring);
 }
+.ico--still { opacity: 0; transform: scale(.4); }
+html.calm .ico--motion { opacity: 0; transform: scale(.4); }
+html.calm .ico--still  { opacity: 1; transform: none; }
+
 [data-theme="dark"]  .ico--sun  { opacity: 1; transform: none; }
 [data-theme="dark"]  .ico--moon { opacity: 0; transform: rotate(-70deg) scale(.4); }
 [data-theme="light"] .ico--sun  { opacity: 0; transform: rotate(70deg) scale(.4); }
@@ -1896,25 +1943,78 @@ html.vt-theme::view-transition-new(root) {
   .frame__bar { height: 28px; }
 }
 
+/* ── Reduced motion ──────────────────────────────────────────────────────
+   "Reduce motion" means no vestibular motion — large translation, parallax,
+   scroll-hijacking, drifting backgrounds. It does not mean a dead page, so
+   opacity and colour transitions stay, and so does the 6px status pulse.
+   The media query only seeds the default: html.calm is what actually gates
+   everything, and the visitor can flip it from the nav. */
+
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .ink { display: none; }
-  *, *::before, *::after {
-    animation-duration: .001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .001ms !important;
-    scroll-behavior: auto !important;
-  }
-  html.js .reveal { opacity: 1; transform: none; }
-  .hero__title .word, .cta .word { transform: none; }
-  [data-words] .w { opacity: 1; transform: none; }
-  [data-skew] { transform: none !important; }
-  .gallery__stage { position: static; height: auto; display: block; overflow: visible; }
-  .gallery__rail { overflow-x: auto; padding-block: .5rem 1.75rem; transform: none !important; }
-  .ambient__grain, .ambient__spot { display: none; }
-  .loader { display: none; }
-  [data-fill]::before { -webkit-mask-image: none; mask-image: none; }
+  html:not(.js) { scroll-behavior: auto; }
+  html:not(.js) .reveal { opacity: 1; transform: none; }
+  html:not(.js) .ink,
+  html:not(.js) .loader { display: none; }
+  html:not(.js) .marquee__track,
+  html:not(.js) .blob,
+  html:not(.js) .ambient__grain { animation: none; }
 }
+
+html.calm { scroll-behavior: auto; }
+
+/* Ambient drift, marquee travel, film grain, sweeping rules: all motion. */
+html.calm .marquee__track,
+html.calm .blob,
+html.calm .ambient__grain,
+html.calm .scrollcue__line i { animation: none !important; }
+
+html.calm .ink { display: none; }
+html.calm .loader { display: none; }
+html.calm .ambient__spot { display: none; }
+html.calm .cursor { display: none; }
+html.calm.has-cursor, html.calm.has-cursor * { cursor: auto !important; }
+
+/* Nothing may be left parked off-screen or invisible. */
+html.calm .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+html.calm [data-words] .w { opacity: 1; transform: none; transition: none; }
+html.calm .hero__title .word,
+html.calm .cta .word { transform: none !important; }
+html.calm [data-fill]::before { -webkit-mask-image: none; mask-image: none; }
+html.calm [data-skew] { transform: none !important; }
+
+/* Scroll-hijacking is the big one — hand the rail back to the browser. */
+html.calm .gallery__stage {
+  position: static;
+  height: auto;
+  display: block;
+  overflow: visible;
+  padding-block: 0;
+}
+html.calm .gallery__rail {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 1rem 1.75rem;
+  transform: none !important;
+  scroll-snap-type: x mandatory;
+}
+html.calm .gallery__rail > * { scroll-snap-align: center; }
+html.calm .gallery__bar { padding-block: 0 .5rem; }
+html.calm .gallery__label [data-hint="scroll"] { display: none; }
+html.calm .gallery__label [data-hint="swipe"] { display: inline; }
+html.calm .gallery__meter i { transform: none; opacity: .3; }
+
+/* Transforms that only fire on hover are user-initiated and brief, but they
+   are still movement — trade them for a colour response. */
+html.calm .btn:hover,
+html.calm .chips li:hover,
+html.calm .iconbtn:hover,
+html.calm .brand:hover .brand__mark { transform: none !important; }
+html.calm .btn svg,
+html.calm .card__cta svg,
+html.calm .contact__list svg,
+html.calm .foot__top svg { transition: none; }
+html.calm .card__link:hover .frame img { transform: none; }
+html.calm .portrait img { transform: none !important; }
 
 @media print {
   .ambient, .cursor, .loader, .nav, .menu, .progress, .marquee, .scrollcue { display: none !important; }

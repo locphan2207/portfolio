@@ -12,9 +12,34 @@
 
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const fineQuery   = matchMedia('(hover: hover) and (pointer: fine)');
-  let calm = motionQuery.matches;
-  motionQuery.addEventListener('change', e => { calm = e.matches; });
 
+  // The OS setting is the default, not the verdict — a visitor can turn the
+  // motion system on or off from the page, and that choice sticks. Everything
+  // re-reads `calm` as it runs, so flipping it needs no reload.
+  function storedMotion() {
+    try { return localStorage.getItem('motion'); } catch (e) { return null; }
+  }
+  function resolveCalm() {
+    const pref = storedMotion();
+    if (pref === 'full') return false;
+    if (pref === 'reduced') return true;
+    return motionQuery.matches;
+  }
+  let calm = resolveCalm();
+  function applyCalm() {
+    calm = resolveCalm();
+    root.classList.toggle('calm', calm);
+    root.classList.toggle('has-cursor', !calm && fineQuery.matches);
+    if (motionBtn) {
+      motionBtn.setAttribute('aria-pressed', String(!calm));
+      motionBtn.setAttribute('aria-label', calm ? 'Turn animation on' : 'Turn animation off');
+      motionBtn.title = calm ? 'Animation off' : 'Animation on';
+    }
+    if (!calm) { measureRail && measureRail(); driveRail && driveRail(); }
+  }
+  motionQuery.addEventListener('change', () => { if (!storedMotion()) applyCalm(); });
+
+  let motionBtn = null;
   const lerp  = (a, b, t) => a + (b - a) * t;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
@@ -178,7 +203,7 @@
   let frame = 0;
   function loop() {
     frame = requestAnimationFrame(loop);
-    if (!pointer.has) return;
+    if (!pointer.has || calm) return;
 
     // Two trailing speeds give the cursor its weight: dot snappy, ring lazy.
     eased.x   = lerp(eased.x,   pointer.x, .35);
@@ -205,13 +230,13 @@
       el.style.setProperty('--fy', `${clamp(((pointer.y - r.top) / r.height) * 100, 0, 100)}%`);
     }
   }
-  if (!calm) loop();
+  loop();
   inkField();
 
   /* Pause the loop when the tab is hidden. */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) cancelAnimationFrame(frame);
-    else if (!calm) { cancelAnimationFrame(frame); loop(); }
+    else { cancelAnimationFrame(frame); loop(); }
   });
 
 
@@ -224,7 +249,7 @@
 
   function inkField() {
     const cv = $('#ink');
-    if (!cv || calm) return;
+    if (!cv) return;
     const ctx = cv.getContext('2d', { alpha: true });
     if (!ctx) return;
 
@@ -272,6 +297,7 @@
     addEventListener('resize', size, { passive: true });
 
     function spawn(x, y, vx, vy, power) {
+      if (calm) return;
       const speed = Math.min(Math.hypot(vx, vy), 90);
       const n = 1 + Math.floor(speed / 22);
       for (let i = 0; i < n; i++) {
@@ -311,6 +337,10 @@
     let raf = 0, idle = 0;
     function frame() {
       raf = requestAnimationFrame(frame);
+      if (calm) {
+        if (blobs.length) { blobs.length = 0; ctx.clearRect(0, 0, w, h); }
+        return;
+      }
       buildSprite();
       ctx.clearRect(0, 0, w, h);
       if (!sprite) return;
@@ -353,8 +383,8 @@
   /* ── Magnetic buttons ─────────────────────────────────────────────── */
 
   magnets.forEach(el => {
-    if (calm) return;
     const pull = (e) => {
+      if (calm) return;
       const r = el.getBoundingClientRect();
       const dx = e.clientX - (r.left + r.width / 2);
       const dy = e.clientY - (r.top + r.height / 2);
@@ -367,11 +397,11 @@
   /* ── Card tilt ────────────────────────────────────────────────────── */
 
   tilts.forEach(card => {
-    if (calm || !fineQuery.matches) return;
     const frame = card.querySelector('.frame');
     if (!frame) return;
 
     card.addEventListener('pointermove', (e) => {
+      if (calm || !fineQuery.matches) return;
       const r = frame.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width  - .5;
       const py = (e.clientY - r.top)  / r.height - .5;
@@ -384,10 +414,10 @@
   /* ── Portrait parallax ────────────────────────────────────────────── */
 
   const portrait = $('[data-parallax] img');
-  if (portrait && !calm) {
+  if (portrait) {
     let ticking = false;
     addEventListener('scroll', () => {
-      if (ticking) return;
+      if (ticking || calm) return;
       ticking = true;
       requestAnimationFrame(() => {
         const r = portrait.getBoundingClientRect();
@@ -418,6 +448,7 @@
   function measureRail() {
     if (!gallery || !rail) return;
     if (!wide.matches || calm) {
+      rail.style.removeProperty('transform');
       gallery.style.height = '';
       rail.style.transform = '';
       travel = 0;
@@ -530,7 +561,6 @@
     let words;
     try { words = JSON.parse(el.dataset.scramble); } catch (_) { return; }
     if (!Array.isArray(words) || words.length < 2) return;
-    if (calm) { el.textContent = words[0]; return; }
 
     let index = 0, queue = [], raf = 0, tick = 0;
 
@@ -567,6 +597,7 @@
     });
 
     const cycle = () => {
+      if (calm) { el.textContent = words[index]; setTimeout(cycle, 2400); return; }
       index = (index + 1) % words.length;
       setText(words[index]).then(() => setTimeout(cycle, 2400));
     };
@@ -685,6 +716,39 @@
   /* ── Theme ────────────────────────────────────────────────────────── */
 
   const toggle = $('#themeToggle');
+
+  motionBtn = $('#motionToggle');
+  applyCalm();
+
+  // If the page is quiet only because the OS said so, say that once. A plain
+  // page with no explanation reads as broken rather than as respectful.
+  const notice = $('#motionNotice');
+  if (notice) {
+    let shown = false;
+    try { shown = sessionStorage.getItem('motionNotice') === 'seen'; } catch (e) {}
+    if (calm && !storedMotion() && !shown) {
+      setTimeout(() => { notice.hidden = false; }, 1200);
+    }
+    const dismiss = () => {
+      notice.hidden = true;
+      try { sessionStorage.setItem('motionNotice', 'seen'); } catch (e) {}
+    };
+    $('#motionNoticeX', notice).addEventListener('click', dismiss);
+    $('#motionNoticeOn', notice).addEventListener('click', () => {
+      try { localStorage.setItem('motion', 'full'); } catch (e) {}
+      applyCalm();
+      dismiss();
+    });
+  }
+  motionBtn && motionBtn.addEventListener('click', () => {
+    const next = calm ? 'full' : 'reduced';
+    try { localStorage.setItem('motion', next); } catch (e) {}
+    applyCalm();
+    if (calm) {
+      // Leaving motion behind should not leave anything mid-flight.
+      $$('[data-magnetic], .frame, [data-skew]').forEach(el => el.style.removeProperty('transform'));
+    }
+  });
 
   function labelToggle() {
     if (!toggle) return;

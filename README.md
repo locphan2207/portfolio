@@ -38,9 +38,15 @@ python3 -m http.server 8000   # then open http://localhost:8000
   `--accentface`, never a family name, which is what lets a skin re-point the
   whole page from one block.
 - **Motion** — everything pointer-driven shares one `requestAnimationFrame`
-  loop; everything scroll-driven goes through `IntersectionObserver`. All of it
-  switches off under `prefers-reduced-motion: reduce`, and the page is complete
-  and readable with JavaScript disabled.
+  loop; everything scroll-driven goes through `IntersectionObserver`. The page
+  is complete and readable with JavaScript disabled.
+- **Reduced motion** — `prefers-reduced-motion: reduce` seeds the default, but
+  `html.calm` is what gates everything, and a nav toggle lets any visitor
+  override it either way (persisted in `localStorage`). Reduce means no
+  vestibular motion — translation, parallax, scroll-hijacking, drifting
+  backgrounds — not a dead page: opacity and colour transitions stay. When the
+  page is quiet only because the OS asked, it says so once, with a way to turn
+  motion on, so a plain page never reads as broken.
 - **Ink field** — the canvas behind the content spawns pigment along the pointer
   path and composites `multiply` on paper, `screen` on ink, so one particle
   system reads as bleed in the light theme and glow in the dark one. Blobs are
