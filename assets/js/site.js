@@ -58,7 +58,7 @@
 
   /* ── Reveal on scroll ─────────────────────────────────────────────── */
 
-  const revealables = $$('[data-reveal], .cta');
+  const revealables = $$('[data-reveal], .cta, [data-words]');
   revealables.forEach(el => {
     if (el.dataset.delay) el.style.setProperty('--d', el.dataset.delay);
   });
@@ -66,7 +66,9 @@
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
+        // Also fire for anything already scrolled past — a fast scroll or a
+        // late layout shift must never leave copy parked at opacity 0.
+        if (!entry.isIntersecting && entry.boundingClientRect.top > 0) return;
         entry.target.classList.add('is-in');
         io.unobserve(entry.target);
       });
@@ -74,6 +76,16 @@
     revealables.forEach(el => io.observe(el));
   } else {
     revealables.forEach(el => el.classList.add('is-in'));
+  }
+
+  // The gallery re-measures once its images land, which moves everything below
+  // it. A periodic sweep guarantees no copy is left parked at opacity 0 if that
+  // shift outruns the observer.
+  function sweepReveals() {
+    for (const el of revealables) {
+      if (el.classList.contains('is-in')) continue;
+      if (el.getBoundingClientRect().top < innerHeight * .92) el.classList.add('is-in');
+    }
   }
 
   /* ── Gradient-fill headings ───────────────────────────────────────── */
@@ -194,12 +206,149 @@
     }
   }
   if (!calm) loop();
+  inkField();
 
   /* Pause the loop when the tab is hidden. */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) cancelAnimationFrame(frame);
     else if (!calm) { cancelAnimationFrame(frame); loop(); }
   });
+
+
+  /* ── Ink field ────────────────────────────────────────────────────── */
+  // Pigment spawned along the pointer path, expanding and fading. The canvas
+  // sits behind the content and composites with multiply on paper, screen on
+  // ink, so the same particles read as bleed in one theme and glow in the
+  // other. Blobs are drawn from a pre-rendered sprite — building a radial
+  // gradient per blob per frame is what makes this kind of effect stutter.
+
+  function inkField() {
+    const cv = $('#ink');
+    if (!cv || calm) return;
+    const ctx = cv.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    const MAX = 210;
+    const blobs = [];
+    let w = 0, h = 0, dpr = 1, sprite = null, spriteKey = '';
+
+    function readInk() {
+      const raw = getComputedStyle(root).getPropertyValue('--ink-rgb').trim() || '255 106 61';
+      const [r, g, b] = raw.split(/[\s,]+/).map(Number);
+      return [r || 0, g || 0, b || 0];
+    }
+
+    function buildSprite() {
+      const rgb = readInk();
+      const key = rgb.join(',');
+      if (key === spriteKey && sprite) return;
+      spriteKey = key;
+      const S = 128;
+      sprite = document.createElement('canvas');
+      sprite.width = sprite.height = S;
+      const sc = sprite.getContext('2d');
+      const g = sc.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+      g.addColorStop(0,   `rgba(${rgb.join(',')},1)`);
+      g.addColorStop(.30, `rgba(${rgb.join(',')},.78)`);
+      g.addColorStop(.62, `rgba(${rgb.join(',')},.30)`);
+      g.addColorStop(.85, `rgba(${rgb.join(',')},.07)`);
+      g.addColorStop(1,   `rgba(${rgb.join(',')},0)`);
+      sc.fillStyle = g;
+      sc.fillRect(0, 0, S, S);
+    }
+
+    function size() {
+      dpr = Math.min(devicePixelRatio || 1, 2);
+      w = innerWidth; h = innerHeight;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(h * dpr);
+      cv.style.width = w + 'px';
+      cv.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    size();
+    buildSprite();
+    addEventListener('resize', size, { passive: true });
+
+    function spawn(x, y, vx, vy, power) {
+      const speed = Math.min(Math.hypot(vx, vy), 90);
+      const n = 1 + Math.floor(speed / 22);
+      for (let i = 0; i < n; i++) {
+        blobs.push({
+          x: x + (Math.random() - .5) * 16,
+          y: y + (Math.random() - .5) * 16,
+          vx: vx * .05 + (Math.random() - .5) * .8,
+          vy: vy * .05 + (Math.random() - .5) * .8,
+          r: (11 + Math.random() * 16 + speed * .22) * power,
+          grow: .42 + Math.random() * .8,
+          life: 0,
+          span: 58 + Math.random() * 76,
+          rot: Math.random() * Math.PI,
+          squash: .58 + Math.random() * .74,
+          a: (.11 + Math.random() * .1) * power,
+        });
+        if (blobs.length > MAX) blobs.shift();
+      }
+    }
+
+    let px = -1, py = -1, lastMove = -1e9;
+    function track(e) {
+      const x = e.clientX, y = e.clientY;
+      if (px >= 0) spawn(x, y, x - px, y - py, 1);
+      px = x; py = y;
+      lastMove = performance.now();
+    }
+    addEventListener('pointermove', track, { passive: true });
+    addEventListener('pointerdown', (e) => {
+      // A press throws a heavier splash than a drag ever will.
+      for (let i = 0; i < 7; i++) {
+        const a = (i / 7) * Math.PI * 2;
+        spawn(e.clientX, e.clientY, Math.cos(a) * 34, Math.sin(a) * 34, 1.5);
+      }
+    }, { passive: true });
+
+    let raf = 0, idle = 0;
+    function frame() {
+      raf = requestAnimationFrame(frame);
+      buildSprite();
+      ctx.clearRect(0, 0, w, h);
+      if (!sprite) return;
+
+      // Bleed on its own whenever the pointer has been still for a moment,
+      // so the page is never a flat rectangle waiting to be touched.
+      if (performance.now() - lastMove > 1400 && ++idle % 16 === 0) {
+        spawn(w * (.12 + Math.random() * .74), h * (.16 + Math.random() * .58),
+              (Math.random() - .5) * 10, (Math.random() - .5) * 10, .85);
+      }
+
+      for (let i = blobs.length - 1; i >= 0; i--) {
+        const b = blobs[i];
+        b.life++;
+        if (b.life >= b.span) { blobs.splice(i, 1); continue; }
+        b.x += b.vx; b.y += b.vy;
+        b.vx *= .94; b.vy *= .94;
+
+        const t = b.life / b.span;
+        const fade = t < .1 ? t / .1 : 1 - (t - .1) / .9;
+        const r = b.r + b.grow * b.life;
+
+        ctx.globalAlpha = Math.max(0, b.a * fade);
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rot);
+        ctx.scale(1, b.squash);
+        ctx.drawImage(sprite, -r, -r, r * 2, r * 2);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      ctx.globalAlpha = 1;
+    }
+    frame();
+
+    document.addEventListener('visibilitychange', () => {
+      cancelAnimationFrame(raf);
+      if (!document.hidden) frame();
+    });
+  }
 
   /* ── Magnetic buttons ─────────────────────────────────────────────── */
 
@@ -248,6 +397,130 @@
       });
     }, { passive: true });
   }
+
+
+  /* ── Pinned horizontal gallery ────────────────────────────────────── */
+  // The section is given enough height for the rail's overflow, then the
+  // stage sticks inside it and vertical progress drives translateX. The
+  // section height is derived from the rail, so adding a project needs no
+  // magic numbers. Below the breakpoint the CSS hands scrolling back to the
+  // browser and this stays out of the way.
+
+  const gallery = $('#gallery');
+  const rail = $('#rail');
+  const meter = $('.gallery__meter i');
+  const railNow = $('#railNow');
+  const cardEls = rail ? $$('.card:not(.card--end)', rail) : [];
+  const wide = matchMedia('(min-width: 901px)');
+
+  let travel = 0;
+
+  function measureRail() {
+    if (!gallery || !rail) return;
+    if (!wide.matches || calm) {
+      gallery.style.height = '';
+      rail.style.transform = '';
+      travel = 0;
+      return;
+    }
+    travel = Math.max(0, rail.scrollWidth - innerWidth);
+    // A little slack past the end so the last card is readable before release.
+    gallery.style.height = `${innerHeight + travel + innerHeight * 0.15}px`;
+  }
+
+  function driveRail() {
+    if (!gallery || !rail || !travel) return;
+    const box = gallery.getBoundingClientRect();
+    const span = box.height - innerHeight;
+    const p = clamp(-box.top / span, 0, 1);
+    rail.style.transform = `translate3d(${-p * travel}px, 0, 0)`;
+    if (meter) meter.style.setProperty('--rail-p', p.toFixed(4));
+
+    // Counter tracks whichever project card is nearest the reading edge.
+    if (railNow) {
+      const edge = innerWidth * .28;
+      let best = 1, bestD = Infinity;
+      cardEls.forEach((c, i) => {
+        const d = Math.abs(c.getBoundingClientRect().left - edge);
+        if (d < bestD) { bestD = d; best = i + 1; }
+      });
+      const label = String(Math.min(best, cardEls.length)).padStart(2, '0');
+      if (railNow.textContent !== label) railNow.textContent = label;
+    }
+  }
+
+  if (gallery && rail) {
+    measureRail();
+    driveRail();
+    addEventListener('resize', () => { measureRail(); driveRail(); }, { passive: true });
+    wide.addEventListener('change', () => { measureRail(); driveRail(); });
+    // Screenshots load late and change the rail's width.
+    addEventListener('load', () => { measureRail(); driveRail(); });
+    $$('img', rail).forEach(img => {
+      if (!img.complete) img.addEventListener('load', () => { measureRail(); driveRail(); }, { once: true });
+    });
+    // Tabbing into a card off-screen must bring it into view. Rail travel is
+    // linear in scroll, so convert the wanted horizontal shift back to pixels
+    // of page scroll rather than letting the browser scroll a pinned stage.
+    $$('a', rail).forEach(a => a.addEventListener('focus', () => {
+      if (!travel) return;
+      const span = gallery.getBoundingClientRect().height - innerHeight;
+      const want = a.getBoundingClientRect().left - innerWidth * .18;
+      if (Math.abs(want) < 8) return;
+      scrollTo({ top: scrollY + want * (span / travel), behavior: calm ? 'auto' : 'smooth' });
+    }));
+  }
+
+  /* ── Scroll velocity ──────────────────────────────────────────────── */
+  // One shared readout: how fast the page is moving, smoothed. Sections
+  // stretch a little into the direction of travel and the marquee speeds up,
+  // which is what makes fast scrolling feel like weight rather than teleporting.
+
+  const skewables = $$('[data-skew]');
+  const marqueeTracks = $$('.marquee__track');
+  let lastScroll = scrollY, vel = 0, smooth = 0, lastRush = 1, sweepTick = 0;
+
+  function velocityFrame() {
+    const y = scrollY;
+    vel = y - lastScroll;
+    lastScroll = y;
+    smooth += (vel - smooth) * .16;
+
+    driveRail();
+    if ((sweepTick = (sweepTick + 1) % 20) === 0) sweepReveals();
+
+    if (!calm) {
+      const stretch = clamp(smooth / 34, -1, 1);
+      for (const el of skewables) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -100 || r.top > innerHeight + 100) continue;
+        el.style.transform = `skewY(${(stretch * -1.15).toFixed(3)}deg) scaleY(${(1 + Math.abs(stretch) * .026).toFixed(4)})`;
+      }
+      const rush = 1 + Math.min(Math.abs(smooth) / 16, 3.2);
+      if (Math.abs(rush - lastRush) > .04) {
+        lastRush = rush;
+        for (const t of marqueeTracks) t.style.animationDuration = `${(t.dataset.dur || 30) / rush}s`;
+      }
+    }
+    requestAnimationFrame(velocityFrame);
+  }
+  requestAnimationFrame(velocityFrame);
+
+  /* ── Per-word reveal ──────────────────────────────────────────────── */
+
+  $$('[data-words]').forEach(el => {
+    if (el.dataset.split) return;
+    el.dataset.split = '1';
+    const words = el.textContent.trim().split(/\s+/);
+    el.textContent = '';
+    words.forEach((word, i) => {
+      const span = document.createElement('span');
+      span.className = 'w';
+      span.style.setProperty('--i', i);
+      span.textContent = word;
+      el.append(span, document.createTextNode(' '));
+    });
+  });
 
   /* ── Scrambling role words ────────────────────────────────────────── */
 
@@ -314,7 +587,9 @@
     if (!track) return;
     const width = track.scrollWidth;
     track.innerHTML += track.innerHTML;
-    track.style.setProperty('--dur', `${Math.max(18, width / 45)}s`);
+    const dur = Math.max(18, width / 45);
+    track.dataset.dur = dur;
+    track.style.setProperty('--dur', `${dur}s`);
   });
 
   /* ── Nav: stick, auto-hide, scrollspy, sliding pill ───────────────── */
