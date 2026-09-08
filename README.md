@@ -3,14 +3,14 @@
 Personal site and portfolio for **Loc Phan** — [loc-phan.com](https://www.loc-phan.com/)
 
 A single static page. No build step, no framework, no runtime dependencies:
-hand-written HTML, one stylesheet, one script, and four self-hosted webfonts.
+hand-written HTML, one stylesheet, one script, and three self-hosted webfonts.
 Drop it on any static host.
 
 ```
 index.html            markup
 assets/css/site.css   design tokens + every component
 assets/js/site.js     motion and interaction layer
-assets/fonts/         Inter, Instrument Serif, JetBrains Mono (woff2, latin subset)
+assets/fonts/         Fraunces + Instrument Sans (woff2, latin subset)
 assets/img/           optimised portrait, project shots, favicon, share card
 ```
 
@@ -28,20 +28,15 @@ python3 -m http.server 8000   # then open http://localhost:8000
   `prefers-color-scheme` on first visit and remembers an explicit choice in
   `localStorage`. An inline script in `<head>` sets it before first paint so the
   wrong palette never flashes.
-- **Accents** — the accent hue is its own axis, set with `data-accent` on
-  `<html>`: `ink` (Prussian navy), `forest`, `petrol` (deep teal), `plum`
-  (aubergine) or `wine` (burgundy). It overrides whichever skin is on, and
-  drives the ink field's pigment through `--ink-rgb`. All 30 skin x accent x
-  theme combinations are checked against WCAG AA.
-- **Skins** — the palette and the typefaces are one swappable unit. `site.css`
-  ships three: `atelier` (bone paper, Fraunces, oxblood), `klein` (achromatic
-  paper, Bricolage Grotesque, electric blue) and `press` (the hybrid — Fraunces
-  on cool paper, blue and ochre). Switch with `data-skin` on `<html>`; drop the
-  two you are not using and their fonts. Every skin is checked against WCAG AA
-  in both themes.
-- **Type roles** — components ask for `--display`, `--body`, `--label` and
-  `--accentface`, never a family name, which is what lets a skin re-point the
-  whole page from one block.
+- **Colour** — the whole palette lives in the two `[data-theme]` blocks at the
+  top of `site.css`. The accent is petrol teal: `#0e5560` on paper, `#52c6d8`
+  on ink. `--ink-rgb` is the same colour as an RGB triplet, which is what the
+  ink field paints with. Every text colour is checked against WCAG AA in both
+  themes.
+- **Type roles** — components ask for `--display`, `--body`, `--label` or
+  `--accentface` and never name a face, so the whole page re-points from one
+  block. Today that is Fraunces for display (SOFT 0, WONK 1) and Instrument
+  Sans for everything else.
 - **Motion** — everything pointer-driven shares one `requestAnimationFrame`
   loop; everything scroll-driven goes through `IntersectionObserver`. The page
   is complete and readable with JavaScript disabled.

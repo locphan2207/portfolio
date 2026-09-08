@@ -8,38 +8,6 @@
 /* ── 0. Fonts (self-hosted, latin subset) ───────────────────────────── */
 
 @font-face {
-  font-family: "Inter";
-  src: url("../fonts/inter-latin-var.woff2") format("woff2-variations");
-  font-weight: 300 800;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-                 U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-                 U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: "Instrument Serif";
-  src: url("../fonts/instrument-serif-latin.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Instrument Serif";
-  src: url("../fonts/instrument-serif-italic-latin.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url("../fonts/jetbrains-mono-latin-var.woff2") format("woff2-variations");
-  font-weight: 100 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Fraunces";
   src: url("../fonts/fraunces-latin.woff2") format("woff2-variations");
   font-weight: 300 800;
@@ -60,13 +28,6 @@
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: "Bricolage Grotesque";
-  src: url("../fonts/bricolage-latin.woff2") format("woff2-variations");
-  font-weight: 300 800;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* ── 1. Tokens ──────────────────────────────────────────────────────── */
 
@@ -80,21 +41,21 @@
   --sweep: linear-gradient(100deg, var(--ember), var(--amber) 55%, var(--iris));
 
   /* Type */
-  --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
 
-  /* Roles, not families — a skin re-points these and the whole page follows. */
-  --display: var(--sans);
+  /* Roles, not families. Components ask for a role and never name a face, so
+     the whole page re-points from this block alone. */
+  --display: var(--serif);
   --body: var(--sans);
-  --label: var(--mono);
+  --label: var(--sans);
   --accentface: var(--serif);
-  --display-weight: 700;
-  --display-track: -0.058em;
-  --head-weight: 600;
-  --head-track: -0.045em;
-  --label-track: .1em;
-  --accent-size: 1.14em;
+  --display-weight: 400;
+  --display-track: -0.028em;
+  --head-weight: 400;
+  --head-track: -0.02em;
+  --label-track: .15em;
+  --accent-size: 1em;
   --accent-style: italic;
   --accent-weight: 400;
 
@@ -105,7 +66,7 @@
   --t-lg:   clamp(1.12rem, 1.02rem + 0.5vw, 1.45rem);
   --t-xl:   clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem);
   --t-2xl:  clamp(2.1rem, 1.4rem + 3.4vw, 4.6rem);
-  --t-3xl:  clamp(2.9rem, 12.6vw, 11.2rem);
+  --t-3xl:  clamp(2.9rem, 24vw, 19rem);
 
   /* Rhythm */
   --shell: 1240px;
@@ -126,279 +87,72 @@
 }
 
 /* Dark — the default */
+/* Dark — warm ink, the accent lifted so it glows rather than bleeds. */
 [data-theme="dark"] {
-  --ink:    #08080b;
-  --ink-2:  #0d0e13;
-  --ink-3:  #14151d;
-  --text:   #f4f2ef;
-  --text-2: #a9a8b3;
-  --text-3: #807f8d;
-  --line:   rgb(255 255 255 / .09);
-  --line-2: rgb(255 255 255 / .17);
-  --glass:  rgb(12 12 17 / .62);
-  --card:   rgb(255 255 255 / .022);
-  --card-2: rgb(255 255 255 / .045);
+  --ink:    #16130f;
+  --ink-2:  #1d1915;
+  --ink-3:  #26211b;
+  --text:   #f3ede2;
+  --text-2: #b3a795;
+  --text-3: #a2957f;
+  --line:   rgb(255 240 214 / .12);
+  --line-2: rgb(255 240 214 / .22);
+  --glass:  rgb(22 19 15 / .7);
+  --card:   rgb(255 240 214 / .03);
+  --card-2: rgb(255 240 214 / .06);
   --shadow: 0 30px 70px -30px rgb(0 0 0 / .85);
+  --ember: #52c6d8;
+  --amber: #6fa0e0;
+  --iris:  #4fcfa6;
+  --mint:  #c9c066;
+  --ink-rgb: 82 198 216;
   --grain: .05;
-  --aurora: .72;
-  --grid: .055;
+  --aurora: .5;
+  --grid: .05;
   --vignette: .86;
-  --shot-bright: .88;
-  --ink-rgb: 255 106 61;
+  --shot-bright: .9;
   color-scheme: dark;
 }
 
-/* Light — warm paper, not clinical white */
+/* Light — warm bone paper. The home theme: cool teal on warm stock is what
+   makes the accent read as ink rather than as UI colour. */
 [data-theme="light"] {
-  --ink:    #f6f3ee;
-  --ink-2:  #fffdfa;
-  --ink-3:  #ebe6dd;
-  --text:   #14131a;
-  --text-2: #55535f;
-  --text-3: #676470;
-  --line:   rgb(20 19 26 / .14);
-  --line-2: rgb(20 19 26 / .26);
-  --glass:  rgb(252 250 246 / .72);
-  --card:   rgb(255 255 255 / .58);
-  --card-2: rgb(255 255 255 / .9);
-  --shadow: 0 26px 60px -28px rgb(40 30 20 / .3);
-  --grain: .038;
-  --aurora: .5;
-  --grid: .032;
-  --vignette: .34;
+  --ink:    #fbf8f1;
+  --ink-2:  #ffffff;
+  --ink-3:  #f1eade;
+  --text:   #1b1813;
+  --text-2: #544d42;
+  --text-3: #6d6458;
+  --line:   rgb(40 30 16 / .16);
+  --line-2: rgb(40 30 16 / .3);
+  --glass:  rgb(251 248 241 / .82);
+  --card:   rgb(255 255 255 / .6);
+  --card-2: rgb(255 255 255 / .95);
+  --shadow: 0 26px 60px -30px rgb(60 42 20 / .34);
+  --ember: #0e5560;
+  --amber: #1e4c7a;
+  --iris:  #16624a;
+  --mint:  #6a6317;
+  --ink-rgb: 14 85 96;
+  --grain: .05;
+  --aurora: .42;
+  --grid: .03;
+  --vignette: .24;
   --shot-bright: 1;
-  --ember: #c53f18;
-  --amber: #98610d;
-  --iris:  #5030d0;
-  --mint:  #0b7c5e;
-  --ink-rgb: 197 63 24;
   color-scheme: light;
 }
 
+/* Fraunces carries the display face; SOFT and WONK are what give the wordmark
+   its character. It also gets proportionally wider as it gets smaller, so the
+   one vw term that fills a desktop measure overflows a phone — ease it off
+   below 640px. */
+.hero__title,
+.secHead__title,
+.cta,
+.loader__name { font-variation-settings: "SOFT" 0, "WONK" 1; }
 
-/* ── 1b. Skins ──────────────────────────────────────────────────────────
-   A skin re-points the type roles and the palette. Everything else in this
-   file — layout, motion, components — is written against the tokens and
-   does not know which skin is on. Default (no attribute) is Ember. */
-
-/* ATELIER — gallery print. Serif display over warm bone paper. */
-[data-skin="atelier"] {
-  --t-3xl: clamp(2.9rem, 24vw, 19rem);
-  --display: "Fraunces", ui-serif, Georgia, serif;
-  --body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
-  --label: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
-  --accentface: "Fraunces", ui-serif, Georgia, serif;
-  --display-weight: 400;
-  --display-track: -0.028em;
-  --head-weight: 400;
-  --head-track: -0.02em;
-  --label-track: .15em;
-  --accent-size: 1em;
-  --sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
-}
-[data-skin="atelier"] .hero__title,
-[data-skin="atelier"] .secHead__title,
-[data-skin="atelier"] .cta,
-[data-skin="atelier"] .loader__name { font-variation-settings: "SOFT" 0, "WONK" 1; }
-[data-skin="atelier"] .mono,
-[data-skin="atelier"] .secHead__idx,
-[data-skin="atelier"] .nav__idx,
-[data-skin="atelier"] .card__idx,
-[data-skin="atelier"] .tags li,
-[data-skin="atelier"] .status,
-[data-skin="atelier"] .contact__k,
-[data-skin="atelier"] .stack__label,
-[data-skin="atelier"] .foot__note { font-weight: 500; }
-
-[data-skin="atelier"][data-theme="light"] {
-  --ink: #fbf8f1;  --ink-2: #ffffff;  --ink-3: #f1eade;
-  --text: #1b1813; --text-2: #544d42; --text-3: #6d6458;
-  --line: rgb(40 30 16 / .16); --line-2: rgb(40 30 16 / .3);
-  --glass: rgb(251 248 241 / .82);
-  --card: rgb(255 255 255 / .6); --card-2: rgb(255 255 255 / .95);
-  --shadow: 0 26px 60px -30px rgb(60 42 20 / .34);
-  --ember: #8e2c22; --amber: #8a6410; --iris: #2f4858; --mint: #3f6b3a;
-  --grain: .05; --aurora: .42; --grid: .03; --vignette: .24; --shot-bright: 1;
-  --ink-rgb: 142 44 34;
-}
-[data-skin="atelier"][data-theme="dark"] {
-  --ink: #16130f;  --ink-2: #1d1915;  --ink-3: #26211b;
-  --text: #f3ede2; --text-2: #b3a795; --text-3: #a2957f;
-  --line: rgb(255 240 214 / .12); --line-2: rgb(255 240 214 / .22);
-  --glass: rgb(22 19 15 / .7);
-  --card: rgb(255 240 214 / .03); --card-2: rgb(255 240 214 / .06);
-  --ember: #e07a5f; --amber: #e3b23c; --iris: #8fb0c4; --mint: #8bbf7a;
-  --grain: .05; --aurora: .5; --grid: .05; --vignette: .86; --shot-bright: .9;
-  --ink-rgb: 224 122 95;
-}
-
-/* KLEIN — achromatic paper, one electric blue, heavy grotesque. */
-[data-skin="klein"] {
-  --t-3xl: clamp(2.9rem, 23vw, 18.3rem);
-  --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --label: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --accentface: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --display-weight: 800;
-  --display-track: -0.05em;
-  --head-weight: 700;
-  --head-track: -0.042em;
-  --label-track: .14em;
-  --accent-size: 1em;
-  --accent-style: normal;
-  --accent-weight: 300;
-}
-[data-skin="klein"] .hero__title { font-variation-settings: "opsz" 96; }
-[data-skin="klein"] .secHead__title,
-[data-skin="klein"] .cta { font-variation-settings: "opsz" 72; }
-[data-skin="klein"] .card__title,
-[data-skin="klein"] .card__endTitle { font-variation-settings: "opsz" 48; }
-[data-skin="klein"] .mono,
-[data-skin="klein"] .secHead__idx,
-[data-skin="klein"] .nav__idx,
-[data-skin="klein"] .card__idx,
-[data-skin="klein"] .tags li,
-[data-skin="klein"] .status,
-[data-skin="klein"] .contact__k,
-[data-skin="klein"] .stack__label,
-[data-skin="klein"] .foot__note { font-weight: 500; }
-[data-skin="klein"] .hero__lead em,
-[data-skin="klein"] .about__lead em { font-family: var(--body); font-style: italic; font-weight: 400; }
-
-[data-skin="klein"][data-theme="light"] {
-  --ink: #f5f5f2;  --ink-2: #ffffff;  --ink-3: #e9e9e4;
-  --text: #0f0f0f; --text-2: #494949; --text-3: #5c5c5c;
-  --line: rgb(15 15 15 / .15); --line-2: rgb(15 15 15 / .28);
-  --glass: rgb(245 245 242 / .8);
-  --card: rgb(255 255 255 / .64); --card-2: rgb(255 255 255 / .96);
-  --shadow: 0 26px 60px -30px rgb(15 15 40 / .3);
-  --ember: #1a2fe6; --amber: #3d4ff0; --iris: #0a16a8; --mint: #0f7a5a;
-  --grain: .04; --aurora: .4; --grid: .028; --vignette: .2; --shot-bright: 1;
-  --ink-rgb: 26 47 230;
-}
-[data-skin="klein"][data-theme="dark"] {
-  --ink: #0a0a0a;  --ink-2: #121212;  --ink-3: #1a1a1a;
-  --text: #f2f2f2; --text-2: #a8a8a8; --text-3: #8d8d8d;
-  --line: rgb(255 255 255 / .12); --line-2: rgb(255 255 255 / .22);
-  --glass: rgb(10 10 10 / .74);
-  --card: rgb(255 255 255 / .03); --card-2: rgb(255 255 255 / .06);
-  --ember: #5a6bff; --amber: #8a95ff; --iris: #5e6df3; --mint: #35d9a4;
-  --grain: .05; --aurora: .42; --grid: .05; --vignette: .88; --shot-bright: .9;
-  --ink-rgb: 90 107 255;
-}
-
-/* PRESS — the hybrid: Atelier's serif on Klein's cool paper, blue and ochre. */
-[data-skin="press"] {
-  --t-3xl: clamp(2.9rem, 24vw, 19.3rem);
-  --display: "Fraunces", ui-serif, Georgia, serif;
-  --body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --label: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --accentface: "Fraunces", ui-serif, Georgia, serif;
-  --display-weight: 400;
-  --display-track: -0.03em;
-  --head-weight: 400;
-  --head-track: -0.022em;
-  --label-track: .14em;
-  --accent-size: 1em;
-}
-[data-skin="press"] .hero__title,
-[data-skin="press"] .secHead__title,
-[data-skin="press"] .cta,
-[data-skin="press"] .loader__name { font-variation-settings: "SOFT" 12, "WONK" 0; }
-[data-skin="press"] .mono,
-[data-skin="press"] .secHead__idx,
-[data-skin="press"] .nav__idx,
-[data-skin="press"] .card__idx,
-[data-skin="press"] .tags li,
-[data-skin="press"] .status,
-[data-skin="press"] .contact__k,
-[data-skin="press"] .stack__label,
-[data-skin="press"] .foot__note { font-weight: 500; }
-
-[data-skin="press"][data-theme="light"] {
-  --ink: #f4f4f1;  --ink-2: #ffffff;  --ink-3: #e8e8e3;
-  --text: #101010; --text-2: #494949; --text-3: #5c5c5c;
-  --line: rgb(16 16 16 / .15); --line-2: rgb(16 16 16 / .28);
-  --glass: rgb(244 244 241 / .8);
-  --card: rgb(255 255 255 / .64); --card-2: rgb(255 255 255 / .96);
-  --shadow: 0 26px 60px -30px rgb(16 16 40 / .3);
-  --ember: #1a2fe6; --amber: #8a6410; --iris: #0a16a8; --mint: #0f7a5a;
-  --grain: .045; --aurora: .4; --grid: .028; --vignette: .2; --shot-bright: 1;
-  --ink-rgb: 26 47 230;
-}
-[data-skin="press"][data-theme="dark"] {
-  --ink: #0c0d10;  --ink-2: #14151a;  --ink-3: #1c1e24;
-  --text: #f0f0ee; --text-2: #a4a4ac; --text-3: #8d8d96;
-  --line: rgb(255 255 255 / .12); --line-2: rgb(255 255 255 / .22);
-  --glass: rgb(12 13 16 / .74);
-  --card: rgb(255 255 255 / .03); --card-2: rgb(255 255 255 / .06);
-  --ember: #6d7dff; --amber: #d9a63c; --iris: #8a95ff; --mint: #35d9a4;
-  --grain: .05; --aurora: .48; --grid: .05; --vignette: .86; --shot-bright: .9;
-  --ink-rgb: 109 125 255;
-}
-
-
-/* ── 1c. Accents ────────────────────────────────────────────────────────
-   The accent is its own axis: set data-accent on <html> and it overrides
-   whichever skin is on. These blocks sit after the skins so they win, and
-   every value is checked against WCAG AA on both grounds. --ink-rgb is the
-   pigment the ink field uses, so the canvas follows the accent too. */
-
-/* Ink — Prussian navy. The print classic: credible, calm, unfussy. */
-[data-accent="ink"][data-theme="light"] {
-  --ember: #1e3a6e; --amber: #2c6a8f; --iris: #46357e; --mint: #1f6b47;
-  --ink-rgb: 30 58 110;
-}
-[data-accent="ink"][data-theme="dark"] {
-  --ember: #86aae8; --amber: #6fb8d6; --iris: #a08fdb; --mint: #4fd094;
-  --ink-rgb: 134 170 232;
-}
-
-/* Forest — deep green with an olive second and a gold signal. */
-[data-accent="forest"][data-theme="light"] {
-  --ember: #20563f; --amber: #55631c; --iris: #1d5461; --mint: #876210;
-  --ink-rgb: 32 86 63;
-}
-[data-accent="forest"][data-theme="dark"] {
-  --ember: #6fc6a0; --amber: #b3c466; --iris: #6fc0d0; --mint: #e0b45a;
-  --ink-rgb: 111 198 160;
-}
-
-/* Petrol — deep teal. Cool and technical without reading as tech-blue. */
-[data-accent="petrol"][data-theme="light"] {
-  --ember: #0e5560; --amber: #1e4c7a; --iris: #16624a; --mint: #6a6317;
-  --ink-rgb: 14 85 96;
-}
-[data-accent="petrol"][data-theme="dark"] {
-  --ember: #52c6d8; --amber: #6fa0e0; --iris: #4fcfa6; --mint: #c9c066;
-  --ink-rgb: 82 198 216;
-}
-
-/* Plum — aubergine. The most distinctive of the five. */
-[data-accent="plum"][data-theme="light"] {
-  --ember: #5e2450; --amber: #3e3a78; --iris: #7a2c46; --mint: #1f6b47;
-  --ink-rgb: 94 36 80;
-}
-[data-accent="plum"][data-theme="dark"] {
-  --ember: #c88dbb; --amber: #9a93e0; --iris: #d089a0; --mint: #4fd094;
-  --ink-rgb: 200 141 187;
-}
-
-/* Wine — burgundy. Keeps the warmth of the oxblood, drops the orange. */
-[data-accent="wine"][data-theme="light"] {
-  --ember: #7b1e3a; --amber: #8a2e5e; --iris: #45305f; --mint: #1f6b47;
-  --ink-rgb: 123 30 58;
-}
-[data-accent="wine"][data-theme="dark"] {
-  --ember: #dd7c93; --amber: #d97cb4; --iris: #a292d6; --mint: #4fd094;
-  --ink-rgb: 221 124 147;
-}
-
-/* Fraunces gets proportionally wider as it gets smaller, so the one vw term
-   that fills a desktop measure overflows a phone. Ease it off below 640px. */
 @media (max-width: 640px) {
-  [data-skin="atelier"] { --t-3xl: clamp(2.9rem, 20.4vw, 19rem); }
-  [data-skin="press"]   { --t-3xl: clamp(2.9rem, 20.5vw, 19.3rem); }
+  :root { --t-3xl: clamp(2.9rem, 20.4vw, 19rem); }
 }
 
 /* ── 2. Reset ───────────────────────────────────────────────────────── */
@@ -449,7 +203,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: var(--text);
   color: var(--ink);
   border-radius: 999px;
-  font: 500 var(--t-sm)/1 var(--mono);
+  font: 500 var(--t-sm)/1 var(--label);
   transform: translateY(-160%);
   transition: transform .3s var(--ease-out);
 }
@@ -461,7 +215,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .loader__count, .scrollcue__text, .contact__k, .stack__label, .foot__note,
 .rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow {
   font-family: var(--label);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: var(--label-track);
   text-transform: uppercase;
   font-size: var(--t-xs);
@@ -820,7 +574,7 @@ main, .nav, .foot, .menu { position: relative; z-index: 2; }
                 background-color .35s var(--ease), border-color .35s var(--ease);
   }
   .cursor__label {
-    font: 500 9.5px/1 var(--mono);
+    font: 500 9.5px/1 var(--label);
     letter-spacing: .12em;
     text-transform: uppercase;
     color: #14100c;
@@ -1097,7 +851,7 @@ html.calm .ico--still  { opacity: 1; transform: none; }
 .menu__links a:nth-child(4) { transition-delay: .24s; }
 .menu__links a:active { color: var(--ember); }
 .menu__links i {
-  font: 400 var(--t-xs)/1 var(--mono);
+  font: 400 var(--t-xs)/1 var(--label);
   letter-spacing: .1em;
   color: var(--ember);
 }
@@ -1215,7 +969,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 .rail a:hover { color: var(--text); padding-left: .85rem; }
 .rail a:hover::before { transform: scaleY(1); transform-origin: top; }
 .rail i {
-  font: 400 10px/1 var(--mono);
+  font: 400 10px/1 var(--label);
   letter-spacing: .14em;
   color: var(--text-3);
   font-style: normal;
@@ -1238,7 +992,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   align-items: center;
   flex-wrap: wrap;
   gap: .7rem;
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: var(--t-sm);
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -1536,6 +1290,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   align-items: center;
   gap: .7rem;
   font-family: var(--label);
+  font-weight: 500;
   font-size: var(--t-xs);
   letter-spacing: var(--label-track);
   color: var(--accent, var(--ember));
@@ -1605,7 +1360,6 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   line-height: 1.1;
 }
 .card__endTitle em { color: var(--ember); }
-
 
 /* Rail falls back to a plain swipeable scroller where pinning would fight
    the browser's own scrolling. */
@@ -1738,7 +1492,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   position: absolute;
   left: 1.4rem; bottom: 1.2rem;
   z-index: 2;
-  font: 400 var(--t-xs)/1 var(--mono);
+  font: 400 var(--t-xs)/1 var(--label);
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--text);
@@ -1772,7 +1526,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 .facts > div:hover { background: var(--ink-2); }
 .facts dt {
-  font: 400 10px/1 var(--mono);
+  font: 400 10px/1 var(--label);
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -1853,7 +1607,7 @@ html.js .cta:not(.is-in) .word { transform: translateY(120%); }
   border-radius: 999px;
   background: var(--card);
   color: var(--text-3);
-  font: 400 var(--t-xs)/1 var(--mono);
+  font: 400 var(--t-xs)/1 var(--label);
   letter-spacing: .1em;
   text-transform: uppercase;
   transition: color .35s var(--ease), border-color .35s var(--ease);
@@ -1951,7 +1705,6 @@ html.js .reveal {
 }
 html.js .reveal.is-in { opacity: 1; transform: none; }
 
-
 /* Per-word reveal for lead paragraphs. Words only exist once JS splits the
    text, so nothing here can hide copy from a reader without scripting. */
 [data-words] .w {
@@ -1989,7 +1742,6 @@ html.vt-theme::view-transition-new(root) {
   .nav__links, .nav__cta { display: none; }
   .burger { display: block; }
   .brand__text { display: none; }
-
 
   .about { grid-template-columns: 1fr; }
   .about__figure { max-width: 340px; }
