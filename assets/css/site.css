@@ -213,7 +213,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .mono, .secHead__idx, .nav__idx, .tags li, .status,
 .loader__count, .scrollcue__text, .contact__k, .stack__label, .foot__note,
-.rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow {
+.rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow,
+.roles__role {
   font-family: var(--label);
   font-weight: 500;
   letter-spacing: var(--label-track);
@@ -1586,6 +1587,37 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   text-wrap: pretty;
 }
 .about__text p { color: var(--text-2); text-wrap: pretty; }
+
+/* Employment history, such as it is: two entries, so a bordered list rather
+   than a dated timeline. Company leads, role is the quiet label beside it. */
+.roles {
+  display: grid;
+  margin-top: .45rem;
+  border-top: 1px solid var(--line);
+}
+.roles > li {
+  padding-block: 1.15rem;
+  border-bottom: 1px solid var(--line);
+}
+.roles__co {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .3rem .7rem;
+  margin-bottom: .5rem;
+  font-family: var(--display);
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+  font-size: var(--t-lg);
+  line-height: 1.1;
+  color: var(--text);
+}
+.roles__role { color: var(--text-3); }
+.about__text .roles__desc {
+  font-size: var(--t-sm);
+  line-height: 1.65;
+  color: var(--text-2);
+}
 
 /* Two columns, not auto-fit: four facts then always fill the grid exactly,
    so no empty cell is left showing the hairline background as a solid block. */

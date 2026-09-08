@@ -439,6 +439,7 @@
             <li data-cursor="link"><span>Angular</span></li>
             <li data-cursor="link"><span>AngularDart</span></li>
             <li data-cursor="link"><span>React</span></li>
+            <li data-cursor="link"><span>React Native</span></li>
             <li data-cursor="link"><span>JavaScript</span></li>
             <li data-cursor="link"><span>CSS</span></li>
           </ul>
@@ -453,6 +454,8 @@
             <li data-cursor="link"><span>Schema design</span></li>
             <li data-cursor="link"><span>Node.js</span></li>
             <li data-cursor="link"><span>Python</span></li>
+            <li data-cursor="link"><span>Django</span></li>
+            <li data-cursor="link"><span>Redis</span></li>
           </ul>
         </section>
 
@@ -501,13 +504,24 @@
         </div>
 
         <div class="about__text reveal" data-reveal data-delay="1">
-          <p class="about__lead" data-words>I am a software engineer at Google, working the full depth of a system my team owns — from the interface down to the schema.</p>
+          <p class="about__lead" data-words>I am a software engineer at Google. Before that I helped build a sportsbook from nothing, and before that I was studying hardware.</p>
           <p>I graduated as a Computer Engineering major and learned to design embedded hardware systems — then kept picking up languages until software won. That background still shows up in how I work: understand the machine underneath, then build on it.</p>
           <p>What has changed since the last version of this page is scale, and consequence. Working on something other teams depend on taught me to write the design doc before the code, to land a migration in stages instead of one heroic commit, to review carefully because somebody will be reading this in two years, and to carry the pager for what I ship. Most of the hard parts turned out not to be technical.</p>
           <p>I also lean on AI heavily now — first drafts, unfamiliar APIs, the boilerplate, a review pass before I send code out. It has made me quick at the mechanical parts, which mostly buys me more time on the parts that are actually hard: deciding what to build, and what shape it should be.</p>
 
+          <ol class="roles">
+            <li>
+              <h3 class="roles__co">Google <span class="roles__role">Software Engineer</span></h3>
+              <p class="roles__desc">Full stack on a system my team owns end to end: the front end, the RPC services behind it, the schema underneath, and the ML serving on top. On call for it too.</p>
+            </li>
+            <li>
+              <h3 class="roles__co">Smarkets <span class="roles__role">Software Engineer</span></h3>
+              <p class="roles__desc">A betting exchange, where I helped take the sportsbook app from the first commit to the App Store and on to nine thousand users. React Native and Redux Saga on the front, driving the API and websocket flows behind live odds, with a lot of attention paid to re-render cost and selector granularity. On the back, a Flask geofencing service checking users against both GPS and IP, and Django behind a Redis cache for profiles, posts and comments.</p>
+            </li>
+          </ol>
+
           <dl class="facts">
-            <div><dt>Now</dt><dd>Software Engineer, Google</dd></div>
+            <div><dt>Shipped</dt><dd>iOS, Android and web</dd></div>
             <div><dt>Range</dt><dd>Front end &rarr; RPC &rarr; schema &rarr; ML</dd></div>
             <div><dt>Studied</dt><dd>Computer Engineering</dd></div>
             <div><dt>Production</dt><dd>On the on-call rotation</dd></div>
