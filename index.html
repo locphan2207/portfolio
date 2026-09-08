@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Loc Phan — Software Engineer</title>
-<meta name="description" content="Loc Phan is a software engineer building functional, beautiful and interactive websites with JavaScript, React and Node.">
+<title>Loc Phan — Software Engineer at Google</title>
+<meta name="description" content="Loc Phan is a software engineer at Google, working across the full stack — Angular front ends, RPC services, large-scale data models and the ML serving behind them.">
 <meta name="author" content="Loc Phan">
 <meta name="theme-color" content="#16130F" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#FBF8F1" media="(prefers-color-scheme: light)">
@@ -13,15 +13,15 @@
 
 <link rel="canonical" href="https://www.loc-phan.com/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Loc Phan — Software Engineer">
-<meta property="og:description" content="Software engineer building functional, beautiful and interactive websites.">
+<meta property="og:title" content="Loc Phan — Software Engineer at Google">
+<meta property="og:description" content="Full stack at scale — front ends, RPC services, data models and ML serving. On the pager for what I ship.">
 <meta property="og:url" content="https://www.loc-phan.com/">
 <meta property="og:image" content="https://www.loc-phan.com/assets/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Loc Phan — Software Engineer">
-<meta name="twitter:description" content="Software engineer building functional, beautiful and interactive websites.">
+<meta name="twitter:title" content="Loc Phan — Software Engineer at Google">
+<meta name="twitter:description" content="Full stack at scale — front ends, RPC services, data models and ML serving. On the pager for what I ship.">
 <meta name="twitter:image" content="https://www.loc-phan.com/assets/img/og.jpg">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -50,8 +50,14 @@
   "name": "Loc Phan",
   "jobTitle": "Software Engineer",
   "email": "mailto:locphan2207@gmail.com",
-  "telephone": "+1-714-837-4471",
   "url": "https://www.loc-phan.com/",
+  "worksFor": { "@type": "Organization", "name": "Google" },
+  "alumniOf": { "@type": "CollegeOrUniversity", "name": "Computer Engineering" },
+  "knowsAbout": [
+    "Angular", "TypeScript", "Dart", "Front-end architecture",
+    "RPC API design", "Database schema design", "Data migration",
+    "Machine learning serving", "Site reliability"
+  ],
   "sameAs": [
     "https://github.com/locphan2207",
     "https://www.linkedin.com/in/tanloc-phan/"
@@ -115,10 +121,11 @@
     </a>
 
     <nav class="nav__links" aria-label="Sections">
-      <a href="#work"    data-nav data-cursor="link"><span class="nav__idx">01</span> Work</a>
-      <a href="#stack"   data-nav data-cursor="link"><span class="nav__idx">02</span> Stack</a>
-      <a href="#about"   data-nav data-cursor="link"><span class="nav__idx">03</span> About</a>
-      <a href="#contact" data-nav data-cursor="link"><span class="nav__idx">04</span> Contact</a>
+      <a href="#work"     data-nav data-cursor="link"><span class="nav__idx">01</span> Work</a>
+      <a href="#projects" data-nav data-cursor="link"><span class="nav__idx">02</span> Projects</a>
+      <a href="#stack"    data-nav data-cursor="link"><span class="nav__idx">03</span> Stack</a>
+      <a href="#about"    data-nav data-cursor="link"><span class="nav__idx">04</span> About</a>
+      <a href="#contact"  data-nav data-cursor="link"><span class="nav__idx">05</span> Contact</a>
       <i class="nav__pill" aria-hidden="true"></i>
     </nav>
 
@@ -146,10 +153,11 @@
 <!-- ── Mobile menu ────────────────────────────────────────────────────── -->
 <div class="menu" id="menu" hidden>
   <nav class="menu__links" aria-label="Sections">
-    <a href="#work"    data-cursor="link"><i>01</i> Work</a>
-    <a href="#stack"   data-cursor="link"><i>02</i> Stack</a>
-    <a href="#about"   data-cursor="link"><i>03</i> About</a>
-    <a href="#contact" data-cursor="link"><i>04</i> Contact</a>
+    <a href="#work"     data-cursor="link"><i>01</i> Work</a>
+    <a href="#projects" data-cursor="link"><i>02</i> Projects</a>
+    <a href="#stack"    data-cursor="link"><i>03</i> Stack</a>
+    <a href="#about"    data-cursor="link"><i>04</i> About</a>
+    <a href="#contact"  data-cursor="link"><i>05</i> Contact</a>
   </nav>
   <div class="menu__foot">
     <a href="mailto:locphan2207@gmail.com">locphan2207@gmail.com</a>
@@ -168,7 +176,7 @@
     <div class="shell">
 
       <p class="hero__eyebrow reveal" data-reveal>
-        <span class="status"><i></i>Software Engineer</span>
+        <span class="status"><i></i>Software Engineer at Google</span>
       </p>
 
       <h1 class="hero__title" id="heroTitle">
@@ -180,11 +188,12 @@
           <p class="hero__role reveal" data-reveal data-delay="1">
             <span class="hero__roleLabel">I build</span>
             <span class="hero__slash" aria-hidden="true">/</span>
-            <span class="scramble" data-scramble='["interfaces","full-stack apps","data visualisation","mobile apps"]'>interfaces</span>
+            <span class="scramble" data-scramble='["front ends","RPC services","data models","ML pipelines"]'>front ends</span>
           </p>
           <p class="hero__lead reveal" data-reveal data-delay="2">
-            I make <em>functional, beautiful and interactive</em> websites — front to back,
-            from the pixel grid to the database.
+            I work at whatever depth the problem needs — a render path one week, a
+            table&rsquo;s access patterns the next. <em>Full stack is less about knowing
+            every layer than about seeing where they fail each other.</em>
           </p>
           <div class="hero__actions reveal" data-reveal data-delay="3">
             <a class="btn btn--solid" href="#work" data-magnetic data-cursor="link">
@@ -204,16 +213,20 @@
             <i>01</i><span>Work</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
+          <a href="#projects" data-cursor="link">
+            <i>02</i><span>Projects</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
           <a href="#stack" data-cursor="link">
-            <i>02</i><span>Stack</span>
+            <i>03</i><span>Stack</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
           <a href="#about" data-cursor="link">
-            <i>03</i><span>About</span>
+            <i>04</i><span>About</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
           <a href="#contact" data-cursor="link">
-            <i>04</i><span>Contact</span>
+            <i>05</i><span>Contact</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
         </nav>
@@ -238,36 +251,91 @@
   <div class="marquee" aria-hidden="true">
     <div class="marquee__row" data-marquee>
       <div class="marquee__track">
-        <span>JavaScript</span><i></i><span>React</span><i></i><span>Redux</span><i></i><span>Node.js</span><i></i>
-        <span>Ruby on Rails</span><i></i><span>D3.js</span><i></i><span>MongoDB</span><i></i><span>PostgreSQL</span><i></i>
+        <span>TypeScript</span><i></i><span>Angular</span><i></i><span>Dart</span><i></i><span>RPC APIs</span><i></i>
+        <span>Protocol buffers</span><i></i><span>SQL</span><i></i><span>Schema design</span><i></i><span>Python</span><i></i>
       </div>
     </div>
     <div class="marquee__row marquee__row--rev" data-marquee>
       <div class="marquee__track">
-        <span>React Native</span><i></i><span>HTML5</span><i></i><span>CSS3</span><i></i><span>jQuery</span><i></i>
-        <span>AWS</span><i></i><span>Heroku</span><i></i><span>Git</span><i></i><span>Firebase</span><i></i>
+        <span>JavaScript</span><i></i><span>React</span><i></i><span>Node.js</span><i></i><span>ML serving</span><i></i>
+        <span>Data migration</span><i></i><span>Design docs</span><i></i><span>Code review</span><i></i><span>On-call</span><i></i>
       </div>
     </div>
   </div>
 
-  <!-- ── Work ─────────────────────────────────────────────────────────── -->
+  <!-- ── Work — current, and mostly unshowable ────────────────────────── -->
   <section class="section" id="work">
     <div class="shell">
       <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">01 — Selected work</p>
-        <h2 class="secHead__title">Things I&rsquo;ve <em>built</em></h2>
-        <p class="secHead__note" data-words>Full-stack products, games and experiments. Five picked from the pile.</p>
+        <p class="secHead__idx">01 — Current work</p>
+        <h2 class="secHead__title">The work behind the <em>firewall</em></h2>
+        <p class="secHead__note" data-words>Nearly everything I build at Google is internal, so there are no screenshots to show. Here is the shape of it instead.</p>
+      </header>
+
+      <ol class="work">
+        <li class="work__item reveal" data-reveal>
+          <span class="work__idx">01</span>
+          <h3 class="work__title">Front end, at scale</h3>
+          <p class="work__desc">Angular and AngularDart features in a web app my team owns and other teams build on. A large codebase with real users and no appetite for a rewrite, so the craft is landing change incrementally &mdash; behind flags, in pieces, without breaking what already works.</p>
+          <ul class="tags"><li>Angular</li><li>AngularDart</li><li>TypeScript</li></ul>
+        </li>
+
+        <li class="work__item reveal" data-reveal data-delay="1">
+          <span class="work__idx">02</span>
+          <h3 class="work__title">A database from scratch</h3>
+          <p class="work__desc">Designed and built a large-scale datastore from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
+          <ul class="tags"><li>Schema design</li><li>SQL</li><li>Capacity</li></ul>
+        </li>
+
+        <li class="work__item reveal" data-reveal data-delay="2">
+          <span class="work__idx">03</span>
+          <h3 class="work__title">Monolith to normalised</h3>
+          <p class="work__desc">Split one overloaded table into a normalised schema in production, with no downtime and no broken consumers. A migration like this is barely about the SQL &mdash; it is sequencing, backfills, and dual writes held long enough that the old path is safe to delete.</p>
+          <ul class="tags"><li>Zero downtime</li><li>Backfill</li><li>Dual writes</li></ul>
+        </li>
+
+        <li class="work__item reveal" data-reveal>
+          <span class="work__idx">04</span>
+          <h3 class="work__title">APIs over RPC</h3>
+          <p class="work__desc">Service contracts that stay stable while everything behind them moves. Versioning, backward compatibility and error semantics picked so the caller has an easy time &mdash; because the caller is another team, and their outage is my outage.</p>
+          <ul class="tags"><li>RPC</li><li>Protocol buffers</li><li>Versioning</li></ul>
+        </li>
+
+        <li class="work__item reveal" data-reveal data-delay="1">
+          <span class="work__idx">05</span>
+          <h3 class="work__title">Trained, hosted, served</h3>
+          <p class="work__desc">A workflow that trains a model, hosts it, and answers live inference behind an endpoint. The interesting parts are the unglamorous ones: reproducible training runs, safe rollout, a latency budget, and a sane answer for when the model is wrong.</p>
+          <ul class="tags"><li>Python</li><li>Model serving</li><li>Live inference</li></ul>
+        </li>
+
+        <li class="work__item work__item--pager reveal" data-reveal data-delay="2">
+          <span class="work__eyebrow">Also</span>
+          <h3 class="work__title">On the pager</h3>
+          <p class="work__desc">I am in the on-call rotation for the system my team maintains. Being the one who gets paged changes how you build: you write the runbook, you add the log line, you make failure legible at 3am. It is the fastest way I know to learn a system all the way down.</p>
+          <ul class="tags"><li>On-call</li><li>Debugging</li><li>Runbooks</li></ul>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── Projects — independent work, all of it public ────────────────── -->
+  <section class="section" id="projects">
+    <div class="shell">
+      <header class="secHead reveal" data-reveal>
+        <p class="secHead__idx">02 — Independent work</p>
+        <h2 class="secHead__title">Built in the <em>open</em></h2>
+        <p class="secHead__note" data-words>Independent projects from before Google: a full-stack app, a mobile app and a game. Older than the code I write today, and all of it still readable.</p>
       </header>
 
       <div class="gallery" id="gallery">
         <div class="gallery__stage">
           <div class="gallery__bar">
             <span class="gallery__label"><i data-hint="scroll">Scroll to browse</i><i data-hint="swipe">Swipe to browse</i></span>
-            <span class="gallery__count" aria-hidden="true"><i id="railNow">01</i> / 05</span>
+            <span class="gallery__count" aria-hidden="true"><i id="railNow">01</i> / 03</span>
           </div>
           <ol class="gallery__rail" id="rail">
         <li class="card" style="--accent: var(--ember)">
-          <a class="card__link" href="https://food-stories.herokuapp.com/" target="_blank" rel="noopener" data-tilt data-cursor="view">
+          <a class="card__link" href="https://github.com/locphan2207/Food-Stories" target="_blank" rel="noopener" data-tilt data-cursor="view">
             <div class="card__shot">
               <div class="frame">
                 <div class="frame__bar" aria-hidden="true"><i></i><i></i><i></i><span>food-stories</span></div>
@@ -284,7 +352,7 @@
               <h3 class="card__title">Food&nbsp;Stories</h3>
               <p class="card__desc">A full-stack CRUD app for cooking recipes — Rails on the back, React and Redux on the front.</p>
               <ul class="tags"><li>Ruby on Rails</li><li>React</li><li>Redux</li><li>PostgreSQL</li></ul>
-              <span class="card__cta">Live site
+              <span class="card__cta">Source
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
               </span>
             </div>
@@ -313,30 +381,6 @@
             </div>
           </a>
         </li>
-        <li class="card" style="--accent: var(--mint)">
-          <a class="card__link" href="https://github.com/locphan2207/Reactathon-Project" target="_blank" rel="noopener" data-tilt data-cursor="view">
-            <div class="card__shot">
-              <div class="frame">
-                <div class="frame__bar" aria-hidden="true"><i></i><i></i><i></i><span>vidama</span></div>
-                <picture>
-                  <source srcset="assets/img/work-vidama.webp" type="image/webp">
-                  <img src="assets/img/work-vidama.jpg" width="1400" height="875" loading="eager" fetchpriority="low" decoding="async"
-                       alt="The VidAMA meeting screen: a large video feed, a speaker queue on the left and a live chat panel on the right.">
-                </picture>
-              </div>
-              <span class="card__glow" aria-hidden="true"></span>
-            </div>
-            <div class="card__body">
-              <span class="card__idx">03<i></i></span>
-              <h3 class="card__title">VidAMA</h3>
-              <p class="card__desc">Online meetings and conferences with a live speaker queue. Built in two days at a hackathon.</p>
-              <ul class="tags"><li>React</li><li>Redux</li><li>Hasura</li><li>TokBox API</li></ul>
-              <span class="card__cta">Source
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-              </span>
-            </div>
-          </a>
-        </li>
         <li class="card" style="--accent: var(--amber)">
           <a class="card__link" href="https://locphan2207.github.io/Data-block/" target="_blank" rel="noopener" data-tilt data-cursor="view">
             <div class="card__shot">
@@ -351,35 +395,11 @@
               <span class="card__glow" aria-hidden="true"></span>
             </div>
             <div class="card__body">
-              <span class="card__idx">04<i></i></span>
+              <span class="card__idx">03<i></i></span>
               <h3 class="card__title">Data&nbsp;Block</h3>
               <p class="card__desc">A game you play with a dataset. Collision, gravity and force are hand-rolled — vanilla JavaScript and D3, no engine.</p>
               <ul class="tags"><li>JavaScript</li><li>D3.js</li><li>Game physics</li></ul>
               <span class="card__cta">Play it
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-              </span>
-            </div>
-          </a>
-        </li>
-        <li class="card" style="--accent: var(--ember)">
-          <a class="card__link" href="https://github.com/locphan2207/recruited" target="_blank" rel="noopener" data-tilt data-cursor="view">
-            <div class="card__shot">
-              <div class="frame">
-                <div class="frame__bar" aria-hidden="true"><i></i><i></i><i></i><span>recruited</span></div>
-                <picture>
-                  <source srcset="assets/img/work-recruited.webp" type="image/webp">
-                  <img src="assets/img/work-recruited.jpg" width="1101" height="688" loading="eager" fetchpriority="low" decoding="async"
-                       alt="The Recruited dashboard, showing a parsed résumé with a percentage match score and applicant pipeline stats.">
-                </picture>
-              </div>
-              <span class="card__glow" aria-hidden="true"></span>
-            </div>
-            <div class="card__body">
-              <span class="card__idx">05<i></i></span>
-              <h3 class="card__title">Recruited</h3>
-              <p class="card__desc">A two-sided job board for recruiters and job seekers, scoring how well a résumé matches a role. MERN, end to end.</p>
-              <ul class="tags"><li>MongoDB</li><li>Express</li><li>React</li><li>Node.js</li></ul>
-              <span class="card__cta">Source
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
               </span>
             </div>
@@ -406,51 +426,57 @@
   <section class="section section--stack" data-skew id="stack">
     <div class="shell">
       <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">02 — Toolkit</p>
+        <p class="secHead__idx">03 — Toolkit</p>
         <h2 class="secHead__title">The stack I <em>reach for</em></h2>
-        <p class="secHead__note" data-words>Web development moves fast, so keeping current is part of the job. Here is what I have sharpened so far.</p>
+        <p class="secHead__note" data-words>This list looks nothing like the one on the last version of this page. Tools turn over; the last group is the part that transfers.</p>
       </header>
 
       <div class="stack">
         <section class="stack__group reveal" data-reveal>
-          <h3 class="stack__label"><i>A</i> Languages &amp; core</h3>
+          <h3 class="stack__label"><i>A</i> Front end</h3>
           <ul class="chips">
+            <li data-cursor="link"><span>TypeScript</span></li>
+            <li data-cursor="link"><span>Angular</span></li>
+            <li data-cursor="link"><span>AngularDart</span></li>
+            <li data-cursor="link"><span>React</span></li>
+            <li data-cursor="link"><span>React Native</span></li>
             <li data-cursor="link"><span>JavaScript</span></li>
-            <li data-cursor="link"><span>Ruby</span></li>
-            <li data-cursor="link"><span>HTML5</span></li>
-            <li data-cursor="link"><span>CSS3</span></li>
+            <li data-cursor="link"><span>CSS</span></li>
           </ul>
         </section>
 
         <section class="stack__group reveal" data-reveal data-delay="1">
-          <h3 class="stack__label"><i>B</i> Front end</h3>
+          <h3 class="stack__label"><i>B</i> Back end &amp; data</h3>
           <ul class="chips">
-            <li data-cursor="link"><span>React</span></li>
-            <li data-cursor="link"><span>Redux</span></li>
-            <li data-cursor="link"><span>React Native</span></li>
-            <li data-cursor="link"><span>D3.js</span></li>
-            <li data-cursor="link"><span>jQuery</span></li>
+            <li data-cursor="link"><span>RPC APIs</span></li>
+            <li data-cursor="link"><span>Protocol buffers</span></li>
+            <li data-cursor="link"><span>SQL</span></li>
+            <li data-cursor="link"><span>Schema design</span></li>
+            <li data-cursor="link"><span>Node.js</span></li>
+            <li data-cursor="link"><span>Python</span></li>
+            <li data-cursor="link"><span>Django</span></li>
+            <li data-cursor="link"><span>Redis</span></li>
           </ul>
         </section>
 
         <section class="stack__group reveal" data-reveal data-delay="2">
-          <h3 class="stack__label"><i>C</i> Back end</h3>
+          <h3 class="stack__label"><i>C</i> ML &amp; pipelines</h3>
           <ul class="chips">
-            <li data-cursor="link"><span>Node.js</span></li>
-            <li data-cursor="link"><span>Express</span></li>
-            <li data-cursor="link"><span>Ruby on Rails</span></li>
-            <li data-cursor="link"><span>MongoDB</span></li>
-            <li data-cursor="link"><span>PostgreSQL</span></li>
+            <li data-cursor="link"><span>Model training</span></li>
+            <li data-cursor="link"><span>Model hosting</span></li>
+            <li data-cursor="link"><span>Live inference</span></li>
+            <li data-cursor="link"><span>Batch pipelines</span></li>
           </ul>
         </section>
 
         <section class="stack__group reveal" data-reveal data-delay="3">
-          <h3 class="stack__label"><i>D</i> Platform</h3>
+          <h3 class="stack__label"><i>D</i> How I work</h3>
           <ul class="chips">
-            <li data-cursor="link"><span>AWS</span></li>
-            <li data-cursor="link"><span>Heroku</span></li>
-            <li data-cursor="link"><span>Firebase</span></li>
-            <li data-cursor="link"><span>Git &amp; GitHub</span></li>
+            <li data-cursor="link"><span>Design docs</span></li>
+            <li data-cursor="link"><span>Code review</span></li>
+            <li data-cursor="link"><span>Incremental migration</span></li>
+            <li data-cursor="link"><span>On-call</span></li>
+            <li data-cursor="link"><span>AI-assisted development</span></li>
           </ul>
         </section>
       </div>
@@ -461,7 +487,7 @@
   <section class="section" data-skew id="about">
     <div class="shell">
       <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">03 — About</p>
+        <p class="secHead__idx">04 — About</p>
         <h2 class="secHead__title">Hardware major, <em>software</em> heart</h2>
       </header>
 
@@ -478,15 +504,27 @@
         </div>
 
         <div class="about__text reveal" data-reveal data-delay="1">
-          <p class="about__lead" data-words>I am a software engineer who loves making functional, beautiful and interactive websites.</p>
+          <p class="about__lead" data-words>I am a software engineer at Google. Before that I helped build a sportsbook from nothing, and before that I was studying hardware.</p>
           <p>I graduated as a Computer Engineering major and learned to design embedded hardware systems — then kept picking up languages until software won. That background still shows up in how I work: understand the machine underneath, then build on it.</p>
-          <p>I am a passionate learner with good problem-solving skills, I work well on a team, and I get up to speed quickly in a new environment.</p>
+          <p>What has changed since the last version of this page is scale, and consequence. Working on something other teams depend on taught me to write the design doc before the code, to land a migration in stages instead of one heroic commit, to review carefully because somebody will be reading this in two years, and to carry the pager for what I ship. Most of the hard parts turned out not to be technical.</p>
+          <p>I also lean on AI heavily now — first drafts, unfamiliar APIs, the boilerplate, a review pass before I send code out. It has made me quick at the mechanical parts, which mostly buys me more time on the parts that are actually hard: deciding what to build, and what shape it should be.</p>
+
+          <ol class="roles">
+            <li>
+              <h3 class="roles__co">Google <span class="roles__role">Software Engineer</span></h3>
+              <p class="roles__desc">Full stack on a system my team owns end to end: the front end, the RPC services behind it, the schema underneath, and the ML serving on top. On call for it too.</p>
+            </li>
+            <li>
+              <h3 class="roles__co">Smarkets <span class="roles__role">Software Engineer</span></h3>
+              <p class="roles__desc">A betting exchange, where I helped take the sportsbook app from the first commit to the App Store and on to nine thousand users. React Native and Redux Saga on the front, driving the API and websocket flows behind live odds, with a lot of attention paid to re-render cost and selector granularity. On the back, a Flask geofencing service checking users against both GPS and IP, and Django behind a Redis cache for profiles, posts and comments.</p>
+            </li>
+          </ol>
 
           <dl class="facts">
-            <div><dt>Focus</dt><dd>Full-stack web</dd></div>
+            <div><dt>Shipped</dt><dd>iOS, Android and web</dd></div>
+            <div><dt>Range</dt><dd>Front end &rarr; RPC &rarr; schema &rarr; ML</dd></div>
             <div><dt>Studied</dt><dd>Computer Engineering</dd></div>
-            <div><dt>Strengths</dt><dd>Problem solving, teamwork</dd></div>
-            <div><dt>Ships with</dt><dd>React &middot; Rails &middot; Node</dd></div>
+            <div><dt>Production</dt><dd>On the on-call rotation</dd></div>
           </dl>
         </div>
       </div>
@@ -497,12 +535,13 @@
   <section class="section section--contact" data-skew id="contact">
     <div class="shell">
       <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">04 — Contact</p>
+        <p class="secHead__idx">05 — Contact</p>
+        <p class="secHead__note" data-words>I am not looking to move, but I like hearing about interesting problems, and I answer every email.</p>
       </header>
 
       <h2 class="cta reveal" data-reveal>
-        <span class="line"><span class="word" data-fill>Let&rsquo;s build</span></span>
-        <span class="line"><span class="word" data-fill>something</span> <em>good</em>.</span>
+        <span class="line"><span class="word" data-fill>Let&rsquo;s talk about</span></span>
+        <span class="line"><span class="word" data-fill>something</span> <em>hard</em>.</span>
       </h2>
 
       <div class="contact">
@@ -517,10 +556,6 @@
       </div>
 
       <ul class="contact__list reveal" data-reveal data-delay="2">
-        <li>
-          <span class="contact__k">Phone</span>
-          <a href="tel:+17148374471" data-cursor="link">(714) 837-4471</a>
-        </li>
         <li>
           <span class="contact__k">Résumé</span>
           <a href="https://drive.google.com/file/d/1vA-fCgY09LYIAm3Ezd5XPqxcxQeqTQOS/view?usp=sharing" target="_blank" rel="noopener" data-cursor="link">
@@ -548,7 +583,7 @@
 <footer class="foot">
   <div class="shell foot__inner">
     <p class="foot__copy">&copy; <span id="year">2026</span> Loc Phan</p>
-    <p class="foot__note">Hand-built with HTML, CSS &amp; vanilla JavaScript.</p>
+    <p class="foot__note">Hand-built with HTML, CSS &amp; vanilla JavaScript. Views my own, not my employer&rsquo;s.</p>
     <a class="foot__top" href="#top" data-cursor="link">
       Back to top
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>

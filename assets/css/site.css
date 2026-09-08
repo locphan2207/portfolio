@@ -213,7 +213,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .mono, .secHead__idx, .nav__idx, .tags li, .status,
 .loader__count, .scrollcue__text, .contact__k, .stack__label, .foot__note,
-.rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow {
+.rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow,
+.roles__role {
   font-family: var(--label);
   font-weight: 500;
   letter-spacing: var(--label-track);
@@ -849,6 +850,7 @@ html.calm .ico--still  { opacity: 1; transform: none; }
 .menu__links a:nth-child(2) { transition-delay: .12s; }
 .menu__links a:nth-child(3) { transition-delay: .18s; }
 .menu__links a:nth-child(4) { transition-delay: .24s; }
+.menu__links a:nth-child(5) { transition-delay: .3s; }
 .menu__links a:active { color: var(--ember); }
 .menu__links i {
   font: 400 var(--t-xs)/1 var(--label);
@@ -1123,6 +1125,62 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
    breakpoint and under reduced motion this degrades to an ordinary
    swipeable scroller — same markup, no pinning. */
 
+/* Six tiles, so five capabilities plus the pager land as two clean rows at
+   three across and never leave a hole. No links, no shots — the copy is the
+   whole card, which is the point: this is the work that cannot be shown. */
+.work {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: clamp(.9rem, 1.5vw, 1.35rem);
+}
+.work__item {
+  display: grid;
+  align-content: start;
+  gap: .6rem;
+  padding: clamp(1.35rem, 2.2vw, 1.85rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--card);
+  transition: border-color .4s var(--ease), background .4s var(--ease),
+              transform .5s var(--ease);
+}
+.work__item:hover {
+  border-color: var(--line-2);
+  background: var(--card-2);
+  transform: translateY(-3px);
+}
+.work__idx,
+.work__eyebrow {
+  font-family: var(--label);
+  font-size: var(--t-xs);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.work__idx { color: var(--ember); }
+.work__title {
+  font-family: var(--display);
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+  font-size: var(--t-lg);
+  line-height: 1.15;
+}
+.work__desc {
+  font-size: var(--t-sm);
+  line-height: 1.65;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+.work__item .tags { margin-top: .35rem; }
+.work__item:hover .tags li { color: var(--text-2); border-color: var(--line-2); }
+
+/* The pager tile is the strongest claim on the page, so it gets the accent. */
+.work__item--pager {
+  background: var(--card-2);
+  border-color: color-mix(in srgb, var(--ember) 32%, var(--line));
+}
+.work__item--pager .work__eyebrow { color: var(--ember); }
+
 .gallery { position: relative; }
 .gallery__stage {
   position: sticky;
@@ -1363,6 +1421,27 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 
 /* Rail falls back to a plain swipeable scroller where pinning would fight
    the browser's own scrolling. */
+/* Set by the rail measurement when the cards already fit across. An ordinary
+   row then, with no browse hint or progress meter for a run that is entirely
+   on screen. */
+.gallery.is-static .gallery__stage {
+  position: static;
+  height: auto;
+  display: block;
+  overflow: visible;
+  padding-block: 0;
+}
+.gallery.is-static .gallery__rail {
+  /* The sticky run's padding exists to line the first card up with the shell
+     while the rail is clipped. Nothing clips it here, so drop it and wrap. */
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding-inline: 0;
+  transform: none !important;
+}
+.gallery.is-static .gallery__bar,
+.gallery.is-static .gallery__meter { display: none; }
+
 @media (max-width: 900px) {
   .gallery__stage { position: static; height: auto; display: block; overflow: visible; }
   .gallery__rail {
@@ -1509,9 +1588,42 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 .about__text p { color: var(--text-2); text-wrap: pretty; }
 
+/* Employment history, such as it is: two entries, so a bordered list rather
+   than a dated timeline. Company leads, role is the quiet label beside it. */
+.roles {
+  display: grid;
+  margin-top: .45rem;
+  border-top: 1px solid var(--line);
+}
+.roles > li {
+  padding-block: 1.15rem;
+  border-bottom: 1px solid var(--line);
+}
+.roles__co {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .3rem .7rem;
+  margin-bottom: .5rem;
+  font-family: var(--display);
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+  font-size: var(--t-lg);
+  line-height: 1.1;
+  color: var(--text);
+}
+.roles__role { color: var(--text-3); }
+.about__text .roles__desc {
+  font-size: var(--t-sm);
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+/* Two columns, not auto-fit: four facts then always fill the grid exactly,
+   so no empty cell is left showing the hairline background as a solid block. */
 .facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   margin-top: 1.6rem;
   background: var(--line);
