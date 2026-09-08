@@ -849,6 +849,7 @@ html.calm .ico--still  { opacity: 1; transform: none; }
 .menu__links a:nth-child(2) { transition-delay: .12s; }
 .menu__links a:nth-child(3) { transition-delay: .18s; }
 .menu__links a:nth-child(4) { transition-delay: .24s; }
+.menu__links a:nth-child(5) { transition-delay: .3s; }
 .menu__links a:active { color: var(--ember); }
 .menu__links i {
   font: 400 var(--t-xs)/1 var(--label);
@@ -1123,6 +1124,62 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
    breakpoint and under reduced motion this degrades to an ordinary
    swipeable scroller — same markup, no pinning. */
 
+/* Six tiles, so five capabilities plus the pager land as two clean rows at
+   three across and never leave a hole. No links, no shots — the copy is the
+   whole card, which is the point: this is the work that cannot be shown. */
+.work {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: clamp(.9rem, 1.5vw, 1.35rem);
+}
+.work__item {
+  display: grid;
+  align-content: start;
+  gap: .6rem;
+  padding: clamp(1.35rem, 2.2vw, 1.85rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--card);
+  transition: border-color .4s var(--ease), background .4s var(--ease),
+              transform .5s var(--ease);
+}
+.work__item:hover {
+  border-color: var(--line-2);
+  background: var(--card-2);
+  transform: translateY(-3px);
+}
+.work__idx,
+.work__eyebrow {
+  font-family: var(--label);
+  font-size: var(--t-xs);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.work__idx { color: var(--ember); }
+.work__title {
+  font-family: var(--display);
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+  font-size: var(--t-lg);
+  line-height: 1.15;
+}
+.work__desc {
+  font-size: var(--t-sm);
+  line-height: 1.65;
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+.work__item .tags { margin-top: .35rem; }
+.work__item:hover .tags li { color: var(--text-2); border-color: var(--line-2); }
+
+/* The pager tile is the strongest claim on the page, so it gets the accent. */
+.work__item--pager {
+  background: var(--card-2);
+  border-color: color-mix(in srgb, var(--ember) 32%, var(--line));
+}
+.work__item--pager .work__eyebrow { color: var(--ember); }
+
 .gallery { position: relative; }
 .gallery__stage {
   position: sticky;
@@ -1342,6 +1399,20 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 .card__link:hover .card__cta svg { transform: translate(3px, -3px); }
 
 /* Closing card */
+/* A project whose source has since gone private or away. The card keeps its
+   place in the history, but drops every affordance that promises a click. */
+.card__link--quiet { cursor: default; }
+.card__link--quiet:hover {
+  transform: none;
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--ink-2) 76%, transparent);
+}
+.card__link--quiet:hover .frame { border-color: var(--line); }
+.card__link--quiet:hover .frame img { transform: none; }
+.card__link--quiet:hover .card__glow { opacity: 0; }
+.card__link--quiet:hover .card__idx i { transform: scaleX(0); }
+.card__cta--quiet { color: var(--text-3); }
+
 .card__link--end {
   justify-content: center;
   gap: .8rem;
@@ -1509,9 +1580,11 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 .about__text p { color: var(--text-2); text-wrap: pretty; }
 
+/* Two columns, not auto-fit: four facts then always fill the grid exactly,
+   so no empty cell is left showing the hairline background as a solid block. */
 .facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   margin-top: 1.6rem;
   background: var(--line);
