@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   Tan Loc Phan — portfolio
+   Loc Phan — portfolio
    1. Tokens        4. Layout        7. Work        10. Contact
    2. Reset         5. Chrome        8. Stack       11. Footer
    3. Type          6. Hero          9. About       12. Motion & media
@@ -183,6 +183,7 @@
 
 /* ATELIER — gallery print. Serif display over warm bone paper. */
 [data-skin="atelier"] {
+  --t-3xl: clamp(2.9rem, 24vw, 19rem);
   --display: "Fraunces", ui-serif, Georgia, serif;
   --body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
   --label: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -233,6 +234,7 @@
 
 /* KLEIN — achromatic paper, one electric blue, heavy grotesque. */
 [data-skin="klein"] {
+  --t-3xl: clamp(2.9rem, 23vw, 18.3rem);
   --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --body: "Inter", ui-sans-serif, system-ui, sans-serif;
   --label: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -287,6 +289,7 @@
 
 /* PRESS — the hybrid: Atelier's serif on Klein's cool paper, blue and ochre. */
 [data-skin="press"] {
+  --t-3xl: clamp(2.9rem, 24vw, 19.3rem);
   --display: "Fraunces", ui-serif, Georgia, serif;
   --body: "Inter", ui-sans-serif, system-ui, sans-serif;
   --label: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -332,6 +335,70 @@
   --ember: #6d7dff; --amber: #d9a63c; --iris: #8a95ff; --mint: #35d9a4;
   --grain: .05; --aurora: .48; --grid: .05; --vignette: .86; --shot-bright: .9;
   --ink-rgb: 109 125 255;
+}
+
+
+/* ── 1c. Accents ────────────────────────────────────────────────────────
+   The accent is its own axis: set data-accent on <html> and it overrides
+   whichever skin is on. These blocks sit after the skins so they win, and
+   every value is checked against WCAG AA on both grounds. --ink-rgb is the
+   pigment the ink field uses, so the canvas follows the accent too. */
+
+/* Ink — Prussian navy. The print classic: credible, calm, unfussy. */
+[data-accent="ink"][data-theme="light"] {
+  --ember: #1e3a6e; --amber: #2c6a8f; --iris: #46357e; --mint: #1f6b47;
+  --ink-rgb: 30 58 110;
+}
+[data-accent="ink"][data-theme="dark"] {
+  --ember: #86aae8; --amber: #6fb8d6; --iris: #a08fdb; --mint: #4fd094;
+  --ink-rgb: 134 170 232;
+}
+
+/* Forest — deep green with an olive second and a gold signal. */
+[data-accent="forest"][data-theme="light"] {
+  --ember: #20563f; --amber: #55631c; --iris: #1d5461; --mint: #876210;
+  --ink-rgb: 32 86 63;
+}
+[data-accent="forest"][data-theme="dark"] {
+  --ember: #6fc6a0; --amber: #b3c466; --iris: #6fc0d0; --mint: #e0b45a;
+  --ink-rgb: 111 198 160;
+}
+
+/* Petrol — deep teal. Cool and technical without reading as tech-blue. */
+[data-accent="petrol"][data-theme="light"] {
+  --ember: #0e5560; --amber: #1e4c7a; --iris: #16624a; --mint: #6a6317;
+  --ink-rgb: 14 85 96;
+}
+[data-accent="petrol"][data-theme="dark"] {
+  --ember: #52c6d8; --amber: #6fa0e0; --iris: #4fcfa6; --mint: #c9c066;
+  --ink-rgb: 82 198 216;
+}
+
+/* Plum — aubergine. The most distinctive of the five. */
+[data-accent="plum"][data-theme="light"] {
+  --ember: #5e2450; --amber: #3e3a78; --iris: #7a2c46; --mint: #1f6b47;
+  --ink-rgb: 94 36 80;
+}
+[data-accent="plum"][data-theme="dark"] {
+  --ember: #c88dbb; --amber: #9a93e0; --iris: #d089a0; --mint: #4fd094;
+  --ink-rgb: 200 141 187;
+}
+
+/* Wine — burgundy. Keeps the warmth of the oxblood, drops the orange. */
+[data-accent="wine"][data-theme="light"] {
+  --ember: #7b1e3a; --amber: #8a2e5e; --iris: #45305f; --mint: #1f6b47;
+  --ink-rgb: 123 30 58;
+}
+[data-accent="wine"][data-theme="dark"] {
+  --ember: #dd7c93; --amber: #d97cb4; --iris: #a292d6; --mint: #4fd094;
+  --ink-rgb: 221 124 147;
+}
+
+/* Fraunces gets proportionally wider as it gets smaller, so the one vw term
+   that fills a desktop measure overflows a phone. Ease it off below 640px. */
+@media (max-width: 640px) {
+  [data-skin="atelier"] { --t-3xl: clamp(2.9rem, 20.4vw, 19rem); }
+  [data-skin="press"]   { --t-3xl: clamp(2.9rem, 20.5vw, 19.3rem); }
 }
 
 /* ── 2. Reset ───────────────────────────────────────────────────────── */

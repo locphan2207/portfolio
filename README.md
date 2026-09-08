@@ -1,6 +1,6 @@
 # loc-phan.com
 
-Personal site and portfolio for **Tan Loc Phan** — [loc-phan.com](https://www.loc-phan.com/)
+Personal site and portfolio for **Loc Phan** — [loc-phan.com](https://www.loc-phan.com/)
 
 A single static page. No build step, no framework, no runtime dependencies:
 hand-written HTML, one stylesheet, one script, and four self-hosted webfonts.
@@ -28,6 +28,11 @@ python3 -m http.server 8000   # then open http://localhost:8000
   `prefers-color-scheme` on first visit and remembers an explicit choice in
   `localStorage`. An inline script in `<head>` sets it before first paint so the
   wrong palette never flashes.
+- **Accents** — the accent hue is its own axis, set with `data-accent` on
+  `<html>`: `ink` (Prussian navy), `forest`, `petrol` (deep teal), `plum`
+  (aubergine) or `wine` (burgundy). It overrides whichever skin is on, and
+  drives the ink field's pigment through `--ink-rgb`. All 30 skin x accent x
+  theme combinations are checked against WCAG AA.
 - **Skins** — the palette and the typefaces are one swappable unit. `site.css`
   ships three: `atelier` (bone paper, Fraunces, oxblood), `klein` (achromatic
   paper, Bricolage Grotesque, electric blue) and `press` (the hybrid — Fraunces

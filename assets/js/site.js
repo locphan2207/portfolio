@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   Tan Loc Phan — interaction layer. No dependencies.
+   Loc Phan — interaction layer. No dependencies.
    Everything pointer-driven shares one rAF loop; everything scroll-driven
    goes through IntersectionObserver. Nothing runs under reduced motion.
    ═══════════════════════════════════════════════════════════════════ */
