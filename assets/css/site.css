@@ -1399,20 +1399,6 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 .card__link:hover .card__cta svg { transform: translate(3px, -3px); }
 
 /* Closing card */
-/* A project whose source has since gone private or away. The card keeps its
-   place in the history, but drops every affordance that promises a click. */
-.card__link--quiet { cursor: default; }
-.card__link--quiet:hover {
-  transform: none;
-  border-color: var(--line);
-  background: color-mix(in srgb, var(--ink-2) 76%, transparent);
-}
-.card__link--quiet:hover .frame { border-color: var(--line); }
-.card__link--quiet:hover .frame img { transform: none; }
-.card__link--quiet:hover .card__glow { opacity: 0; }
-.card__link--quiet:hover .card__idx i { transform: scaleX(0); }
-.card__cta--quiet { color: var(--text-3); }
-
 .card__link--end {
   justify-content: center;
   gap: .8rem;
@@ -1434,6 +1420,27 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 
 /* Rail falls back to a plain swipeable scroller where pinning would fight
    the browser's own scrolling. */
+/* Set by the rail measurement when the cards already fit across. An ordinary
+   row then, with no browse hint or progress meter for a run that is entirely
+   on screen. */
+.gallery.is-static .gallery__stage {
+  position: static;
+  height: auto;
+  display: block;
+  overflow: visible;
+  padding-block: 0;
+}
+.gallery.is-static .gallery__rail {
+  /* The sticky run's padding exists to line the first card up with the shell
+     while the rail is clipped. Nothing clips it here, so drop it and wrap. */
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding-inline: 0;
+  transform: none !important;
+}
+.gallery.is-static .gallery__bar,
+.gallery.is-static .gallery__meter { display: none; }
+
 @media (max-width: 900px) {
   .gallery__stage { position: static; height: auto; display: block; overflow: visible; }
   .gallery__rail {

@@ -449,12 +449,25 @@
     if (!gallery || !rail) return;
     if (!wide.matches || calm) {
       rail.style.removeProperty('transform');
+      gallery.classList.remove('is-static');
       gallery.style.height = '';
       rail.style.transform = '';
       travel = 0;
       return;
     }
     travel = Math.max(0, rail.scrollWidth - innerWidth);
+
+    // The rail can simply fit: few enough cards, or a wide enough screen. There
+    // is nothing to travel then, so hand the section back its natural height
+    // rather than park a motionless stage in a viewport of reserved space.
+    if (!travel) {
+      gallery.classList.add('is-static');
+      gallery.style.height = '';
+      rail.style.transform = '';
+      return;
+    }
+
+    gallery.classList.remove('is-static');
     // A little slack past the end so the last card is readable before release.
     gallery.style.height = `${innerHeight + travel + innerHeight * 0.15}px`;
   }
