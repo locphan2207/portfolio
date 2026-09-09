@@ -1545,7 +1545,10 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   position: relative;
   border-radius: var(--r-lg);
   overflow: hidden;
-  background: linear-gradient(155deg, var(--ember), var(--iris));
+  /* Ramped, not flat: the top of the frame is all empty studio backdrop, so
+     the first stop sits on the surface colour and the accent only reaches
+     full strength across the subject. */
+  background: linear-gradient(176deg, var(--ink-3), var(--ember) 72%, var(--iris));
   box-shadow: var(--shadow);
   isolation: isolate;
 }
