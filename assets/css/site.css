@@ -214,7 +214,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .mono, .secHead__idx, .nav__idx, .tags li, .status,
 .loader__count, .scrollcue__text, .contact__k, .stack__label, .foot__note,
 .rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow,
-.roles__role, .workGroup__meta, .workGroup__co {
+.workGroup__meta, .workGroup__co {
   font-family: var(--label);
   font-weight: 500;
   letter-spacing: var(--label-track);
@@ -226,7 +226,7 @@ em { font-family: var(--accentface); font-style: var(--accent-style); font-weigh
 
 /* Serif italics sit optically small next to Inter — nudge them up. */
 h1 em, h2 em, h3 em { font-size: var(--accent-size); letter-spacing: 0; }
-.hero__lead em, .about__lead em { font-size: var(--accent-size); letter-spacing: 0; }
+.hero__lead em { font-size: var(--accent-size); letter-spacing: 0; }
 
 .ulink {
   position: relative;
@@ -1130,7 +1130,11 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
    whole card, which is the point: this is the work that cannot be shown. */
 /* Each job gets a quiet label, so the numbering restarts per employer
    without the company name reading as a headline. */
-.workGroup + .workGroup { margin-top: clamp(2.25rem, 4.5vw, 3.5rem); }
+/* The break between two jobs has to beat the gap between two cards inside
+   one job by a clear margin, or the label reads as floating between the two
+   blocks instead of heading the one under it. Generous above, tight below —
+   the label binds downward, to the cards it numbers. */
+.workGroup + .workGroup { margin-top: clamp(3.25rem, 6vw, 5.25rem); }
 .workGroup__label {
   display: flex;
   align-items: baseline;
@@ -1549,13 +1553,6 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 
 /* ── 9. About ───────────────────────────────────────────────────────── */
 
-.about {
-  display: grid;
-  grid-template-columns: minmax(0, .78fr) minmax(0, 1fr);
-  gap: clamp(2rem, 6vw, 5.5rem);
-  align-items: start;
-}
-
 .portrait {
   position: relative;
   border-radius: var(--r-lg);
@@ -1596,74 +1593,6 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   mix-blend-mode: difference;
 }
 
-.about__text { display: grid; gap: 1.15rem; max-width: 58ch; }
-.about__lead {
-  font-size: var(--t-lg);
-  line-height: 1.5;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  text-wrap: pretty;
-}
-.about__text p { color: var(--text-2); text-wrap: pretty; }
-
-/* Employment history, such as it is: two entries, so a bordered list rather
-   than a dated timeline. Company leads, role is the quiet label beside it. */
-.roles {
-  display: grid;
-  margin-top: .45rem;
-  border-top: 1px solid var(--line);
-}
-.roles > li {
-  padding-block: 1.15rem;
-  border-bottom: 1px solid var(--line);
-}
-.roles__co {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: .3rem .7rem;
-  margin-bottom: .5rem;
-  font-family: var(--display);
-  font-weight: var(--head-weight);
-  letter-spacing: var(--head-track);
-  font-size: var(--t-lg);
-  line-height: 1.1;
-  color: var(--text);
-}
-.roles__role { color: var(--text-3); }
-.about__text .roles__desc {
-  font-size: var(--t-sm);
-  line-height: 1.65;
-  color: var(--text-2);
-}
-
-/* Two columns, not auto-fit: four facts then always fill the grid exactly,
-   so no empty cell is left showing the hairline background as a solid block. */
-.facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  margin-top: 1.6rem;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  overflow: hidden;
-}
-.facts > div {
-  padding: 1.15rem 1.25rem;
-  background: var(--ink);
-  transition: background-color .4s var(--ease);
-}
-.facts > div:hover { background: var(--ink-2); }
-.facts dt {
-  font: 400 10px/1 var(--label);
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  margin-bottom: .55rem;
-}
-.facts dd { font-size: var(--t-sm); font-weight: 500; }
-
 /* ── 10. Contact ────────────────────────────────────────────────────── */
 
 .section--contact { padding-bottom: clamp(4rem, 8vw, 7rem); }
@@ -1697,7 +1626,7 @@ html.js .cta:not(.is-in) .word { transform: translateY(120%); }
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
 }
 
 .contact__mail {
@@ -1749,6 +1678,18 @@ html.js .cta:not(.is-in) .word { transform: translateY(120%); }
   stroke-linecap: round; stroke-linejoin: round;
 }
 .copy.is-done { color: var(--mint); border-color: color-mix(in srgb, var(--mint) 45%, transparent); }
+
+/* The portrait sits here now, paired with the links as a sign-off. It is
+   sized down from the About layout: a face beside the details, not a figure
+   the section is built around. */
+.contact__end {
+  display: grid;
+  grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+  gap: clamp(1.75rem, 5vw, 3.5rem);
+  align-items: center;
+}
+.contact__end .portrait { border-radius: var(--r-md); }
+.contact__details { display: grid; align-content: center; }
 
 .contact__list {
   display: grid;
@@ -1863,18 +1804,14 @@ html.vt-theme::view-transition-new(root) {
   to   { clip-path: circle(160% at var(--tx, 50%) var(--ty, 50%)); }
 }
 
-@media (max-width: 1080px) {
-  .about { grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); }
-}
-
 @media (max-width: 900px) {
   :root { --nav-h: 66px; }
   .nav__links, .nav__cta { display: none; }
   .burger { display: block; }
   .brand__text { display: none; }
 
-  .about { grid-template-columns: 1fr; }
-  .about__figure { max-width: 340px; }
+  .contact__end { grid-template-columns: 1fr; }
+  .contact__end .portrait { max-width: 260px; }
 }
 
 @media (max-width: 860px) {
