@@ -263,8 +263,8 @@
     <div class="shell">
       <header class="secHead reveal" data-reveal>
         <p class="secHead__idx">01 — Work</p>
-        <h2 class="secHead__title">Google, and before that <em>Smarkets</em></h2>
-        <p class="secHead__note" data-words>Almost everything I build at Google is internal, so there are no screenshots. Here is what I work on, and what I built at Smarkets before it.</p>
+        <h2 class="secHead__title">What I&rsquo;ve <em>built</em></h2>
+        <p class="secHead__note" data-words>Almost everything I build at Google is internal, so there are no screenshots. Here is what I have worked on.</p>
       </header>
 
       <div class="workGroup reveal" data-reveal>
@@ -323,27 +323,34 @@
           <span class="workGroup__meta">Software Engineer &middot; 2018&ndash;2020</span>
         </h3>
         <ol class="work">
-          <li class="work__item reveal" data-reveal>
-            <span class="work__idx">01</span>
-            <h3 class="work__title">First commit to App&nbsp;Store</h3>
-            <p class="work__desc">A cross-platform sportsbook app in React Native, from the first commit to the store listing and on to nine thousand users. Redux Saga drove the API and websocket flows behind live odds, and a lot of the work was re-render cost &mdash; granular components, and selectors that only recompute what actually moved.</p>
-            <ul class="tags"><li>React Native</li><li>Redux Saga</li><li>iOS &amp; Android</li></ul>
-          </li>
+            <li class="work__item reveal" data-reveal>
+              <span class="work__idx">01</span>
+              <h3 class="work__title">First commit to App&nbsp;Store</h3>
+              <p class="work__desc">A cross-platform sportsbook app in React Native, from the early stages through to the App Store launch and on to nine thousand users. Redux Saga managed the API and websocket data flow behind every key feature, live odds included.</p>
+              <ul class="tags"><li>React Native</li><li>Redux Saga</li><li>iOS &amp; Android</li></ul>
+            </li>
 
-          <li class="work__item reveal" data-reveal data-delay="1">
-            <span class="work__idx">02</span>
-            <h3 class="work__title">Geofencing as a service</h3>
-            <p class="work__desc">A micro-service that checked where a user actually was before letting them place a bet, cross-referencing GPS against IP address. Flask on the back, React on the front. Betting licences are granted per territory, so this is the kind of check that has to be right every time.</p>
-            <ul class="tags"><li>Flask</li><li>React</li><li>Geolocation</li></ul>
-          </li>
+            <li class="work__item reveal" data-reveal data-delay="1">
+              <span class="work__idx">02</span>
+              <h3 class="work__title">Smooth on a phone</h3>
+              <p class="work__desc">Animation libraries and styling to build the mocked designs out properly, then the work to keep them cheap: granular components and selectors with efficient time complexity, which brought down both re-render counts and load times.</p>
+              <ul class="tags"><li>React Native</li><li>Animation</li><li>Performance</li></ul>
+            </li>
 
-          <li class="work__item reveal" data-reveal data-delay="2">
-            <span class="work__idx">03</span>
-            <h3 class="work__title">Social, behind a cache</h3>
-            <p class="work__desc">Profiles, posts and comments for the app&rsquo;s social side: Django models and the API endpoints on top of them, with Redis in front so the feed stayed quick as the user count climbed. Unit and automation tests, plus crash reporting, to catch what got through.</p>
-            <ul class="tags"><li>Django</li><li>Redis</li><li>REST APIs</li></ul>
-          </li>
-        </ol>
+            <li class="work__item reveal" data-reveal data-delay="2">
+              <span class="work__idx">03</span>
+              <h3 class="work__title">Geofencing as a service</h3>
+              <p class="work__desc">A micro-service that enforced where a user actually was before letting them place a bet, checking GPS against IP address. Flask on the back, React on the front.</p>
+              <ul class="tags"><li>Flask</li><li>React</li><li>Geolocation</li></ul>
+            </li>
+
+            <li class="work__item reveal" data-reveal data-delay="3">
+              <span class="work__idx">04</span>
+              <h3 class="work__title">Social, behind a cache</h3>
+              <p class="work__desc">Django models and API endpoints for the social side of the app &mdash; profiles, posts and comments &mdash; with a Redis cache in front to keep responses fast. Unit and automation tests plus crash reporting to catch what got through.</p>
+              <ul class="tags"><li>Django</li><li>Redis</li><li>Testing</li></ul>
+            </li>
+</ol>
       </div>
     </div>
   </section>
