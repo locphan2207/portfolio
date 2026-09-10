@@ -124,8 +124,7 @@
       <a href="#work"     data-nav data-cursor="link"><span class="nav__idx">01</span> Work</a>
       <a href="#stack"    data-nav data-cursor="link"><span class="nav__idx">02</span> Stack</a>
       <a href="#projects" data-nav data-cursor="link"><span class="nav__idx">03</span> Projects</a>
-      <a href="#about"    data-nav data-cursor="link"><span class="nav__idx">04</span> About</a>
-      <a href="#contact"  data-nav data-cursor="link"><span class="nav__idx">05</span> Contact</a>
+      <a href="#contact"  data-nav data-cursor="link"><span class="nav__idx">04</span> Contact</a>
       <i class="nav__pill" aria-hidden="true"></i>
     </nav>
 
@@ -156,8 +155,7 @@
     <a href="#work"     data-cursor="link"><i>01</i> Work</a>
     <a href="#stack"    data-cursor="link"><i>02</i> Stack</a>
     <a href="#projects" data-cursor="link"><i>03</i> Projects</a>
-    <a href="#about"    data-cursor="link"><i>04</i> About</a>
-    <a href="#contact"  data-cursor="link"><i>05</i> Contact</a>
+    <a href="#contact"  data-cursor="link"><i>04</i> Contact</a>
   </nav>
   <div class="menu__foot">
     <a href="mailto:locphan2207@gmail.com">locphan2207@gmail.com</a>
@@ -216,12 +214,8 @@
             <i>03</i><span>Projects</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#about" data-cursor="link">
-            <i>04</i><span>About</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-          </a>
           <a href="#contact" data-cursor="link">
-            <i>05</i><span>Contact</span>
+            <i>04</i><span>Contact</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
         </nav>
@@ -543,48 +537,11 @@
     </div>
   </section>
 
-  <!-- ── About ────────────────────────────────────────────────────────── -->
-  <section class="section" data-skew id="about">
-    <div class="shell">
-      <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">04 — About</p>
-        <h2 class="secHead__title">The whole system, <em>not a slice</em></h2>
-      </header>
-
-      <div class="about">
-        <div class="about__figure reveal" data-reveal>
-          <figure class="portrait" data-parallax>
-            <picture>
-              <source srcset="assets/img/portrait.webp" type="image/webp">
-              <img src="assets/img/portrait.jpg" width="1000" height="1250" loading="lazy" decoding="async"
-                   alt="Portrait of Loc Phan, a black and white studio headshot.">
-            </picture>
-            <figcaption>Loc Phan</figcaption>
-          </figure>
-        </div>
-
-        <div class="about__text reveal" data-reveal data-delay="1">
-          <p class="about__lead" data-words>I am a software engineer at Google, building both ends of a system my team owns outright — the interface a user touches, and the schema and model serving behind it.</p>
-          <p>On the product side I took a cross-platform app from its first commit to the App Store and on to nine thousand users, and landed Angular features piece by piece into a codebase far too large to rewrite. Underneath it I have designed schemas before a single row existed, run migrations under live traffic without downtime, and written the RPC contracts other teams build against.</p>
-          <p>Working at this size changed my habits. I write the design document before the code, stage a migration rather than trying to land it in one commit, and review code for the person who has to read it two years from now. None of that is ceremony. It is what keeps a large system from turning into one nobody can safely change.</p>
-          <p>The work I find most interesting happens earlier than any of that, while the question is still what to build and what shape it ought to take. Those decisions set the ceiling on everything after them, and no amount of careful implementation will lift it.</p>
-
-          <dl class="facts">
-            <div><dt>Shipped</dt><dd>iOS, Android and web</dd></div>
-            <div><dt>Range</dt><dd>Front end &rarr; RPC &rarr; schema &rarr; ML</dd></div>
-            <div><dt>Shipping since</dt><dd>2018</dd></div>
-            <div><dt>Production</dt><dd>On the on-call rotation</dd></div>
-          </dl>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ── Contact ──────────────────────────────────────────────────────── -->
   <section class="section section--contact" data-skew id="contact">
     <div class="shell">
       <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">05 — Contact</p>
+        <p class="secHead__idx">04 — Contact</p>
         <p class="secHead__note" data-words>I am not looking to move, but I like hearing about interesting problems. I answer every email.</p>
       </header>
 
@@ -593,31 +550,44 @@
         <span class="line"><span class="word" data-fill>something</span> <em>hard</em>.</span>
       </h2>
 
-      <div class="contact">
-        <a class="contact__mail reveal" data-reveal data-delay="1" href="mailto:locphan2207@gmail.com" data-magnetic data-cursor="link">
-          <span class="contact__mailText">locphan2207@gmail.com</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-        </a>
-        <button class="copy" id="copyMail" type="button" data-cursor="link" data-mail="locphan2207@gmail.com">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 5.5H6.5A2.5 2.5 0 0 0 4 8v8"/></svg>
-          <span>Copy</span>
-        </button>
-      </div>
+      <div class="contact__end">
+        <figure class="portrait reveal" data-reveal data-delay="1" data-parallax>
+          <picture>
+            <source srcset="assets/img/portrait.webp" type="image/webp">
+            <img src="assets/img/portrait.jpg" width="1000" height="1250" loading="lazy" decoding="async"
+                 alt="Portrait of Loc Phan, a black and white studio headshot.">
+          </picture>
+          <figcaption>Loc Phan</figcaption>
+        </figure>
 
-      <ul class="contact__list reveal" data-reveal data-delay="2">
-        <li>
-          <span class="contact__k">GitHub</span>
-          <a href="https://github.com/locphan2207" target="_blank" rel="noopener" data-cursor="link">
-            @locphan2207 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-          </a>
-        </li>
-        <li>
-          <span class="contact__k">LinkedIn</span>
-          <a href="https://www.linkedin.com/in/tanloc-phan/" target="_blank" rel="noopener" data-cursor="link">
-            tanloc-phan <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-          </a>
-        </li>
-      </ul>
+        <div class="contact__details">
+          <div class="contact">
+            <a class="contact__mail reveal" data-reveal data-delay="2" href="mailto:locphan2207@gmail.com" data-magnetic data-cursor="link">
+              <span class="contact__mailText">locphan2207@gmail.com</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+            </a>
+            <button class="copy" id="copyMail" type="button" data-cursor="link" data-mail="locphan2207@gmail.com">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 5.5H6.5A2.5 2.5 0 0 0 4 8v8"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+
+          <ul class="contact__list reveal" data-reveal data-delay="3">
+            <li>
+              <span class="contact__k">GitHub</span>
+              <a href="https://github.com/locphan2207" target="_blank" rel="noopener" data-cursor="link">
+                @locphan2207 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+            </li>
+            <li>
+              <span class="contact__k">LinkedIn</span>
+              <a href="https://www.linkedin.com/in/tanloc-phan/" target="_blank" rel="noopener" data-cursor="link">
+                tanloc-phan <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 </main>
