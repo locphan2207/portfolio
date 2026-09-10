@@ -115,7 +115,7 @@
 }
 
 /* Light — warm bone paper. The home theme: cool teal on warm stock is what
-   makes the accent read as ink rather than as UI colour. */
+   makes the accent read as ink rather than as UI color. */
 [data-theme="light"] {
   --ink:    #fbf8f1;
   --ink-2:  #ffffff;
@@ -466,7 +466,7 @@ h1 em, h2 em, h3 em { font-size: var(--accent-size); letter-spacing: 0; }
   100% { transform: translate(0, 0); }
 }
 
-/* A soft vignette pins the content to the centre of the frame */
+/* A soft vignette pins the content to the center of the frame */
 body::after {
   content: "";
   position: fixed;
@@ -1561,7 +1561,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   border-radius: var(--r-lg);
   overflow: hidden;
   /* Ramped, not flat: the top of the frame is all empty studio backdrop, so
-     the first stop sits on the surface colour and the accent only reaches
+     the first stop sits on the surface color and the accent only reaches
      full strength across the subject. */
   background: linear-gradient(176deg, var(--ink-3), var(--ember) 72%, var(--iris));
   box-shadow: var(--shadow);
@@ -1895,7 +1895,7 @@ html.vt-theme::view-transition-new(root) {
 /* ── Reduced motion ──────────────────────────────────────────────────────
    "Reduce motion" means no vestibular motion — large translation, parallax,
    scroll-hijacking, drifting backgrounds. It does not mean a dead page, so
-   opacity and colour transitions stay, and so does the 6px status pulse.
+   opacity and color transitions stay, and so does the 6px status pulse.
    The media query only seeds the default: html.calm is what actually gates
    everything, and the visitor can flip it from the nav. */
 
@@ -1953,7 +1953,7 @@ html.calm .gallery__label [data-hint="swipe"] { display: inline; }
 html.calm .gallery__meter i { transform: none; opacity: .3; }
 
 /* Transforms that only fire on hover are user-initiated and brief, but they
-   are still movement — trade them for a colour response. */
+   are still movement — trade them for a color response. */
 html.calm .btn:hover,
 html.calm .chips li:hover,
 html.calm .iconbtn:hover,

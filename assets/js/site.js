@@ -115,10 +115,10 @@
 
   /* ── Gradient-fill headings ───────────────────────────────────────── */
   // Duplicate the text into ::before so a pointer-tracked mask can wipe
-  // the flat colour away and let the gradient underneath show through.
+  // the flat color away and let the gradient underneath show through.
   $$('[data-fill]').forEach(el => el.dataset.text = el.textContent);
 
-  // One light-pass across the name on arrival, so the colour underneath
+  // One light-pass across the name on arrival, so the color underneath
   // announces itself before anyone thinks to move the mouse.
   function sweepName() {
     const title = $('#heroTitle');
