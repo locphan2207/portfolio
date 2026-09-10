@@ -110,7 +110,6 @@
   --aurora: .5;
   --grid: .05;
   --vignette: .86;
-  --shot-bright: .9;
   color-scheme: dark;
 }
 
@@ -138,7 +137,6 @@
   --aurora: .42;
   --grid: .03;
   --vignette: .24;
-  --shot-bright: 1;
   color-scheme: light;
 }
 
@@ -213,7 +211,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .mono, .secHead__idx, .nav__idx, .tags li, .status,
 .loader__count, .scrollcue__text, .contact__k, .stack__label, .foot__note,
-.rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow,
+.rail i, .portrait figcaption, .menu__links i, .work__eyebrow,
 .workGroup__meta, .workGroup__co {
   font-family: var(--label);
   font-weight: 500;
@@ -1238,14 +1236,16 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 .gallery__label i::after { content: " \2192"; }
 .gallery__label [data-hint="swipe"] { display: none; }
 
+/* Text cards, so the rail is only as tall as the cards themselves: stretched
+   to the tallest of them, and sitting as one band in the middle of the stage
+   instead of a short card adrift in a viewport of air. */
 .gallery__rail {
   display: flex;
-  flex: 1;
-  align-items: center;
+  flex: none;
+  align-items: stretch;
   gap: clamp(1.25rem, 2.4vw, 2.25rem);
   padding-inline: max(var(--gut), calc((100vw - var(--shell)) / 2 + var(--gut)));
   will-change: transform;
-  min-height: 0;
 }
 
 .gallery__meter { height: 2px; }
@@ -1269,70 +1269,22 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   transform-origin: left;
 }
 
-/* Screenshot plate. Five shots spanning four years and three aspect ratios
-   only read as one set inside a shared frame and a shared grade. */
-.frame {
-  position: relative;
-  z-index: 1;
-  border-radius: var(--r-md);
-  border: 1px solid var(--line);
-  background: var(--ink-3);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transform: translate3d(0, 0, 0);
-  transition: border-color .5s var(--ease), box-shadow .6s var(--ease), transform .5s var(--ease-out);
-}
-.card__link:hover .frame { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
-
-.frame__bar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 32px;
-  padding-inline: 13px;
-  border-bottom: 1px solid var(--line);
-  background: var(--ink-3);
-}
-.frame__bar i {
-  flex: none;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--line-2);
-}
-.frame__bar i:first-child { background: color-mix(in srgb, var(--accent, var(--ember)) 75%, transparent); }
-.frame__bar span {
-  margin-left: 8px;
-  font-size: 10px;
-  color: var(--text-3);
-}
-
-.frame picture { display: block; }
-.frame img {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  object-position: top center;
-  filter: grayscale(.72) contrast(1.04) brightness(var(--shot-bright));
-  transform: scale(1.005);
-  transition: filter .7s var(--ease), transform 1.1s var(--ease-out);
-}
-.frame--plain img { object-position: center; }
-.card__link:hover .frame img { filter: none; transform: scale(1.05); }
-
 /* Cards */
 .card {
+  position: relative;
   flex: none;
-  width: clamp(280px, 30vw, 430px);
+  width: clamp(280px, 26vw, 380px);
   display: flex;
 }
 .card--end { width: clamp(240px, 22vw, 320px); }
 
 .card__link {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
   width: 100%;
-  padding: 1.15rem 1.15rem 1.4rem;
+  padding: clamp(1.35rem, 2.2vw, 1.75rem);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   background: color-mix(in srgb, var(--ink-2) 76%, transparent);
@@ -1346,19 +1298,20 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   background: color-mix(in srgb, var(--ink-2) 92%, transparent);
 }
 
-.card__shot { position: relative; display: block; }
+/* The accent, bled from behind the card and picked up by its own backdrop
+   blur. It used to pool behind the screenshot plate. */
 .card__glow {
   position: absolute;
-  inset: 12% 8%;
+  inset: 6% 4%;
   z-index: 0;
   border-radius: 50%;
   background: var(--accent, var(--ember));
-  filter: blur(52px);
+  filter: blur(58px);
   opacity: 0;
   transform: scale(.85);
   transition: opacity .7s var(--ease), transform .9s var(--ease-out);
 }
-.card__link:hover .card__glow { opacity: .34; transform: scale(1); }
+.card:hover .card__glow { opacity: .38; transform: scale(1); }
 
 .card__body { display: flex; flex-direction: column; gap: .55rem; flex: 1; }
 
@@ -1454,7 +1407,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   /* The sticky run's padding exists to line the first card up with the shell
      while the rail is clipped. Nothing clips it here, so drop it and wrap. */
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: stretch;
   padding-inline: 0;
   transform: none !important;
 }
@@ -1826,7 +1779,6 @@ html.vt-theme::view-transition-new(root) {
   .contact__list li { padding-right: 0; }
   .foot__inner { justify-content: flex-start; }
   .foot__note { order: 3; flex-basis: 100%; }
-  .frame__bar { height: 28px; }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────────────────
@@ -1899,7 +1851,6 @@ html.calm .btn svg,
 html.calm .card__cta svg,
 html.calm .contact__list svg,
 html.calm .foot__top svg { transition: none; }
-html.calm .card__link:hover .frame img { transform: none; }
 html.calm .portrait img { transform: none !important; }
 
 @media print {

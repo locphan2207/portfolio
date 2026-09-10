@@ -11,7 +11,7 @@ index.html            markup
 assets/css/site.css   design tokens + every component
 assets/js/site.js     motion and interaction layer
 assets/fonts/         Fraunces + Instrument Sans (woff2, latin subset)
-assets/img/           optimized portrait, project shots, favicon, share card
+assets/img/           optimized portrait, favicon, share card
 ```
 
 ## Working on it
@@ -52,9 +52,10 @@ python3 -m http.server 8000   # then open http://localhost:8000
   system reads as bleed in the light theme and glow in the dark one. Blobs are
   drawn from a pre-rendered sprite; building a gradient per blob per frame is
   what makes this kind of effect stutter.
-- **Work gallery** — the section is given enough height for the rail's overflow,
-  then the stage sticks inside it and vertical progress drives `translateX`. The
-  height is derived from the rail, so adding a project needs no magic numbers.
+- **Side-projects rail** — the section is given enough height for the rail's
+  overflow, then the stage sticks inside it and vertical progress drives
+  `translateX`. The height is derived from the rail, so adding a project needs
+  no magic numbers.
   Under 900px, and under reduced motion, it degrades to an ordinary swipeable
   scroller from the same markup.
 - **Images** — sources live in git history. `assets/img/` holds derivatives in

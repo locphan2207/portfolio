@@ -103,9 +103,9 @@
     revealables.forEach(el => el.classList.add('is-in'));
   }
 
-  // The gallery re-measures once its images land, which moves everything below
-  // it. A periodic sweep guarantees no copy is left parked at opacity 0 if that
-  // shift outruns the observer.
+  // Late layout shifts — webfonts landing, the gallery re-measuring — move
+  // everything below them. A periodic sweep guarantees no copy is left parked
+  // at opacity 0 if a shift outruns the observer.
   function sweepReveals() {
     for (const el of revealables) {
       if (el.classList.contains('is-in')) continue;
@@ -157,7 +157,6 @@
   const spot   = $('.ambient__spot');
   const fills  = $$('[data-fill]');
   const magnets = $$('[data-magnetic]');
-  const tilts   = $$('[data-tilt]');
 
   const pointer = { x: -400, y: -400, has: false };
   const eased   = { x: -400, y: -400 };
@@ -394,23 +393,6 @@
     el.addEventListener('pointerleave', () => { el.style.transform = ''; });
   });
 
-  /* ── Card tilt ────────────────────────────────────────────────────── */
-
-  tilts.forEach(card => {
-    const frame = card.querySelector('.frame');
-    if (!frame) return;
-
-    card.addEventListener('pointermove', (e) => {
-      if (calm || !fineQuery.matches) return;
-      const r = frame.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width  - .5;
-      const py = (e.clientY - r.top)  / r.height - .5;
-      frame.style.transform =
-        `perspective(1100px) rotateY(${px * 7}deg) rotateX(${-py * 5}deg) translate3d(0,-6px,0)`;
-    });
-    card.addEventListener('pointerleave', () => { frame.style.transform = ''; });
-  });
-
   /* ── Portrait parallax ────────────────────────────────────────────── */
 
   const portrait = $('[data-parallax] img');
@@ -498,11 +480,8 @@
     driveRail();
     addEventListener('resize', () => { measureRail(); driveRail(); }, { passive: true });
     wide.addEventListener('change', () => { measureRail(); driveRail(); });
-    // Screenshots load late and change the rail's width.
+    // Webfonts land after first paint and change the rail's width.
     addEventListener('load', () => { measureRail(); driveRail(); });
-    $$('img', rail).forEach(img => {
-      if (!img.complete) img.addEventListener('load', () => { measureRail(); driveRail(); }, { once: true });
-    });
     // Tabbing into a card off-screen must bring it into view. Rail travel is
     // linear in scroll, so convert the wanted horizontal shift back to pixels
     // of page scroll rather than letting the browser scroll a pinned stage.
@@ -759,7 +738,7 @@
     applyCalm();
     if (calm) {
       // Leaving motion behind should not leave anything mid-flight.
-      $$('[data-magnetic], .frame, [data-skew]').forEach(el => el.style.removeProperty('transform'));
+      $$('[data-magnetic], [data-skew]').forEach(el => el.style.removeProperty('transform'));
     }
   });
 
