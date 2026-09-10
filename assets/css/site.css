@@ -281,6 +281,11 @@ h1 em, h2 em, h3 em { font-size: var(--accent-size); letter-spacing: 0; }
 }
 
 .section { position: relative; padding-block: var(--sec); }
+/* A pinned section is already a screen with its own padding. Section padding
+   on top of that only pushes the composed view off the bottom of the viewport,
+   and the negative scroll margin cancels the page's nav offset so a jump to
+   the section lands on the whole of it rather than a screen's worth above. */
+.section--rail { padding-block: 0; scroll-margin-top: calc(-1 * (var(--nav-h) + 24px)); }
 
 .secHead { max-width: 46ch; margin-bottom: clamp(2.75rem, 5vw, 4.5rem); }
 .secHead__idx {
@@ -1116,7 +1121,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 @keyframes slide { to { transform: translateX(-50%); } }
 
-/* ── 7. Work — pinned horizontal gallery ────────────────────────────── */
+/* ── 7. Work & side projects — the pinned horizontal gallery ────────── */
 
 /* The section is tall; the stage inside it sticks while the rail slides
    sideways, so vertical scroll reads as horizontal travel. Below the
@@ -1205,11 +1210,30 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   height: 100svh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* The stage owns a whole viewport, so the three rows have to hold it. Hint
+     and counter sit against the top, the meter against the bottom, and the
+     rail takes the middle at a height worth the screen it is given —
+     centering the lot instead leaves a strip of cards floating in air. */
+  justify-content: space-between;
   gap: clamp(1.5rem, 4vh, 2.75rem);
   overflow: hidden;
   padding-block: calc(var(--nav-h) + 1rem) clamp(1.5rem, 5vh, 3rem);
 }
+
+/* The head rides in the stage, so it has to be short: title and eyebrow in
+   one column, the note beside them rather than under them. Same words as
+   every other section head, a third of the height. */
+.secHead--rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, clamp(26ch, 36%, 40ch));
+  align-items: end;
+  gap: clamp(1rem, 2.5vw, 2.75rem);
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding-inline: var(--gut);
+}
+.secHead--rail .secHead__note { margin-top: 0; font-size: var(--t-base); }
 
 /* Context stays on screen for the whole horizontal run. */
 .gallery__bar,
@@ -1243,7 +1267,11 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   display: flex;
   flex: none;
   align-items: stretch;
+  height: clamp(320px, 34svh, 356px);
   gap: clamp(1.25rem, 2.4vw, 2.25rem);
+  /* Full-bleed padding: the first card lines up with the shell while the rail
+     itself runs to both screen edges. This is why the gallery sits outside
+     .shell in the markup — inside it the inset would be applied twice. */
   padding-inline: max(var(--gut), calc((100vw - var(--shell)) / 2 + var(--gut)));
   will-change: transform;
 }
@@ -1381,6 +1409,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   border-style: dashed;
 }
 .card__link--end:hover { background: var(--card); }
+.card__link--end .card__cta { margin-top: 0; }
 .card__endIdx { font-family: var(--label); color: var(--text-3); letter-spacing: var(--label-track); font-size: var(--t-xs); }
 .card__endTitle {
   font-family: var(--display);
@@ -1405,21 +1434,31 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 .gallery.is-static .gallery__rail {
   /* The sticky run's padding exists to line the first card up with the shell
-     while the rail is clipped. Nothing clips it here, so drop it and wrap. */
+     while the rail is clipped. Nothing clips it here, so swap that inset for
+     the shell itself, drop the pinned height, and let the rows wrap. */
   flex-wrap: wrap;
   align-items: stretch;
-  padding-inline: 0;
+  height: auto;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gut);
   transform: none !important;
 }
 .gallery.is-static .gallery__bar,
 .gallery.is-static .gallery__meter { display: none; }
+.gallery.is-static .secHead--rail { margin-bottom: clamp(2.75rem, 5vw, 4.5rem); }
 
-@media (max-width: 900px) {
+@media (max-width: 900px), (max-height: 719px) {
+  .section--rail { padding-block: var(--sec); scroll-margin-top: 0; }
   .gallery__stage { position: static; height: auto; display: block; overflow: visible; }
+  .secHead--rail { display: block; margin-bottom: clamp(2.75rem, 5vw, 4.5rem); }
+  .secHead--rail .secHead__lead { max-width: 46ch; }
+  .secHead--rail .secHead__note { margin-top: 1.4rem; font-size: var(--t-lg); }
   .gallery__rail {
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
+    height: auto;
     padding-block: .5rem 1.75rem;
     scrollbar-width: thin;
     transform: none !important;
@@ -1820,26 +1859,45 @@ html.calm .cta .word { transform: none !important; }
 html.calm [data-fill]::before { -webkit-mask-image: none; mask-image: none; }
 html.calm [data-skew] { transform: none !important; }
 
-/* Scroll-hijacking is the big one — hand the rail back to the browser. */
-html.calm .gallery__stage {
+/* Scroll-hijacking is the big one — hand the rail back to the browser. Same
+   for a page with no script: nothing would be driving the rail, so pinning
+   it would clip a run the visitor has no way to move. Unpinned, the head
+   unstacks and the section takes its own spacing back. */
+html.calm .section--rail,
+html:not(.js) .section--rail { padding-block: var(--sec); scroll-margin-top: 0; }
+html.calm .gallery__stage,
+html:not(.js) .gallery__stage {
   position: static;
   height: auto;
   display: block;
   overflow: visible;
   padding-block: 0;
 }
-html.calm .gallery__rail {
+html.calm .secHead--rail,
+html:not(.js) .secHead--rail { display: block; margin-bottom: clamp(2.75rem, 5vw, 4.5rem); }
+html.calm .secHead--rail .secHead__lead,
+html:not(.js) .secHead--rail .secHead__lead { max-width: 46ch; }
+html.calm .secHead--rail .secHead__note,
+html:not(.js) .secHead--rail .secHead__note { margin-top: 1.4rem; font-size: var(--t-lg); }
+html.calm .gallery__rail,
+html:not(.js) .gallery__rail {
   overflow-x: auto;
   overflow-y: hidden;
+  height: auto;
   padding-block: 1rem 1.75rem;
   transform: none !important;
   scroll-snap-type: x mandatory;
 }
-html.calm .gallery__rail > * { scroll-snap-align: center; }
-html.calm .gallery__bar { padding-block: 0 .5rem; }
-html.calm .gallery__label [data-hint="scroll"] { display: none; }
-html.calm .gallery__label [data-hint="swipe"] { display: inline; }
-html.calm .gallery__meter i { transform: none; opacity: .3; }
+html.calm .gallery__rail > *,
+html:not(.js) .gallery__rail > * { scroll-snap-align: center; }
+html.calm .gallery__bar,
+html:not(.js) .gallery__bar { padding-block: 0 .5rem; }
+html.calm .gallery__label [data-hint="scroll"],
+html:not(.js) .gallery__label [data-hint="scroll"] { display: none; }
+html.calm .gallery__label [data-hint="swipe"],
+html:not(.js) .gallery__label [data-hint="swipe"] { display: inline; }
+html.calm .gallery__meter i,
+html:not(.js) .gallery__meter i { transform: none; opacity: .3; }
 
 /* Transforms that only fire on hover are user-initiated and brief, but they
    are still movement — trade them for a color response. */
