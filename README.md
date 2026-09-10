@@ -11,7 +11,7 @@ index.html            markup
 assets/css/site.css   design tokens + every component
 assets/js/site.js     motion and interaction layer
 assets/fonts/         Fraunces + Instrument Sans (woff2, latin subset)
-assets/img/           optimised portrait, project shots, favicon, share card
+assets/img/           optimized portrait, project shots, favicon, share card
 ```
 
 ## Working on it
@@ -28,10 +28,10 @@ python3 -m http.server 8000   # then open http://localhost:8000
   `prefers-color-scheme` on first visit and remembers an explicit choice in
   `localStorage`. An inline script in `<head>` sets it before first paint so the
   wrong palette never flashes.
-- **Colour** — the whole palette lives in the two `[data-theme]` blocks at the
+- **Color** — the whole palette lives in the two `[data-theme]` blocks at the
   top of `site.css`. The accent is petrol teal: `#0e5560` on paper, `#52c6d8`
-  on ink. `--ink-rgb` is the same colour as an RGB triplet, which is what the
-  ink field paints with. Every text colour is checked against WCAG AA in both
+  on ink. `--ink-rgb` is the same color as an RGB triplet, which is what the
+  ink field paints with. Every text color is checked against WCAG AA in both
   themes.
 - **Type roles** — components ask for `--display`, `--body`, `--label` or
   `--accentface` and never name a face, so the whole page re-points from one
@@ -44,7 +44,7 @@ python3 -m http.server 8000   # then open http://localhost:8000
   `html.calm` is what gates everything, and a nav toggle lets any visitor
   override it either way (persisted in `localStorage`). Reduce means no
   vestibular motion — translation, parallax, scroll-hijacking, drifting
-  backgrounds — not a dead page: opacity and colour transitions stay. When the
+  backgrounds — not a dead page: opacity and color transitions stay. When the
   page is quiet only because the OS asked, it says so once, with a way to turn
   motion on, so a plain page never reads as broken.
 - **Ink field** — the canvas behind the content spawns pigment along the pointer
