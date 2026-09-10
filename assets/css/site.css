@@ -214,7 +214,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .mono, .secHead__idx, .nav__idx, .tags li, .status,
 .loader__count, .scrollcue__text, .contact__k, .stack__label, .foot__note,
 .rail i, .frame__bar span, .portrait figcaption, .menu__links i, .work__eyebrow,
-.roles__role {
+.roles__role, .workGroup__meta {
   font-family: var(--label);
   font-weight: 500;
   letter-spacing: var(--label-track);
@@ -1128,6 +1128,26 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 /* Six tiles, so five capabilities plus the pager land as two clean rows at
    three across and never leave a hole. No links, no shots — the copy is the
    whole card, which is the point: this is the work that cannot be shown. */
+/* Each job gets a heading, so the numbering restarts per employer. */
+.workGroup + .workGroup { margin-top: clamp(2.25rem, 4.5vw, 3.5rem); }
+.workGroup__label {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .3rem .8rem;
+  margin-bottom: clamp(1rem, 1.8vw, 1.5rem);
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--line);
+}
+.workGroup__co {
+  font-family: var(--display);
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+  font-size: var(--t-lg);
+  line-height: 1.1;
+}
+.workGroup__meta { color: var(--text-3); }
+
 .work {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));

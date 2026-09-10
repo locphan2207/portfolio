@@ -191,9 +191,9 @@
             <span class="scramble" data-scramble='["front ends","RPC services","data models","ML pipelines"]'>front ends</span>
           </p>
           <p class="hero__lead reveal" data-reveal data-delay="2">
-            I work at whatever depth the problem needs — a render path one week, a
-            table&rsquo;s access patterns the next. <em>Full stack is less about knowing
-            every layer than about seeing where they fail each other.</em>
+            Hi, I&rsquo;m Loc. I write software at Google &mdash; front end, back end,
+            and most of what sits between. <em>I&rsquo;m still happiest on the days
+            something I built ends up in front of real people.</em>
           </p>
           <div class="hero__actions reveal" data-reveal data-delay="3">
             <a class="btn btn--solid" href="#work" data-magnetic data-cursor="link">
@@ -262,54 +262,89 @@
   <section class="section" id="work">
     <div class="shell">
       <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">01 — Current work</p>
-        <h2 class="secHead__title">The work behind the <em>firewall</em></h2>
-        <p class="secHead__note" data-words>Nearly everything I build at Google is internal, so there are no screenshots to show. Here is the shape of it instead.</p>
+        <p class="secHead__idx">01 — Work</p>
+        <h2 class="secHead__title">Google, and before that <em>Smarkets</em></h2>
+        <p class="secHead__note" data-words>Almost everything I build at Google is internal, so there are no screenshots. Here is what I work on, and what I built at Smarkets before it.</p>
       </header>
 
-      <ol class="work">
-        <li class="work__item reveal" data-reveal>
-          <span class="work__idx">01</span>
-          <h3 class="work__title">Front end, at scale</h3>
-          <p class="work__desc">Angular and AngularDart features in a web app my team owns and other teams build on. A large codebase with real users and no appetite for a rewrite, so the craft is landing change incrementally &mdash; behind flags, in pieces, without breaking what already works.</p>
-          <ul class="tags"><li>Angular</li><li>AngularDart</li><li>TypeScript</li></ul>
-        </li>
+      <div class="workGroup reveal" data-reveal>
+        <h3 class="workGroup__label">
+          <span class="workGroup__co">Google</span>
+          <span class="workGroup__meta">Software Engineer &middot; Current</span>
+        </h3>
+        <ol class="work">
+          <li class="work__item reveal" data-reveal>
+            <span class="work__idx">01</span>
+            <h3 class="work__title">Front end, at scale</h3>
+            <p class="work__desc">Angular and AngularDart features in a web app my team owns and other teams build on. A large codebase with real users and no appetite for a rewrite, so the craft is landing change incrementally &mdash; behind flags, in pieces, without breaking what already works.</p>
+            <ul class="tags"><li>Angular</li><li>AngularDart</li><li>TypeScript</li></ul>
+          </li>
 
-        <li class="work__item reveal" data-reveal data-delay="1">
-          <span class="work__idx">02</span>
-          <h3 class="work__title">A database from scratch</h3>
-          <p class="work__desc">Designed and built a large-scale datastore from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
-          <ul class="tags"><li>Schema design</li><li>SQL</li><li>Capacity</li></ul>
-        </li>
+          <li class="work__item reveal" data-reveal data-delay="1">
+            <span class="work__idx">02</span>
+            <h3 class="work__title">A database from scratch</h3>
+            <p class="work__desc">Designed and built a large-scale datastore from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
+            <ul class="tags"><li>Schema design</li><li>SQL</li><li>Capacity</li></ul>
+          </li>
 
-        <li class="work__item reveal" data-reveal data-delay="2">
-          <span class="work__idx">03</span>
-          <h3 class="work__title">Monolith to normalised</h3>
-          <p class="work__desc">Split one overloaded table into a normalised schema in production, with no downtime and no broken consumers. A migration like this is barely about the SQL &mdash; it is sequencing, backfills, and dual writes held long enough that the old path is safe to delete.</p>
-          <ul class="tags"><li>Zero downtime</li><li>Backfill</li><li>Dual writes</li></ul>
-        </li>
+          <li class="work__item reveal" data-reveal data-delay="2">
+            <span class="work__idx">03</span>
+            <h3 class="work__title">Monolith to normalised</h3>
+            <p class="work__desc">Split one overloaded table into a normalised schema in production, with no downtime and no broken consumers. A migration like this is barely about the SQL &mdash; it is sequencing, backfills, and dual writes held long enough that the old path is safe to delete.</p>
+            <ul class="tags"><li>Zero downtime</li><li>Backfill</li><li>Dual writes</li></ul>
+          </li>
 
-        <li class="work__item reveal" data-reveal>
-          <span class="work__idx">04</span>
-          <h3 class="work__title">APIs over RPC</h3>
-          <p class="work__desc">Service contracts that stay stable while everything behind them moves. Versioning, backward compatibility and error semantics picked so the caller has an easy time &mdash; because the caller is another team, and their outage is my outage.</p>
-          <ul class="tags"><li>RPC</li><li>Protocol buffers</li><li>Versioning</li></ul>
-        </li>
+          <li class="work__item reveal" data-reveal>
+            <span class="work__idx">04</span>
+            <h3 class="work__title">APIs over RPC</h3>
+            <p class="work__desc">Service contracts that stay stable while everything behind them moves. Versioning, backward compatibility and error semantics picked so the caller has an easy time &mdash; because the caller is another team, and their outage is my outage.</p>
+            <ul class="tags"><li>RPC</li><li>Protocol buffers</li><li>Versioning</li></ul>
+          </li>
 
-        <li class="work__item reveal" data-reveal data-delay="1">
-          <span class="work__idx">05</span>
-          <h3 class="work__title">Trained, hosted, served</h3>
-          <p class="work__desc">A workflow that trains a model, hosts it, and answers live inference behind an endpoint. The interesting parts are the unglamorous ones: reproducible training runs, safe rollout, a latency budget, and a sane answer for when the model is wrong.</p>
-          <ul class="tags"><li>Python</li><li>Model serving</li><li>Live inference</li></ul>
-        </li>
+          <li class="work__item reveal" data-reveal data-delay="1">
+            <span class="work__idx">05</span>
+            <h3 class="work__title">Trained, hosted, served</h3>
+            <p class="work__desc">A workflow that trains a model, hosts it, and answers live inference behind an endpoint. The interesting parts are the unglamorous ones: reproducible training runs, safe rollout, a latency budget, and a sane answer for when the model is wrong.</p>
+            <ul class="tags"><li>Python</li><li>Model serving</li><li>Live inference</li></ul>
+          </li>
 
-        <li class="work__item work__item--pager reveal" data-reveal data-delay="2">
-          <span class="work__eyebrow">Also</span>
-          <h3 class="work__title">On the pager</h3>
-          <p class="work__desc">I am in the on-call rotation for the system my team maintains. Being the one who gets paged changes how you build: you write the runbook, you add the log line, you make failure legible at 3am. It is the fastest way I know to learn a system all the way down.</p>
-          <ul class="tags"><li>On-call</li><li>Debugging</li><li>Runbooks</li></ul>
-        </li>
-      </ol>
+          <li class="work__item work__item--pager reveal" data-reveal data-delay="2">
+            <span class="work__eyebrow">Also</span>
+            <h3 class="work__title">On the pager</h3>
+            <p class="work__desc">I am in the on-call rotation for the system my team maintains. Being the one who gets paged changes how you build: you write the runbook, you add the log line, you make failure legible at 3am. It is the fastest way I know to learn a system all the way down.</p>
+            <ul class="tags"><li>On-call</li><li>Debugging</li><li>Runbooks</li></ul>
+          </li>
+        </ol>
+      </div>
+
+      <div class="workGroup reveal" data-reveal>
+        <h3 class="workGroup__label">
+          <span class="workGroup__co">Smarkets</span>
+          <span class="workGroup__meta">Software Engineer &middot; 2018&ndash;2020</span>
+        </h3>
+        <ol class="work">
+          <li class="work__item reveal" data-reveal>
+            <span class="work__idx">01</span>
+            <h3 class="work__title">First commit to App&nbsp;Store</h3>
+            <p class="work__desc">A cross-platform sportsbook app in React Native, from the first commit to the store listing and on to nine thousand users. Redux Saga drove the API and websocket flows behind live odds, and a lot of the work was re-render cost &mdash; granular components, and selectors that only recompute what actually moved.</p>
+            <ul class="tags"><li>React Native</li><li>Redux Saga</li><li>iOS &amp; Android</li></ul>
+          </li>
+
+          <li class="work__item reveal" data-reveal data-delay="1">
+            <span class="work__idx">02</span>
+            <h3 class="work__title">Geofencing as a service</h3>
+            <p class="work__desc">A micro-service that checked where a user actually was before letting them place a bet, cross-referencing GPS against IP address. Flask on the back, React on the front. Betting licences are granted per territory, so this is the kind of check that has to be right every time.</p>
+            <ul class="tags"><li>Flask</li><li>React</li><li>Geolocation</li></ul>
+          </li>
+
+          <li class="work__item reveal" data-reveal data-delay="2">
+            <span class="work__idx">03</span>
+            <h3 class="work__title">Social, behind a cache</h3>
+            <p class="work__desc">Profiles, posts and comments for the app&rsquo;s social side: Django models and the API endpoints on top of them, with Redis in front so the feed stayed quick as the user count climbed. Unit and automation tests, plus crash reporting, to catch what got through.</p>
+            <ul class="tags"><li>Django</li><li>Redis</li><li>REST APIs</li></ul>
+          </li>
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -319,7 +354,7 @@
       <header class="secHead reveal" data-reveal>
         <p class="secHead__idx">02 — Toolkit</p>
         <h2 class="secHead__title">The stack I <em>reach for</em></h2>
-        <p class="secHead__note" data-words>This list looks nothing like the one on the last version of this page. Tools turn over; the last group is the part that transfers.</p>
+        <p class="secHead__note" data-words>The tools I use most, grouped by where they sit. The last group is about how I work.</p>
       </header>
 
       <div class="stack">
@@ -380,7 +415,7 @@
       <header class="secHead reveal" data-reveal>
         <p class="secHead__idx">03 — Independent work</p>
         <h2 class="secHead__title">Built in the <em>open</em></h2>
-        <p class="secHead__note" data-words>Independent projects from before Google: a dashboard, a full-stack app, a mobile app and a game. Older than the code I write today, and all of it still readable.</p>
+        <p class="secHead__note" data-words>Four things I built on my own time: a dashboard, a full-stack app, a mobile app and a game. All of the source is public.</p>
       </header>
 
       <div class="gallery" id="gallery">
@@ -535,7 +570,7 @@
             </li>
             <li>
               <h3 class="roles__co">Smarkets <span class="roles__role">Software Engineer</span></h3>
-              <p class="roles__desc">A betting exchange, where I helped take the sportsbook app from the first commit to the App Store and on to nine thousand users. React Native and Redux Saga on the front, driving the API and websocket flows behind live odds, with a lot of attention paid to re-render cost and selector granularity. On the back, a Flask geofencing service checking users against both GPS and IP, and Django behind a Redis cache for profiles, posts and comments.</p>
+              <p class="roles__desc">A betting exchange. I worked on the sportsbook app and the services behind it &mdash; the mobile front end, a geofencing check, and the social features.</p>
             </li>
           </ol>
 
@@ -555,7 +590,7 @@
     <div class="shell">
       <header class="secHead reveal" data-reveal>
         <p class="secHead__idx">05 — Contact</p>
-        <p class="secHead__note" data-words>I am not looking to move, but I like hearing about interesting problems, and I answer every email.</p>
+        <p class="secHead__note" data-words>I am not looking to move, but I like hearing about interesting problems. I answer every email.</p>
       </header>
 
       <h2 class="cta reveal" data-reveal>
