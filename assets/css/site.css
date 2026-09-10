@@ -1130,7 +1130,11 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
    whole card, which is the point: this is the work that cannot be shown. */
 /* Each job gets a quiet label, so the numbering restarts per employer
    without the company name reading as a headline. */
-.workGroup + .workGroup { margin-top: clamp(2.25rem, 4.5vw, 3.5rem); }
+/* The break between two jobs has to beat the gap between two cards inside
+   one job by a clear margin, or the label reads as floating between the two
+   blocks instead of heading the one under it. Generous above, tight below —
+   the label binds downward, to the cards it numbers. */
+.workGroup + .workGroup { margin-top: clamp(3.25rem, 6vw, 5.25rem); }
 .workGroup__label {
   display: flex;
   align-items: baseline;
