@@ -275,43 +275,43 @@
         <ol class="work">
           <li class="work__item reveal" data-reveal>
             <span class="work__idx">01</span>
-            <h3 class="work__title">Front end, at scale</h3>
+            <h3 class="work__title">The web app front end</h3>
             <p class="work__desc">Angular and AngularDart features in a web app my team owns and other teams build on. A large codebase with real users and no appetite for a rewrite, so the craft is landing change incrementally &mdash; behind flags, in pieces, without breaking what already works.</p>
             <ul class="tags"><li>Angular</li><li>AngularDart</li><li>TypeScript</li></ul>
           </li>
 
           <li class="work__item reveal" data-reveal data-delay="1">
             <span class="work__idx">02</span>
-            <h3 class="work__title">A database from scratch</h3>
-            <p class="work__desc">Designed and built a large-scale datastore from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
+            <h3 class="work__title">A large-scale datastore</h3>
+            <p class="work__desc">Designed and built from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
             <ul class="tags"><li>Schema design</li><li>SQL</li><li>Capacity</li></ul>
           </li>
 
           <li class="work__item reveal" data-reveal data-delay="2">
             <span class="work__idx">03</span>
-            <h3 class="work__title">Monolith to normalised</h3>
+            <h3 class="work__title">A live schema migration</h3>
             <p class="work__desc">Split one overloaded table into a normalised schema in production, with no downtime and no broken consumers. A migration like this is barely about the SQL &mdash; it is sequencing, backfills, and dual writes held long enough that the old path is safe to delete.</p>
             <ul class="tags"><li>Zero downtime</li><li>Backfill</li><li>Dual writes</li></ul>
           </li>
 
           <li class="work__item reveal" data-reveal>
             <span class="work__idx">04</span>
-            <h3 class="work__title">APIs over RPC</h3>
+            <h3 class="work__title">RPC APIs</h3>
             <p class="work__desc">Service contracts that stay stable while everything behind them moves. Versioning, backward compatibility and error semantics picked so the caller has an easy time &mdash; because the caller is another team, and their outage is my outage.</p>
             <ul class="tags"><li>RPC</li><li>Protocol buffers</li><li>Versioning</li></ul>
           </li>
 
           <li class="work__item reveal" data-reveal data-delay="1">
             <span class="work__idx">05</span>
-            <h3 class="work__title">Trained, hosted, served</h3>
+            <h3 class="work__title">Model training and serving</h3>
             <p class="work__desc">A workflow that trains a model, hosts it, and answers live inference behind an endpoint. The interesting parts are the unglamorous ones: reproducible training runs, safe rollout, a latency budget, and a sane answer for when the model is wrong.</p>
             <ul class="tags"><li>Python</li><li>Model serving</li><li>Live inference</li></ul>
           </li>
 
           <li class="work__item work__item--pager reveal" data-reveal data-delay="2">
             <span class="work__eyebrow">Also</span>
-            <h3 class="work__title">On the pager</h3>
-            <p class="work__desc">I am in the on-call rotation for the system my team maintains. Being the one who gets paged changes how you build: you write the runbook, you add the log line, you make failure legible at 3am. It is the fastest way I know to learn a system all the way down.</p>
+            <h3 class="work__title">The on-call rotation</h3>
+            <p class="work__desc">I carry the pager for the system my team maintains. Being the one who gets paged changes how you build: you write the runbook, you add the log line, you make failure legible at 3am. It is the fastest way I know to learn a system all the way down.</p>
             <ul class="tags"><li>On-call</li><li>Debugging</li><li>Runbooks</li></ul>
           </li>
         </ol>
@@ -325,28 +325,28 @@
         <ol class="work">
             <li class="work__item reveal" data-reveal>
               <span class="work__idx">01</span>
-              <h3 class="work__title">First commit to App&nbsp;Store</h3>
-              <p class="work__desc">A cross-platform sportsbook app in React Native, from the early stages through to the App Store launch and on to nine thousand users. Redux Saga managed the API and websocket data flow behind every key feature, live odds included.</p>
+              <h3 class="work__title">The sportsbook app</h3>
+              <p class="work__desc">Cross-platform, in React Native, from the early stages through to the App Store launch and on to nine thousand users. Redux Saga managed the API and websocket data flow behind every key feature, live odds included.</p>
               <ul class="tags"><li>React Native</li><li>Redux Saga</li><li>iOS &amp; Android</li></ul>
             </li>
 
             <li class="work__item reveal" data-reveal data-delay="1">
               <span class="work__idx">02</span>
-              <h3 class="work__title">Smooth on a phone</h3>
+              <h3 class="work__title">Animation and re-renders</h3>
               <p class="work__desc">Animation libraries and styling to build the mocked designs out properly, then the work to keep them cheap: granular components and selectors with efficient time complexity, which brought down both re-render counts and load times.</p>
               <ul class="tags"><li>React Native</li><li>Animation</li><li>Performance</li></ul>
             </li>
 
             <li class="work__item reveal" data-reveal data-delay="2">
               <span class="work__idx">03</span>
-              <h3 class="work__title">Geofencing as a service</h3>
-              <p class="work__desc">A micro-service that enforced where a user actually was before letting them place a bet, checking GPS against IP address. Flask on the back, React on the front.</p>
+              <h3 class="work__title">Geofencing micro-service</h3>
+              <p class="work__desc">Enforced where a user actually was before letting them place a bet, checking GPS against IP address. Flask on the back, React on the front.</p>
               <ul class="tags"><li>Flask</li><li>React</li><li>Geolocation</li></ul>
             </li>
 
             <li class="work__item reveal" data-reveal data-delay="3">
               <span class="work__idx">04</span>
-              <h3 class="work__title">Social, behind a cache</h3>
+              <h3 class="work__title">Social features</h3>
               <p class="work__desc">Django models and API endpoints for the social side of the app &mdash; profiles, posts and comments &mdash; with a Redis cache in front to keep responses fast. Unit and automation tests plus crash reporting to catch what got through.</p>
               <ul class="tags"><li>Django</li><li>Redis</li><li>Testing</li></ul>
             </li>
