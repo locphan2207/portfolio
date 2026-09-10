@@ -122,8 +122,8 @@
 
     <nav class="nav__links" aria-label="Sections">
       <a href="#work"     data-nav data-cursor="link"><span class="nav__idx">01</span> Work</a>
-      <a href="#projects" data-nav data-cursor="link"><span class="nav__idx">02</span> Projects</a>
-      <a href="#stack"    data-nav data-cursor="link"><span class="nav__idx">03</span> Stack</a>
+      <a href="#stack"    data-nav data-cursor="link"><span class="nav__idx">02</span> Stack</a>
+      <a href="#projects" data-nav data-cursor="link"><span class="nav__idx">03</span> Projects</a>
       <a href="#about"    data-nav data-cursor="link"><span class="nav__idx">04</span> About</a>
       <a href="#contact"  data-nav data-cursor="link"><span class="nav__idx">05</span> Contact</a>
       <i class="nav__pill" aria-hidden="true"></i>
@@ -154,8 +154,8 @@
 <div class="menu" id="menu" hidden>
   <nav class="menu__links" aria-label="Sections">
     <a href="#work"     data-cursor="link"><i>01</i> Work</a>
-    <a href="#projects" data-cursor="link"><i>02</i> Projects</a>
-    <a href="#stack"    data-cursor="link"><i>03</i> Stack</a>
+    <a href="#stack"    data-cursor="link"><i>02</i> Stack</a>
+    <a href="#projects" data-cursor="link"><i>03</i> Projects</a>
     <a href="#about"    data-cursor="link"><i>04</i> About</a>
     <a href="#contact"  data-cursor="link"><i>05</i> Contact</a>
   </nav>
@@ -213,12 +213,12 @@
             <i>01</i><span>Work</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#projects" data-cursor="link">
-            <i>02</i><span>Projects</span>
+          <a href="#stack" data-cursor="link">
+            <i>02</i><span>Stack</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#stack" data-cursor="link">
-            <i>03</i><span>Stack</span>
+          <a href="#projects" data-cursor="link">
+            <i>03</i><span>Projects</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
           </a>
           <a href="#about" data-cursor="link">
@@ -318,11 +318,72 @@
     </div>
   </section>
 
+  <!-- ── Stack ────────────────────────────────────────────────────────── -->
+  <section class="section section--stack" data-skew id="stack">
+    <div class="shell">
+      <header class="secHead reveal" data-reveal>
+        <p class="secHead__idx">02 — Toolkit</p>
+        <h2 class="secHead__title">The stack I <em>reach for</em></h2>
+        <p class="secHead__note" data-words>This list looks nothing like the one on the last version of this page. Tools turn over; the last group is the part that transfers.</p>
+      </header>
+
+      <div class="stack">
+        <section class="stack__group reveal" data-reveal>
+          <h3 class="stack__label"><i>A</i> Front end</h3>
+          <ul class="chips">
+            <li data-cursor="link"><span>TypeScript</span></li>
+            <li data-cursor="link"><span>Angular</span></li>
+            <li data-cursor="link"><span>AngularDart</span></li>
+            <li data-cursor="link"><span>React</span></li>
+            <li data-cursor="link"><span>React Native</span></li>
+            <li data-cursor="link"><span>JavaScript</span></li>
+            <li data-cursor="link"><span>CSS</span></li>
+          </ul>
+        </section>
+
+        <section class="stack__group reveal" data-reveal data-delay="1">
+          <h3 class="stack__label"><i>B</i> Back end &amp; data</h3>
+          <ul class="chips">
+            <li data-cursor="link"><span>RPC APIs</span></li>
+            <li data-cursor="link"><span>Protocol buffers</span></li>
+            <li data-cursor="link"><span>SQL</span></li>
+            <li data-cursor="link"><span>Schema design</span></li>
+            <li data-cursor="link"><span>Node.js</span></li>
+            <li data-cursor="link"><span>Python</span></li>
+            <li data-cursor="link"><span>Django</span></li>
+            <li data-cursor="link"><span>Redis</span></li>
+          </ul>
+        </section>
+
+        <section class="stack__group reveal" data-reveal data-delay="2">
+          <h3 class="stack__label"><i>C</i> ML &amp; pipelines</h3>
+          <ul class="chips">
+            <li data-cursor="link"><span>Model training</span></li>
+            <li data-cursor="link"><span>Model hosting</span></li>
+            <li data-cursor="link"><span>Live inference</span></li>
+            <li data-cursor="link"><span>Batch pipelines</span></li>
+          </ul>
+        </section>
+
+        <section class="stack__group reveal" data-reveal data-delay="3">
+          <h3 class="stack__label"><i>D</i> How I work</h3>
+          <ul class="chips">
+            <li data-cursor="link"><span>Design docs</span></li>
+            <li data-cursor="link"><span>Code review</span></li>
+            <li data-cursor="link"><span>Incremental migration</span></li>
+            <li data-cursor="link"><span>On-call</span></li>
+            <li data-cursor="link"><span>AI-assisted development</span></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+
   <!-- ── Projects — independent work, all of it public ────────────────── -->
   <section class="section" id="projects">
     <div class="shell">
       <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">02 — Independent work</p>
+        <p class="secHead__idx">03 — Independent work</p>
         <h2 class="secHead__title">Built in the <em>open</em></h2>
         <p class="secHead__note" data-words>Independent projects from before Google: a full-stack app, a mobile app and a game. Older than the code I write today, and all of it still readable.</p>
       </header>
@@ -419,67 +480,6 @@
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- ── Stack ────────────────────────────────────────────────────────── -->
-  <section class="section section--stack" data-skew id="stack">
-    <div class="shell">
-      <header class="secHead reveal" data-reveal>
-        <p class="secHead__idx">03 — Toolkit</p>
-        <h2 class="secHead__title">The stack I <em>reach for</em></h2>
-        <p class="secHead__note" data-words>This list looks nothing like the one on the last version of this page. Tools turn over; the last group is the part that transfers.</p>
-      </header>
-
-      <div class="stack">
-        <section class="stack__group reveal" data-reveal>
-          <h3 class="stack__label"><i>A</i> Front end</h3>
-          <ul class="chips">
-            <li data-cursor="link"><span>TypeScript</span></li>
-            <li data-cursor="link"><span>Angular</span></li>
-            <li data-cursor="link"><span>AngularDart</span></li>
-            <li data-cursor="link"><span>React</span></li>
-            <li data-cursor="link"><span>React Native</span></li>
-            <li data-cursor="link"><span>JavaScript</span></li>
-            <li data-cursor="link"><span>CSS</span></li>
-          </ul>
-        </section>
-
-        <section class="stack__group reveal" data-reveal data-delay="1">
-          <h3 class="stack__label"><i>B</i> Back end &amp; data</h3>
-          <ul class="chips">
-            <li data-cursor="link"><span>RPC APIs</span></li>
-            <li data-cursor="link"><span>Protocol buffers</span></li>
-            <li data-cursor="link"><span>SQL</span></li>
-            <li data-cursor="link"><span>Schema design</span></li>
-            <li data-cursor="link"><span>Node.js</span></li>
-            <li data-cursor="link"><span>Python</span></li>
-            <li data-cursor="link"><span>Django</span></li>
-            <li data-cursor="link"><span>Redis</span></li>
-          </ul>
-        </section>
-
-        <section class="stack__group reveal" data-reveal data-delay="2">
-          <h3 class="stack__label"><i>C</i> ML &amp; pipelines</h3>
-          <ul class="chips">
-            <li data-cursor="link"><span>Model training</span></li>
-            <li data-cursor="link"><span>Model hosting</span></li>
-            <li data-cursor="link"><span>Live inference</span></li>
-            <li data-cursor="link"><span>Batch pipelines</span></li>
-          </ul>
-        </section>
-
-        <section class="stack__group reveal" data-reveal data-delay="3">
-          <h3 class="stack__label"><i>D</i> How I work</h3>
-          <ul class="chips">
-            <li data-cursor="link"><span>Design docs</span></li>
-            <li data-cursor="link"><span>Code review</span></li>
-            <li data-cursor="link"><span>Incremental migration</span></li>
-            <li data-cursor="link"><span>On-call</span></li>
-            <li data-cursor="link"><span>AI-assisted development</span></li>
-          </ul>
-        </section>
-      </div>
     </div>
   </section>
 
