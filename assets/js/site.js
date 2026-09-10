@@ -418,12 +418,19 @@
   // magic numbers. Below the breakpoint the CSS hands scrolling back to the
   // browser and this stays out of the way.
 
+  // Scroll spent standing still on the last card before the stage lets go, as
+  // a fraction of the viewport. Rail travel is mapped 1:1 to scroll, so this
+  // is pure dwell on the end of the run, not a slower run.
+  const RAIL_DWELL = .18;
+
   const gallery = $('#gallery');
   const rail = $('#rail');
   const meter = $('.gallery__meter i');
   const railNow = $('#railNow');
   const cardEls = rail ? $$('.card:not(.card--end)', rail) : [];
-  const wide = matchMedia('(min-width: 901px)');
+  // Pinning needs a viewport that can hold head, rail and meter at once. Too
+  // narrow or too short and the CSS hands the rail back to the browser.
+  const wide = matchMedia('(min-width: 901px) and (min-height: 720px)');
 
   let travel = 0;
 
@@ -437,11 +444,27 @@
       travel = 0;
       return;
     }
-    travel = Math.max(0, rail.scrollWidth - innerWidth);
+    // The rail overflows its own visible box, which is the window only while
+    // the stage runs full bleed — measure the box, and the sum holds either
+    // way. Off the last card rather than scrollWidth, because a flex row drops
+    // its trailing padding from that: the inset that leaves the closing card
+    // off the right edge the way the first card sits off the left. Both rects
+    // carry the live transform, so the distance between them is free of it.
+    const railBox = rail.getBoundingClientRect();
+    const lastBox = rail.lastElementChild && rail.lastElementChild.getBoundingClientRect();
+    const tailInset = parseFloat(getComputedStyle(rail).paddingRight) || 0;
+    const reach = lastBox ? lastBox.right - railBox.left + tailInset : rail.scrollWidth;
+    travel = Math.max(0, Math.round(reach - rail.clientWidth));
 
     // The rail can simply fit: few enough cards, or a wide enough screen. There
     // is nothing to travel then, so hand the section back its natural height
     // rather than park a motionless stage in a viewport of reserved space.
+    // A run shorter than one card is the same case in practice — it would buy
+    // a screen of scroll and barely move.
+    const firstCard = cardEls[0];
+    if (travel < (firstCard ? firstCard.offsetWidth : 1)) {
+      travel = 0;
+    }
     if (!travel) {
       gallery.classList.add('is-static');
       gallery.style.height = '';
@@ -450,27 +473,24 @@
     }
 
     gallery.classList.remove('is-static');
-    // A little slack past the end so the last card is readable before release.
-    gallery.style.height = `${innerHeight + travel + innerHeight * 0.15}px`;
+    gallery.style.height = `${innerHeight * (1 + RAIL_DWELL) + travel}px`;
   }
 
   function driveRail() {
     if (!gallery || !rail || !travel) return;
     const box = gallery.getBoundingClientRect();
-    const span = box.height - innerHeight;
-    const p = clamp(-box.top / span, 0, 1);
+    // One pixel of scroll, one pixel of rail: the run ends the moment the last
+    // card lands, and the dwell height left over holds it there before release.
+    const p = clamp(-box.top / travel, 0, 1);
     rail.style.transform = `translate3d(${-p * travel}px, 0, 0)`;
     if (meter) meter.style.setProperty('--rail-p', p.toFixed(4));
 
-    // Counter tracks whichever project card is nearest the reading edge.
-    if (railNow) {
-      const edge = innerWidth * .28;
-      let best = 1, bestD = Infinity;
-      cardEls.forEach((c, i) => {
-        const d = Math.abs(c.getBoundingClientRect().left - edge);
-        if (d < bestD) { bestD = d; best = i + 1; }
-      });
-      const label = String(Math.min(best, cardEls.length)).padStart(2, '0');
+    // Counter reads off the same progress as the meter under it, so it starts
+    // at the first project and lands on the last. Measuring the card nearest a
+    // reading edge instead would stall short of the last one, which can never
+    // reach that edge: the rail runs out of cards before it runs out of room.
+    if (railNow && cardEls.length) {
+      const label = String(1 + Math.round(p * (cardEls.length - 1))).padStart(2, '0');
       if (railNow.textContent !== label) railNow.textContent = label;
     }
   }
@@ -487,10 +507,10 @@
     // of page scroll rather than letting the browser scroll a pinned stage.
     $$('a', rail).forEach(a => a.addEventListener('focus', () => {
       if (!travel) return;
-      const span = gallery.getBoundingClientRect().height - innerHeight;
-      const want = a.getBoundingClientRect().left - innerWidth * .18;
+      const want = a.getBoundingClientRect().left - rail.getBoundingClientRect().left
+                 - parseFloat(getComputedStyle(rail).paddingLeft);
       if (Math.abs(want) < 8) return;
-      scrollTo({ top: scrollY + want * (span / travel), behavior: calm ? 'auto' : 'smooth' });
+      scrollTo({ top: scrollY + want, behavior: calm ? 'auto' : 'smooth' });
     }));
   }
 
