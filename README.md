@@ -52,11 +52,31 @@ python3 -m http.server 8000   # then open http://localhost:8000
   system reads as bleed in the light theme and glow in the dark one. Blobs are
   drawn from a pre-rendered sprite; building a gradient per blob per frame is
   what makes this kind of effect stutter.
-- **Side-projects rail** — the section is given enough height for the rail's
-  overflow, then the stage sticks inside it and vertical progress drives
-  `translateX`. The height is derived from the rail, so adding a project needs
-  no magic numbers.
-  Under 900px, and under reduced motion, it degrades to an ordinary swipeable
-  scroller from the same markup.
+- **Rails** — two sections run on the same device, so the page only ever
+  teaches one scroll behaviour: the section is given enough height for the
+  rail's overflow, then the stage sticks inside it and vertical progress
+  drives `translateX`. Travel is measured off the last card rather than
+  `scrollWidth`, because a flex row drops its trailing padding from that, and
+  the height is derived from the rail, so adding a card needs no magic
+  numbers.
+  The side-projects rail hands scrolling back to the browser under 900px. The
+  work rail keeps running off scroll there — width only decides whether the
+  diagram sits beside the cards or above them — and unpins only where it
+  genuinely cannot work: a viewport too short to hold the diagram and a card
+  at once, reduced motion, or no JavaScript. Both degrade to an ordinary
+  swipeable scroller from the same markup.
+- **System diagram** — the work at Google is invisible by nature, so the Work
+  section draws it instead of describing it. Each card lights the nodes it is
+  about and runs traffic on the edges it uses; `pathLength="100"` normalises
+  every edge so one dash pattern gives the same pulse on a long curve and a
+  short straight. Step 03 is the only one that changes the drawing's shape:
+  the datastore splits, both paths take writes, then the old table is cut
+  loose. Every node label carries a short form for the narrow layout, where
+  the drawing renders at about half size and the edge labels come off — the
+  caption says the same thing in words.
+- **Stack wall** — one mass instead of four chip trays. Size carries how deep
+  the thing goes, colour carries the field, and picking a term pulls its whole
+  field forward. The depth is a reading of the copy on this page, not a
+  metric, which is why nothing on screen claims a number.
 - **Images** — sources live in git history. `assets/img/` holds derivatives in
   WebP with JPEG fallbacks, served through `<picture>`.
