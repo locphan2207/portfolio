@@ -45,6 +45,7 @@
   --serif: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
 
   --shell: 1180px;
+  --stage-pad: clamp(1.1rem, 3vw, 2rem);
   --gut: clamp(1.1rem, 4vw, 2.6rem);
   --ease: cubic-bezier(.22, .61, .36, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
@@ -102,7 +103,8 @@ body {
   font-size: 1rem;
   line-height: 1.62;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* No overflow-x here on purpose: it computes overflow-y to auto, which makes
+     body a scroll container and silently kills position: sticky everywhere. */
 }
 
 h1, h2, h3 {
@@ -206,7 +208,9 @@ a { color: inherit; }
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--raise);
-  overflow: hidden;
+  /* Deliberately not overflow: hidden — it would clip nothing useful and
+     would trap the sticky panel inside the stage. The bar rounds its own
+     top corners instead. */
 }
 .stage__bar {
   display: flex;
@@ -217,8 +221,9 @@ a { color: inherit; }
   padding: .7rem 1.1rem;
   border-bottom: 1px solid var(--line);
   background: var(--sink);
+  border-radius: 17px 17px 0 0;
 }
-.stage__body { padding: clamp(1.1rem, 3vw, 2rem); }
+.stage__body { padding: var(--stage-pad); }
 
 .cost {
   display: flex;
@@ -278,8 +283,8 @@ a { color: inherit; }
 
 /* Diagram parts. Everything rests visible and quiet; active lights up. */
 .n-box { fill: var(--raise); stroke: var(--line-2); stroke-width: 1; transition: stroke .4s var(--ease), fill .4s var(--ease); }
-.n-label { fill: var(--text-3); font-family: var(--sans); font-size: 11.5px; font-weight: 500; transition: fill .4s var(--ease); }
-.n-tag { fill: var(--text-3); font-family: var(--sans); font-size: 8.5px; letter-spacing: .1em; opacity: .7; transition: fill .4s var(--ease), opacity .4s var(--ease); }
+.n-label { fill: var(--text-3); font-family: var(--sans); font-size: 14px; font-weight: 500; transition: fill .4s var(--ease); }
+.n-tag { fill: var(--text-3); font-family: var(--sans); font-size: 10px; letter-spacing: .1em; opacity: .7; transition: fill .4s var(--ease), opacity .4s var(--ease); }
 
 .node.on .n-box { stroke: var(--accent); fill: var(--wash); }
 .node.on .n-label { fill: var(--text); }
@@ -294,7 +299,7 @@ a { color: inherit; }
 .edge.alert .flow { stroke: var(--alert); }
 @keyframes flow { from { stroke-dashoffset: 50; } to { stroke-dashoffset: 0; } }
 
-.e-label { fill: var(--text-3); font-family: var(--sans); font-size: 9px; letter-spacing: .03em; opacity: 0; transition: opacity .35s var(--ease); }
+.e-label { fill: var(--text-3); font-family: var(--sans); font-size: 11px; letter-spacing: .03em; opacity: 0; transition: opacity .35s var(--ease); }
 .edge.on .e-label { opacity: 1; fill: var(--accent); }
 .edge.alert.on .e-label { fill: var(--alert); }
 
@@ -304,11 +309,16 @@ a { color: inherit; }
 .sys.mig #plateOld .n-box { stroke: var(--accent); fill: var(--wash); }
 .sys.mig.retired #plateOld { opacity: .42; }
 .sys.mig.retired #plateOld .n-box { stroke-dasharray: 4 3; stroke: var(--line-2); fill: none; }
-#retireNote { opacity: 0; transition: opacity .5s var(--ease); fill: var(--text-3); font-family: var(--sans); font-size: 8.5px; letter-spacing: .04em; }
+#retireNote { opacity: 0; transition: opacity .5s var(--ease); fill: var(--text-3); font-family: var(--sans); font-size: 10px; letter-spacing: .04em; }
 .sys.mig.retired #retireNote { opacity: 1; }
-#storeLabel tspan.alt { display: none; }
-.sys.mig #storeLabel tspan.base { display: none; }
-.sys.mig #storeLabel tspan.alt { display: inline; }
+
+/* Every node label carries a long form and a short one. The short form is
+   for the narrow layout, where the whole drawing renders at about half
+   scale and the long names stop fitting inside their boxes. */
+.n-label tspan.alt { display: none; }
+#storeLabel tspan.mig, #storeLabel tspan.migAlt { display: none; }
+.sys.mig #storeLabel tspan.base, .sys.mig #storeLabel tspan.alt { display: none; }
+.sys.mig #storeLabel tspan.mig { display: inline; }
 
 .pulse { fill: none; stroke: var(--alert); stroke-width: 1.2; opacity: 0; }
 .node.alert .pulse { animation: ping 1.9s var(--ease-out) infinite; }
@@ -424,8 +434,42 @@ a { color: inherit; }
 
 /* ── Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .sys { grid-template-columns: 1fr; }
-  .sys__panel { position: static; order: -1; }
+  /* Flex, not a one-column grid: a grid item's containing block is its own
+     row, so a sticky panel there has nowhere to travel. A flex item is
+     bounded by the whole container, which is what lets it pin. */
+  .sys { display: flex; flex-direction: column; }
+  .sys__cards { padding-top: 1.1rem; }
+
+  .sys__panel {
+    order: -1;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    gap: .55rem;
+    /* Opaque, or the cards scroll through the diagram behind it. */
+    background: var(--raise);
+    padding-block: .7rem;
+    border-bottom: 1px solid var(--line);
+    /* Bleed to the stage edges, or cards show through beside the panel. */
+    margin-inline: calc(var(--stage-pad) * -1);
+    padding-inline: var(--stage-pad);
+  }
+  .sys__cap { min-height: 0; font-size: .82rem; padding-top: .55rem; }
+
+  /* The drawing scales to roughly half, so the type inside it is set in
+     bigger user units to land back at a readable size. */
+  .n-label { font-size: 19px; }
+  .n-tag { display: none; }
+  #retireNote { font-size: 13px; }
+  /* Edge labels do not survive the scale-down. The caption names the same
+     thing in words, so they come off rather than shrink into noise. */
+  .e-label { display: none; }
+
+  .n-label tspan.base { display: none; }
+  .n-label tspan.alt { display: inline; }
+  .sys.mig #storeLabel tspan.mig, .sys.mig #storeLabel tspan.alt { display: none; }
+  .sys.mig #storeLabel tspan.migAlt { display: inline; }
+
   .decks { grid-template-columns: repeat(2, 1fr); }
   .verdict__grid { grid-template-columns: 1fr; }
 }
@@ -536,119 +580,123 @@ html.calm * { scroll-behavior: auto; }
           </div>
 
           <figure class="sys__figure">
-            <svg class="sys__svg" viewBox="0 0 440 512" role="img"
+            <!-- Laid out left-to-right on purpose: a request flow reads that
+                 way, and a wide-short drawing is the only shape that can sit
+                 pinned above the cards on a phone without eating the screen. -->
+            <svg class="sys__svg" viewBox="0 0 660 380" role="img"
                  aria-label="Architecture of the system: users reach an Angular web app, which calls an RPC gateway alongside other teams; the gateway writes to a datastore and queries a model server fed by training; the datastore and model server page an on-call engineer.">
 
               <!-- edges first so nodes paint over their ends -->
               <g class="edge" data-edge="users-web">
-                <path class="edge-base" d="M220 68 V120" pathLength="100"/>
-                <path class="flow" d="M220 68 V120" pathLength="100"/>
-                <text class="e-label" x="228" y="98">requests</text>
-              </g>
-
-              <g class="edge" data-edge="peers-rpc">
-                <path class="edge-base" d="M372 164 C372 202 330 216 289 230" pathLength="100"/>
-                <path class="flow" d="M372 164 C372 202 330 216 289 230" pathLength="100"/>
-                <text class="e-label" x="330" y="196">versioned calls</text>
+                <path class="edge-base" d="M100 160 H144" pathLength="100"/>
+                <path class="flow" d="M100 160 H144" pathLength="100"/>
+                <text class="e-label" x="122" y="128" text-anchor="middle">requests</text>
               </g>
 
               <g class="edge" data-edge="web-rpc">
-                <path class="edge-base" d="M220 164 V216" pathLength="100"/>
-                <path class="flow" d="M220 164 V216" pathLength="100"/>
-                <text class="e-label" x="228" y="194">RPC</text>
+                <path class="edge-base" d="M292 160 H328" pathLength="100"/>
+                <path class="flow" d="M292 160 H328" pathLength="100"/>
+                <text class="e-label" x="310" y="152" text-anchor="middle">RPC</text>
+              </g>
+
+              <g class="edge" data-edge="peers-rpc">
+                <path class="edge-base" d="M396 80 V138" pathLength="100"/>
+                <path class="flow" d="M396 80 V138" pathLength="100"/>
+                <text class="e-label" x="404" y="112">versioned calls</text>
               </g>
 
               <g class="edge" data-edge="rpc-store">
-                <path class="edge-base" d="M220 260 C220 300 106 296 106 330" pathLength="100"/>
-                <path class="flow" d="M220 260 C220 300 106 296 106 330" pathLength="100"/>
-                <text class="e-label" x="150" y="288" text-anchor="end">writes</text>
+                <path class="edge-base" d="M464 152 C486 152 492 104 512 104" pathLength="100"/>
+                <path class="flow" d="M464 152 C486 152 492 104 512 104" pathLength="100"/>
+                <text class="e-label" x="496" y="136">writes</text>
               </g>
 
               <g class="edge" data-edge="rpc-model">
-                <path class="edge-base" d="M220 260 C220 300 330 296 330 330" pathLength="100"/>
-                <path class="flow" d="M220 260 C220 300 330 296 330 330" pathLength="100"/>
-                <text class="e-label" x="252" y="292">infers</text>
+                <path class="edge-base" d="M464 170 C488 170 492 240 512 240" pathLength="100"/>
+                <path class="flow" d="M464 170 C488 170 492 240 512 240" pathLength="100"/>
+                <text class="e-label" x="496" y="196">infers</text>
               </g>
 
               <g class="edge" data-edge="train-model">
-                <path class="edge-base" d="M330 430 V374" pathLength="100"/>
-                <path class="flow" d="M330 430 V374" pathLength="100"/>
-                <text class="e-label" x="338" y="406">deploys</text>
+                <path class="edge-base" d="M578 310 V254" pathLength="100"/>
+                <path class="flow" d="M578 310 V254" pathLength="100"/>
+                <text class="e-label" x="586" y="285">deploys</text>
               </g>
 
               <!-- the fork that only exists during the migration -->
               <g class="edge" data-edge="fork-old">
-                <path class="flow" d="M220 260 C200 280 140 286 74 290" pathLength="100"/>
+                <path class="flow" d="M464 150 C490 142 490 47 512 47" pathLength="100"/>
               </g>
               <g class="edge" data-edge="fork-new">
-                <path class="flow" d="M220 260 C220 302 106 302 106 330" pathLength="100"/>
-                <text class="e-label" x="186" y="312">dual writes</text>
+                <path class="flow" d="M464 158 C490 158 492 104 512 104" pathLength="100"/>
+                <text class="e-label" x="470" y="178">dual writes</text>
               </g>
 
               <g class="edge" data-edge="store-pager">
-                <path class="edge-base dash" d="M106 374 V430" pathLength="100"/>
-                <path class="flow" d="M106 374 V430" pathLength="100"/>
-                <text class="e-label" x="98" y="406" text-anchor="end">pages</text>
+                <path class="edge-base dash" d="M520 126 C500 190 470 268 446 310" pathLength="100"/>
+                <path class="flow" d="M520 126 C500 190 470 268 446 310" pathLength="100"/>
+                <text class="e-label" x="462" y="232" text-anchor="end">pages</text>
               </g>
 
               <g class="edge" data-edge="model-pager">
-                <path class="edge-base dash" d="M330 374 C330 420 230 452 163 452" pathLength="100"/>
-                <path class="flow" d="M330 374 C330 420 230 452 163 452" pathLength="100"/>
+                <path class="edge-base dash" d="M512 244 C484 250 462 300 452 326" pathLength="100"/>
+                <path class="flow" d="M512 244 C484 250 462 300 452 326" pathLength="100"/>
               </g>
 
-              <!-- nodes -->
+              <!-- nodes. Each label carries a short form for narrow screens,
+                   where the whole drawing is scaled down to about half size. -->
               <g class="node" data-node="users">
-                <rect class="n-box" x="164" y="24" width="112" height="44" rx="10"/>
-                <text class="n-label" x="220" y="51" text-anchor="middle">Users</text>
+                <rect class="n-box" x="12" y="138" width="88" height="44" rx="10"/>
+                <text class="n-label" x="56" y="165" text-anchor="middle">Users</text>
               </g>
 
               <g class="node" data-node="web">
-                <rect class="n-box" x="154" y="120" width="132" height="44" rx="10"/>
-                <text class="n-tag" x="164" y="137">01</text>
-                <text class="n-label" x="220" y="150" text-anchor="middle">Angular web app</text>
+                <rect class="n-box" x="144" y="138" width="148" height="44" rx="10"/>
+                <text class="n-tag" x="154" y="155">01</text>
+                <text class="n-label" x="218" y="168" text-anchor="middle"><tspan class="base">Angular web app</tspan><tspan class="alt">Web app</tspan></text>
               </g>
 
               <g class="node" data-node="peers">
-                <rect class="n-box" x="317" y="120" width="110" height="44" rx="10"/>
-                <text class="n-tag" x="325" y="137">04</text>
-                <text class="n-label" x="372" y="150" text-anchor="middle">Other teams</text>
+                <rect class="n-box" x="333" y="36" width="126" height="44" rx="10"/>
+                <text class="n-tag" x="343" y="53">04</text>
+                <text class="n-label" x="396" y="66" text-anchor="middle"><tspan class="base">Other teams</tspan><tspan class="alt">Other teams</tspan></text>
               </g>
 
               <g class="node" data-node="rpc">
-                <rect class="n-box" x="154" y="216" width="132" height="44" rx="10"/>
-                <text class="n-tag" x="164" y="233">04</text>
-                <text class="n-label" x="220" y="246" text-anchor="middle">RPC gateway</text>
+                <rect class="n-box" x="328" y="138" width="136" height="44" rx="10"/>
+                <text class="n-tag" x="338" y="155">04</text>
+                <text class="n-label" x="396" y="168" text-anchor="middle"><tspan class="base">RPC gateway</tspan><tspan class="alt">RPC gateway</tspan></text>
               </g>
 
-              <!-- the old plate sits behind the datastore, migration only -->
+              <!-- the old table, migration only -->
               <g class="node" id="plateOld">
-                <rect class="n-box" x="14" y="290" width="120" height="34" rx="9"/>
-                <text class="n-label" x="74" y="312" text-anchor="middle">orders_wide</text>
-                <text id="retireNote" x="14" y="283">safe to delete</text>
+                <rect class="n-box" x="512" y="28" width="132" height="38" rx="9"/>
+                <text class="n-label" x="578" y="52" text-anchor="middle">orders_wide</text>
+                <text id="retireNote" x="578" y="20" text-anchor="middle">safe to delete</text>
               </g>
 
               <g class="node" data-node="store">
-                <rect class="n-box" x="36" y="330" width="140" height="44" rx="10"/>
-                <text class="n-tag" x="44" y="347">02 / 03</text>
-                <text class="n-label" id="storeLabel" x="106" y="360" text-anchor="middle"><tspan class="base">Datastore</tspan><tspan class="alt">orders + line_items</tspan></text>
+                <rect class="n-box" x="512" y="82" width="132" height="44" rx="10"/>
+                <text class="n-tag" x="522" y="99">02 / 03</text>
+                <text class="n-label" id="storeLabel" x="578" y="112" text-anchor="middle"><tspan class="base">Datastore</tspan><tspan class="alt">Datastore</tspan><tspan class="mig">orders + line_items</tspan><tspan class="migAlt">2 tables</tspan></text>
               </g>
 
               <g class="node" data-node="model">
-                <rect class="n-box" x="260" y="330" width="140" height="44" rx="10"/>
-                <text class="n-tag" x="268" y="347">05</text>
-                <text class="n-label" x="330" y="360" text-anchor="middle">Model server</text>
+                <rect class="n-box" x="512" y="210" width="132" height="44" rx="10"/>
+                <text class="n-tag" x="522" y="227">05</text>
+                <text class="n-label" x="578" y="240" text-anchor="middle"><tspan class="base">Model server</tspan><tspan class="alt">Model server</tspan></text>
               </g>
 
               <g class="node" data-node="train">
-                <rect class="n-box" x="270" y="430" width="120" height="44" rx="10"/>
-                <text class="n-label" x="330" y="457" text-anchor="middle">Training</text>
+                <rect class="n-box" x="524" y="310" width="108" height="44" rx="10"/>
+                <text class="n-label" x="578" y="337" text-anchor="middle">Training</text>
               </g>
 
               <g class="node" data-node="pager">
-                <rect class="pulse" x="51" y="430" width="110" height="44" rx="10" style="transform-origin: 106px 452px;"/>
-                <rect class="n-box" x="51" y="430" width="110" height="44" rx="10"/>
-                <text class="n-tag" x="59" y="447">06</text>
-                <text class="n-label" x="106" y="460" text-anchor="middle">Pager</text>
+                <rect class="pulse" x="340" y="310" width="112" height="44" rx="10" style="transform-origin: 396px 332px;"/>
+                <rect class="n-box" x="340" y="310" width="112" height="44" rx="10"/>
+                <text class="n-tag" x="350" y="327">06</text>
+                <text class="n-label" x="396" y="340" text-anchor="middle">Pager</text>
               </g>
             </svg>
             <figcaption class="sys__cap" id="sysCap" aria-live="polite">
@@ -665,6 +713,7 @@ html.calm * { scroll-behavior: auto; }
     <span><b>Cost</b> ~140 lines of CSS + ~60 of JS</span>
     <span><b>Deps</b> none — inline SVG, one IntersectionObserver</span>
     <span><b>Calm</b> flows freeze to static dashes, nothing translates</span>
+    <span><b>Narrow</b> pins above the cards, short labels, ~24vh</span>
     <span><b>A11y</b> svg carries an aria-label; captions announce politely</span>
   </div>
 </section>
@@ -922,21 +971,43 @@ html.calm * { scroll-behavior: auto; }
   // otherwise enough to leave the diagram on the wrong step.
   var ratios = {};
   var lockUntil = 0;
+  var panel = $('.sys__panel');
+  var io = null;
 
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        ratios[e.target.dataset.step] = e.isIntersecting ? e.intersectionRatio : 0;
-      });
-      if (Date.now() < lockUntil) return;
-      var bestStep = 0, bestRatio = 0;
-      Object.keys(ratios).forEach(function (k) {
-        if (ratios[k] > bestRatio) { bestRatio = ratios[k]; bestStep = Number(k); }
-      });
-      if (bestStep) setStep(bestStep);
-    }, { rootMargin: '-20% 0px -30% 0px', threshold: [0, 0.2, 0.45, 0.7, 0.95] });
+  function onCards(entries) {
+    entries.forEach(function (e) {
+      ratios[e.target.dataset.step] = e.isIntersecting ? e.intersectionRatio : 0;
+    });
+    if (Date.now() < lockUntil) return;
+    var bestStep = 0, bestRatio = 0;
+    Object.keys(ratios).forEach(function (k) {
+      if (ratios[k] > bestRatio) { bestRatio = ratios[k]; bestStep = Number(k); }
+    });
+    if (bestStep) setStep(bestStep);
+  }
+
+  // Stacked, the diagram pins to the top of the viewport and the cards read
+  // underneath it, so the band that decides the active card has to start
+  // below the panel rather than at 20% of the screen.
+  function watchCards() {
+    if (!('IntersectionObserver' in window)) return;
+    if (io) io.disconnect();
+    var stacked = innerWidth <= 900;
+    var top = stacked ? -(Math.round(panel.getBoundingClientRect().height) + 10) + 'px' : '-20%';
+    io = new IntersectionObserver(onCards, {
+      rootMargin: top + ' 0px ' + (stacked ? '-22%' : '-30%') + ' 0px',
+      threshold: [0, 0.2, 0.45, 0.7, 0.95]
+    });
+    ratios = {};
     wcards.forEach(function (c) { io.observe(c); });
   }
+  watchCards();
+
+  var reflow;
+  addEventListener('resize', function () {
+    clearTimeout(reflow);
+    reflow = setTimeout(watchCards, 180);
+  }, { passive: true });
 
   stepBtns.forEach(function (b) {
     b.addEventListener('click', function () {
