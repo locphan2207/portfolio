@@ -487,26 +487,19 @@ a { color: inherit; }
 .foot { padding-block: 1.6rem 3rem; font-size: .76rem; color: var(--text-3); border-top: 1px solid var(--line); }
 
 /* ── Responsive ────────────────────────────────────────────────────── */
-/* Too narrow or too short to hold the diagram and a card at once, so the
-   pinning comes off and the rail becomes an ordinary swipeable scroller —
-   same markup, the browser doing the scrolling. */
-@media (max-width: 900px), (max-height: 719px) {
-  .railwrap { height: auto !important; }
-  .railstage { position: static; height: auto; }
-  .railstage > .stage__body { display: block; }
-  .sys { display: flex; flex-direction: column; align-items: stretch; gap: 1rem; }
+/* Narrow is a layout question, not a pinning one: the diagram moves above
+   the rail instead of beside it, and the rail still runs off vertical
+   scroll. What actually takes the pinning off is height, calm, or no JS. */
+@media (max-width: 900px) {
+  .railstage { height: min(100svh, 720px); }
+  .sys { display: flex; flex-direction: column; align-items: stretch; gap: .9rem; }
   .sys__panel { gap: .55rem; }
-  .railcards { transform: none !important; }
-  .railtrack {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    overscroll-behavior-x: contain;
-    margin-inline: calc(var(--stage-pad) * -1);
-    padding-inline: var(--stage-pad);
-  }
-  .wcard { flex-basis: min(78vw, 320px); scroll-snap-align: center; }
-  [data-hint="scroll"] { display: none; }
-  [data-hint="swipe"] { display: inline; }
+  .railtrack { margin-inline: calc(var(--stage-pad) * -1); padding-inline: var(--stage-pad); }
+  .wcard { flex-basis: min(78vw, 320px); }
+  /* Stacked, the diagram and a card share one screen, so the drawing takes a
+     height cap rather than its natural width — otherwise the panel outgrows
+     the pinned stage and the centred content spills over the bar. */
+  .sys__svg { max-height: min(30vh, 260px); width: auto; margin-inline: auto; }
   .sys__cap { min-height: 0; font-size: .82rem; padding-top: .55rem; }
 
   /* The drawing scales to roughly half, so the type inside it is set in
@@ -522,7 +515,9 @@ a { color: inherit; }
   .n-label tspan.alt { display: inline; }
   .sys.mig #storeLabel tspan.mig, .sys.mig #storeLabel tspan.alt { display: none; }
   .sys.mig #storeLabel tspan.migAlt { display: inline; }
+}
 
+@media (max-width: 900px) {
   .decks { grid-template-columns: repeat(2, 1fr); }
   .verdict__grid { grid-template-columns: 1fr; }
 }
@@ -532,6 +527,24 @@ a { color: inherit; }
 }
 
 /* ── Calm: the site's own reduce-motion contract ───────────────────── */
+/* The one case the pinned rail cannot serve: a viewport too short to hold
+   the diagram and a card at once, a reader who asked for less motion, or a
+   page with no script to drive it. Same markup, the browser scrolling. */
+@media (max-height: 559px) {
+  .railwrap { height: auto !important; }
+  .railstage { position: static; height: auto; }
+  .railstage > .stage__body { display: block; }
+  .railcards { transform: none !important; }
+  .railtrack {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+  .wcard { scroll-snap-align: center; }
+  [data-hint="scroll"] { display: none; }
+  [data-hint="swipe"] { display: inline; }
+}
+
 html.calm .railwrap,
 html:not(.js) .railwrap { height: auto !important; }
 html.calm .railstage,
@@ -1085,11 +1098,13 @@ html.calm * { scroll-behavior: auto; }
   var track = $('#railtrack');
   var rail  = $('#wcards');
   var meter = $('#railMeter');
-  // Pinning needs a viewport that can hold the diagram and a card at once.
-  var wide  = matchMedia('(min-width: 901px) and (min-height: 720px)');
+  // Pinning only needs a viewport tall enough to hold the diagram and a card
+  // at once. Width decides whether they sit side by side or stacked, which is
+  // a layout question the CSS answers on its own.
+  var canPin = matchMedia('(min-height: 560px)');
   var travel = 0;
 
-  function isPinned() { return wide.matches && !calm; }
+  function isPinned() { return canPin.matches && !calm; }
 
   function measureRail() {
     if (!isPinned()) {
@@ -1162,7 +1177,7 @@ html.calm * { scroll-behavior: auto; }
     clearTimeout(reflow);
     reflow = setTimeout(remeasure, 150);
   }, { passive: true });
-  wide.addEventListener('change', remeasure);
+  canPin.addEventListener('change', remeasure);
   // Webfonts land after first paint and change every card's width.
   addEventListener('load', remeasure);
 
