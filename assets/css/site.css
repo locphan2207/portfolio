@@ -213,8 +213,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .mono, .secHead__idx, .nav__idx, .tags li, .status,
 .loader__count, .scrollcue__text, .contact__k, .foot__note,
-.rail i, .portrait figcaption, .menu__links i, .work__eyebrow,
-.workGroup__meta, .workGroup__co {
+.rail i, .portrait figcaption, .menu__links i, .work__eyebrow {
   font-family: var(--label);
   font-weight: 500;
   letter-spacing: var(--label-track);
@@ -1130,36 +1129,15 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
    breakpoint and under reduced motion this degrades to an ordinary
    swipeable scroller — same markup, no pinning. */
 
-/* Six tiles, so five capabilities plus the pager land as two clean rows at
-   three across and never leave a hole. No links, no shots — the copy is the
-   whole card, which is the point: this is the work that cannot be shown. */
-/* Each job gets a quiet label, so the numbering restarts per employer
-   without the company name reading as a headline. */
-/* The break between two jobs has to beat the gap between two cards inside
-   one job by a clear margin, or the label reads as floating between the two
-   blocks instead of heading the one under it. Generous above, tight below —
-   the label binds downward, to the cards it numbers. */
-.workGroup + .workGroup { margin-top: clamp(3.25rem, 6vw, 5.25rem); }
-.workGroup__label {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: .3rem .7rem;
-  margin-bottom: clamp(1rem, 1.8vw, 1.5rem);
-  padding-bottom: .9rem;
-  border-bottom: 1px solid var(--line);
-}
-.workGroup__co { color: var(--text-2); }
-.workGroup__meta { color: var(--text-3); }
-
-.work {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
-  gap: clamp(.9rem, 1.5vw, 1.35rem);
-}
+/* No links, no shots — the copy is the whole card, which is the point: this is
+   the work that cannot be shown. */
+/* Every job is a rail now, so a card is only ever a column in a run: the
+   employer and its dates ride the rail's own bar (.sysrail__bar), which is
+   where the numbering restarts per job without the company name reading as a
+   headline. */
 .work__item {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: .6rem;
   padding: clamp(1.35rem, 2.2vw, 1.85rem);
   border: 1px solid var(--line);
@@ -1171,7 +1149,6 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 .work__item:hover {
   border-color: var(--line-2);
   background: var(--card-2);
-  transform: translateY(-3px);
 }
 .work__idx,
 .work__eyebrow {
@@ -1524,35 +1501,55 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 .sysrail__hint i::after { content: " \2192"; }
 .sysrail__hint [data-hint="swipe"] { display: none; }
 
+/* The drawing sits above the run, not beside it. Side by side, the two halves
+   were each paying for the other: the diagram rendered in 44% of the screen
+   and the cards in the rest, so the cards ran ten lines deep and the drawing
+   never got the width it was set at. Stacked, each takes the full shell — the
+   diagram as wide as the stage will let it, the cards wide enough to read. */
 .sysrail__body {
   flex: 1;
   min-height: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 44%) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(1.5rem, 3vw, 3rem);
-  /* Left edge lines up with the shell, the right runs off the screen. That
-     asymmetry is what makes the cards read as a run rather than a row. */
-  padding-left: max(var(--gut), calc((100vw - var(--shell)) / 2 + var(--gut)));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(.9rem, 2.2vh, 1.6rem);
 }
 
-.sysrail__track { min-width: 0; overflow: hidden; }
+.sysrail__track { min-width: 0; overflow: hidden; flex: none; }
 .sysrail__rail {
   display: flex;
   align-items: stretch;
   gap: clamp(1.25rem, 2.4vw, 2rem);
+  /* Left edge lines up with the shell — the same line the bar and the drawing
+     start on — and the run carries on off the right of the screen. That
+     asymmetry is what makes the cards read as a run rather than a row. The
+     lead has to live on the rail rather than on the track: travel is measured
+     against the track's own width, and padding there would come off the run.
+     Under 1240px the max() collapses to the plain gutter on its own. */
+  padding-inline: max(var(--gut), calc((100vw - var(--shell)) / 2 + var(--gut))) var(--gut);
   will-change: transform;
 }
-/* .work__item is a grid in the static section; in the rail it is a column
-   with the tags pinned to the bottom, so every card ends on the same line. */
-.sysrail__rail .work__item {
-  flex: 0 0 clamp(250px, 24vw, 310px);
+
+/* A job with no drawing to hold — same bar, same run, same meter, and nothing
+   above the cards. Four text cards left at their natural height would then sit
+   as a thin strip adrift in a screen of air, so they are stretched to a band
+   the way the projects rail stretches its own: the band takes what the stage
+   has, up to a height past which a card is more padding than card. */
+.sysrail--plain .sysrail__track {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
-  flex-direction: column;
-  gap: .6rem;
+  align-items: center;
 }
+.sysrail--plain .sysrail__rail { height: 100%; max-height: 400px; }
+/* Stacked under the drawing, the run has the whole shell to itself, so a card
+   can be wide enough to set its copy in six or seven lines instead of ten.
+   That is what buys the drawing its height back above — and it is what makes
+   four Smarkets cards overflow a desktop screen at all, so the shorter job
+   still reads as a run rather than a row that happens to fit. */
+.sysrail__rail .work__item { flex: 0 0 clamp(300px, 40vw, 520px); }
+/* Tags pinned to the bottom, so every card in a run ends on the same line. */
 .sysrail__rail .work__item .tags { margin-top: auto; padding-top: .5rem; }
-.sysrail__rail .work__item:hover { transform: none; }
 .sysrail__rail .work__item.is-live { border-color: var(--ember); background: var(--card-2); }
 .sysrail__rail .work__item.is-live .tags li { color: var(--text-2); border-color: var(--line-2); }
 .sysrail__rail .work__item--pager.is-live { border-color: var(--alert); }
@@ -1577,14 +1574,41 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 
 /* The drawing. Everything rests visible and quiet; the active step lights. */
-.sysmap { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: clamp(.7rem, 2vh, 1.3rem); }
-.sysmap__svg { display: block; width: 100%; max-width: 100%; height: auto; }
+/* On top of the run, the caption goes beside the diagram rather than under it:
+   stacked, vertical room is the scarce thing and a caption under the drawing
+   costs the drawing its own height. Shell width, so the diagram starts on the
+   same left line as the bar above it and the first card below. */
+.sysmap {
+  margin: 0 auto;
+  min-width: 0;
+  width: 100%;
+  max-width: var(--shell);
+  padding-inline: var(--gut);
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  flex: 0 1 auto;
+  min-height: 0;
+}
+/* Height is what the stage is short of, so the drawing takes what the cards
+   leave and its width follows from the viewBox — no fixed vh cap to re-tune
+   every time a card gains a line. */
+.sysmap__svg {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  flex: 0 1 auto;
+  min-width: 0;
+}
 .sysmap__cap {
+  flex: 0 1 clamp(20ch, 32%, 38ch);
   font-size: var(--t-sm);
   line-height: 1.55;
   color: var(--text-2);
-  border-top: 1px solid var(--line);
-  padding-top: .8rem;
+  border-left: 1px solid var(--line);
+  padding-left: clamp(1rem, 2vw, 1.6rem);
   min-height: 4.4em;
 }
 .sysmap__cap b {
@@ -1684,23 +1708,29 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 
 
-/* Narrow is a layout question, not a pinning one: the drawing moves above the
-   rail instead of beside it, and the rail still runs off vertical scroll.
-   What actually takes the pinning off is a short viewport, calm, or no JS. */
+/* Narrow is a layout question, not a pinning one: the caption drops back under
+   the drawing — beside it there is no width for either — and the rail still
+   runs off vertical scroll. What actually takes the pinning off is a short
+   viewport, calm, or no JS. */
 @media (max-width: 900px) {
-  .sysrail__body {
+  .sysmap {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(.8rem, 2.5vh, 1.4rem);
-    padding-left: 0;
+    gap: clamp(.7rem, 2vh, 1.3rem);
   }
-  .sysmap { padding-inline: var(--gut); }
-  /* Stacked, the drawing and a card share one screen, so it takes a height
-     cap rather than its natural width or it outgrows the pinned stage. */
-  .sysmap__svg { max-height: min(28vh, 250px); width: auto; margin-inline: auto; }
-  .sysmap__cap { min-height: 3.6em; font-size: var(--t-xs); padding-top: .6rem; }
-  .sysrail__track { padding-inline: var(--gut); }
+  /* Under a card rather than beside it, the drawing takes a height cap: left
+     to the column's full width it would outgrow the stage on its own. */
+  .sysmap__svg { max-height: min(28vh, 250px); margin-inline: auto; }
+  .sysmap__cap {
+    flex: none;
+    min-height: 3.6em;
+    font-size: var(--t-xs);
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: .6rem;
+  }
   .sysrail__rail .work__item { flex-basis: min(78vw, 320px); }
 
   /* The drawing renders at about half size here, so the type inside it is set
@@ -1732,28 +1762,23 @@ html:not(.js) .sysrail__stage {
 }
 html.calm .sysrail,
 html:not(.js) .sysrail { height: auto !important; }
-.sysrail.is-static .sysrail__body,
-html.calm .sysrail__body,
-html:not(.js) .sysrail__body {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding-left: 0;
-}
-.sysrail.is-static .sysmap,
-html.calm .sysmap,
-html:not(.js) .sysmap { padding-inline: var(--gut); }
+/* Unpinned, the stage is as tall as it needs to be, so the drawing is free to
+   take its natural size again rather than the room the cards left over. */
+.sysrail.is-static .sysmap__svg,
+html.calm .sysmap__svg,
+html:not(.js) .sysmap__svg { max-height: min(46vh, 340px); }
 .sysrail.is-static .sysrail__track,
 html.calm .sysrail__track,
 html:not(.js) .sysrail__track {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
-  padding-inline: var(--gut);
 }
+/* Nothing is translating the rail, so the lead that lined the first card up
+   with the shell would just be an indent inside a scroller. Plain gutters. */
 .sysrail.is-static .sysrail__rail,
 html.calm .sysrail__rail,
-html:not(.js) .sysrail__rail { transform: none !important; }
+html:not(.js) .sysrail__rail { padding-inline: var(--gut); transform: none !important; }
 .sysrail.is-static .sysrail__rail .work__item,
 html.calm .sysrail__rail .work__item,
 html:not(.js) .sysrail__rail .work__item { scroll-snap-align: center; }

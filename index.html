@@ -265,10 +265,11 @@
     <!-- Google. The work here is invisible by nature, so the section draws
          the system instead of describing it: the stage pins, vertical scroll
          runs the cards past it, and each card lights the part of the system
-         it is about. Full bleed on purpose — the rail runs off the right
-         edge, and inside .shell the inset would be applied twice.
-         The Smarkets group below keeps its grid: the drawing is this team's
-         system, not that one. -->
+         it is about. The drawing sits above the run rather than beside it:
+         stacked, the cards get the width they were cramped out of and the
+         diagram gets its caption alongside instead of under it, so neither
+         pays for the other. Full bleed on purpose — the rail runs off the
+         right edge, and inside .shell the inset would be applied twice. -->
     <div class="sysrail" id="sysrail">
       <div class="sysrail__stage">
 
@@ -433,41 +434,52 @@
       </div>
     </div>
 
-    <div class="shell">
-      <div class="workGroup reveal" data-reveal>
-        <h3 class="workGroup__label">
-          <span class="workGroup__co">Smarkets</span>
-          <span class="workGroup__meta">Software Engineer &middot; 2018&ndash;2020</span>
-        </h3>
-        <ol class="work">
-          <li class="work__item reveal" data-reveal>
-            <span class="work__idx">01</span>
-            <h3 class="work__title">New mobile app</h3>
-            <p class="work__desc">Cross-platform, in React Native, from the early stages through to the App Store launch and on to nine thousand users. Redux Saga managed the API and WebSocket data flow behind every key feature, live odds included.</p>
-            <ul class="tags"><li>React Native</li><li>Redux Saga</li><li>iOS &amp; Android</li></ul>
-          </li>
+    <!-- Smarkets. Same device as the run above and the projects rail below,
+         minus the drawing: four cards, and the stage holds them while vertical
+         scroll walks the row right to left. The page only ever teaches one
+         scroll behaviour, so the older job reads the way the current one does
+         rather than as a grid the eye has to switch modes for. -->
+    <div class="sysrail sysrail--plain" id="smrail">
+      <div class="sysrail__stage">
 
-          <li class="work__item reveal" data-reveal data-delay="1">
-            <span class="work__idx">02</span>
-            <h3 class="work__title">Animation and performance</h3>
-            <p class="work__desc">Animation libraries and styling to build the mocked designs out properly, then the work to keep them cheap: granular components and selectors with efficient time complexity, which brought down both re-render counts and load times.</p>
-            <ul class="tags"><li>React Native</li><li>Animation</li><li>Performance</li></ul>
-          </li>
+        <div class="sysrail__bar">
+          <span class="sysrail__co">Smarkets <i>Software Engineer &middot; 2018&ndash;2020</i></span>
+          <span class="sysrail__hint" aria-hidden="true"><i data-hint="scroll">Scroll to browse</i><i data-hint="swipe">Swipe to browse</i></span>
+          <span class="sysrail__count" aria-hidden="true"><i id="smNow">01</i> / 04</span>
+        </div>
 
-          <li class="work__item reveal" data-reveal data-delay="2">
-            <span class="work__idx">03</span>
-            <h3 class="work__title">Geofencing</h3>
-            <p class="work__desc">Enforced where a user actually was before letting them place a bet, checking GPS against the IP address. Flask on the back, React on the front.</p>
-            <ul class="tags"><li>Flask</li><li>React</li><li>Geolocation</li></ul>
-          </li>
+        <div class="sysrail__body">
+          <div class="sysrail__track" id="smTrack">
+            <ol class="sysrail__rail" id="smRail">
+              <li class="work__item" data-step="1">
+                <span class="work__idx">01</span>
+                <h3 class="work__title">New mobile app</h3>
+                <p class="work__desc">Cross-platform, in React Native, from the early stages through to the App Store launch and on to nine thousand users. Redux Saga managed the API and WebSocket data flow behind every key feature, live odds included.</p>
+                <ul class="tags"><li>React Native</li><li>Redux Saga</li><li>iOS &amp; Android</li></ul>
+              </li>
+              <li class="work__item" data-step="2">
+                <span class="work__idx">02</span>
+                <h3 class="work__title">Animation and performance</h3>
+                <p class="work__desc">Animation libraries and styling to build the mocked designs out properly, then the work to keep them cheap: granular components and selectors with efficient time complexity, which brought down both re-render counts and load times.</p>
+                <ul class="tags"><li>React Native</li><li>Animation</li><li>Performance</li></ul>
+              </li>
+              <li class="work__item" data-step="3">
+                <span class="work__idx">03</span>
+                <h3 class="work__title">Geofencing</h3>
+                <p class="work__desc">Enforced where a user actually was before letting them place a bet, checking GPS against the IP address. Flask on the back, React on the front.</p>
+                <ul class="tags"><li>Flask</li><li>React</li><li>Geolocation</li></ul>
+              </li>
+              <li class="work__item" data-step="4">
+                <span class="work__idx">04</span>
+                <h3 class="work__title">Social features</h3>
+                <p class="work__desc">Django models and API endpoints for the social side of the app &mdash; profiles, posts and comments &mdash; with a Redis cache in front to keep responses fast. Unit and automation tests plus crash reporting to catch what got through.</p>
+                <ul class="tags"><li>Django</li><li>Redis</li><li>Testing</li></ul>
+              </li>
+            </ol>
+          </div>
+        </div>
 
-          <li class="work__item reveal" data-reveal data-delay="3">
-            <span class="work__idx">04</span>
-            <h3 class="work__title">Social features</h3>
-            <p class="work__desc">Django models and API endpoints for the social side of the app &mdash; profiles, posts and comments &mdash; with a Redis cache in front to keep responses fast. Unit and automation tests plus crash reporting to catch what got through.</p>
-            <ul class="tags"><li>Django</li><li>Redis</li><li>Testing</li></ul>
-          </li>
-        </ol>
+        <div class="sysrail__meter" aria-hidden="true"><i></i></div>
       </div>
     </div>
   </section>
