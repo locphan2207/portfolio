@@ -1,0 +1,1179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Live Type</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Ranges, not pins. The other prototype asks for SOFT@0 and WONK@1, which
+     serves a static instance; to move an axis you have to request its span. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,100..900,0..100,0..1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Live Type — idea 03: per-glyph variable-font response to the pointer.
+   Palette and type are lifted from assets/css/site.css so the demo can be
+   judged as if it were already on the page. Fraunces comes from Google
+   Fonts here because the shipped subset cannot do what this idea needs —
+   which is most of what the prototype is about.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --paper:  #FBF8F1;
+  --raise:  #FFFFFF;
+  --sink:   #F1EADE;
+  --text:   #1B1813;
+  --text-2: #544D42;
+  --text-3: #6D6458;
+  --line:   rgb(40 30 16 / .16);
+  --line-2: rgb(40 30 16 / .30);
+  --accent:   #0E5560;
+  --accent-2: #1E4C7A;
+  --accent-3: #16624A;
+  --accent-4: #6A6317;
+  --alert:  #A8371A;
+  --wash:   rgb(14 85 96 / .07);
+  --shadow: 0 26px 60px -30px rgb(60 42 20 / .34);
+
+  /* The hero's gradient, verbatim from the site's two theme blocks. */
+  --ember: var(--accent);
+  --amber: var(--accent-2);
+  --iris:  var(--accent-3);
+  --sweep: linear-gradient(100deg, var(--ember), var(--amber) 55%, var(--iris));
+
+  --sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+
+  --shell: 1180px;
+  --stage-pad: clamp(1.1rem, 3vw, 2rem);
+  --gut: clamp(1.1rem, 4vw, 2.6rem);
+  --ease: cubic-bezier(.22, .61, .36, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:  #16130F;
+    --raise:  #1D1915;
+    --sink:   #26211B;
+    --text:   #F3EDE2;
+    --text-2: #B3A795;
+    --text-3: #A2957F;
+    --line:   rgb(255 240 214 / .12);
+    --line-2: rgb(255 240 214 / .22);
+    --accent:   #52C6D8;
+    --accent-2: #6FA0E0;
+    --accent-3: #4FCFA6;
+    --accent-4: #C9C066;
+    --alert:  #FF8A5C;
+    --wash:   rgb(82 198 216 / .09);
+    --shadow: 0 30px 70px -30px rgb(0 0 0 / .85);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:  #16130F;
+  --raise:  #1D1915;
+  --sink:   #26211B;
+  --text:   #F3EDE2;
+  --text-2: #B3A795;
+  --text-3: #A2957F;
+  --line:   rgb(255 240 214 / .12);
+  --line-2: rgb(255 240 214 / .22);
+  --accent:   #52C6D8;
+  --accent-2: #6FA0E0;
+  --accent-3: #4FCFA6;
+  --accent-4: #C9C066;
+  --alert:  #FF8A5C;
+  --wash:   rgb(82 198 216 / .09);
+  --shadow: 0 30px 70px -30px rgb(0 0 0 / .85);
+  color-scheme: dark;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+  letter-spacing: -.022em;
+  line-height: 1.06;
+  text-wrap: balance;
+  margin: 0;
+}
+
+p { margin: 0; }
+em { font-family: var(--serif); font-style: italic; }
+a { color: inherit; }
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .86em;
+  background: var(--sink);
+  border-radius: 4px;
+  padding: .1em .34em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+}
+
+.eyebrow {
+  font-size: .69rem;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────── */
+.top {
+  padding-block: clamp(2.2rem, 6vw, 3.6rem) clamp(1.6rem, 4vw, 2.4rem);
+  border-bottom: 1px solid var(--line);
+}
+.top__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.6rem 2rem;
+}
+.top__lead { max-width: 40ch; display: flex; flex-direction: column; gap: .7rem; }
+.top h1 { font-size: clamp(2.5rem, 7vw, 4.1rem); }
+.top h1 i { font-style: normal; color: var(--accent); }
+.top__deck { color: var(--text-2); font-size: 1.02rem; max-width: 46ch; }
+
+.tools { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.tbtn {
+  font: inherit;
+  font-size: .78rem;
+  letter-spacing: .04em;
+  color: var(--text-2);
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .48rem 1rem;
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.tbtn:hover { color: var(--text); border-color: var(--line-2); }
+.tbtn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--wash); }
+
+.jump {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  padding-block: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.jump a {
+  text-decoration: none;
+  font-size: .82rem;
+  color: var(--text-2);
+  display: inline-flex;
+  gap: .55rem;
+  align-items: baseline;
+  transition: color .2s var(--ease);
+}
+.jump a:hover { color: var(--accent); }
+.jump a i { font-style: normal; font-size: .68rem; letter-spacing: .14em; color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+/* ── Bay ───────────────────────────────────────────────────────────── */
+.bay { padding-block: clamp(3.4rem, 9vw, 6rem); border-bottom: 1px solid var(--line); }
+.bay__head { display: flex; flex-direction: column; gap: .85rem; max-width: 62ch; margin-bottom: clamp(1.8rem, 4vw, 2.6rem); }
+.bay__head h2 { font-size: clamp(1.9rem, 4.4vw, 3rem); }
+.bay__head h2 em { color: var(--accent); }
+.bay__pitch { color: var(--text-2); font-size: 1.04rem; }
+
+.stage {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--raise);
+}
+.stage__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: .7rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--sink);
+  border-radius: 17px 17px 0 0;
+}
+.stage__body { padding: var(--stage-pad); }
+
+.cost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1.6rem;
+  margin-top: 1.1rem;
+  font-size: .78rem;
+  color: var(--text-3);
+}
+.cost b { font-weight: 500; color: var(--text-2); }
+
+/* ── The reactive line ─────────────────────────────────────────────── */
+/* Every glyph is its own inline-block so it can carry its own axis
+   values. Boxes are locked to the advance each glyph has at rest, so a
+   glyph gaining weight grows inside its own box instead of shoving the
+   rest of the line sideways. */
+.live {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.03em;
+  margin: 0;
+  /* Kerning dies at element boundaries once the line is split, so the
+     tracking is dialled back by hand to make up for it. */
+}
+.live .g {
+  display: inline-block;
+  text-align: center;
+  will-change: font-variation-settings;
+  font-variation-settings: "wght" 400, "opsz" 24, "SOFT" 0, "WONK" 1;
+}
+.live--free .g { width: auto !important; }
+
+.hero {
+  font-size: clamp(3.2rem, 13vw, 9.5rem);
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(1.4rem, 5vw, 3rem);
+  cursor: crosshair;
+}
+
+.readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1.4rem;
+  font-size: .76rem;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+  border-top: 1px solid var(--line);
+  padding-top: .8rem;
+  margin-top: .4rem;
+}
+.readout b { font-weight: 500; color: var(--text-2); }
+.readout .val { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+/* ── Axis audit ────────────────────────────────────────────────────── */
+.axes { display: flex; flex-direction: column; gap: 1.5rem; }
+.axis { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: .4rem 1.6rem; align-items: center; }
+.axis__id { display: flex; flex-direction: column; gap: .3rem; }
+.axis__tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1rem;
+  color: var(--text);
+}
+.axis__note { font-size: .79rem; color: var(--text-3); line-height: 1.5; }
+.axis__spec {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 5vw, 3.1rem);
+  line-height: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .2em 1.1em;
+  align-items: baseline;
+  min-width: 0;
+}
+.axis__spec span { white-space: nowrap; }
+.axis__spec i {
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: .68rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-left: .5em;
+  vertical-align: middle;
+}
+
+.tag {
+  display: inline-block;
+  font-size: .64rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-radius: 999px;
+  padding: .16rem .55rem;
+  border: 1px solid currentColor;
+  width: fit-content;
+}
+.tag--yes  { color: var(--accent-3); }
+.tag--no   { color: var(--alert); }
+.tag--free { color: var(--accent); }
+
+/* ── Cost table ────────────────────────────────────────────────────── */
+.tblwrap { overflow-x: auto; }
+table.cmp { border-collapse: collapse; width: 100%; font-size: .85rem; min-width: 34rem; }
+table.cmp th, table.cmp td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); }
+table.cmp th { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); font-weight: 500; }
+table.cmp td { color: var(--text-2); font-variant-numeric: tabular-nums; }
+table.cmp tr.is-now td { color: var(--text); }
+table.cmp tr.is-pick td { color: var(--accent); }
+table.cmp .num { text-align: right; }
+
+/* ── Lanes (the reflow demo) ───────────────────────────────────────── */
+.lanes { display: flex; flex-direction: column; gap: 1.15rem; }
+.lane { display: flex; flex-direction: column; gap: .3rem; }
+.lane__top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.lane__name { font-size: .72rem; letter-spacing: .11em; text-transform: uppercase; color: var(--text-3); font-weight: 500; }
+.lane__num { font-size: .74rem; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.lane__num b { font-weight: 500; }
+.lane__num .drift { color: var(--alert); }
+.lane__num .hold  { color: var(--accent-3); }
+.lane__rule {
+  position: relative;
+  border-left: 1px solid var(--line-2);
+  padding-block: .35rem;
+}
+/* A ruler mark pinned at the resting width: anything that moves past it is
+   the line pushing its own neighbours around. */
+.lane__mark {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 0;
+  border-left: 1px dashed var(--alert);
+  opacity: .8;
+  left: 0;
+}
+.lane__mark::after {
+  content: "rest";
+  position: absolute;
+  top: -.2rem;
+  left: .35rem;
+  font-size: .6rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--alert);
+  white-space: nowrap;
+}
+.lane .live { font-size: clamp(1.9rem, 5.6vw, 3.4rem); white-space: nowrap; }
+.lane__word { display: inline-block; }
+
+/* ── Fill demo ─────────────────────────────────────────────────────── */
+.fillgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; }
+.fillcell { display: flex; flex-direction: column; gap: .6rem; }
+.fillcell__head { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+.fillbox {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  padding: clamp(1rem, 3vw, 1.8rem);
+  display: flex;
+  justify-content: center;
+}
+.fillname {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  line-height: 1;
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+}
+/* The site's own mechanism, verbatim: a saturated copy under a flat copy,
+   with the flat one masked away around the pointer. */
+[data-fill] {
+  position: relative;
+  background-image: var(--sweep);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 190% 190%;
+  background-position: var(--fx, 50%) var(--fy, 50%);
+}
+[data-fill]::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: var(--text);
+  -webkit-mask-image: radial-gradient(300px circle at var(--lx, -300px) var(--ly, -300px), transparent 0%, #000 66%);
+  mask-image: radial-gradient(300px circle at var(--lx, -300px) var(--ly, -300px), transparent 0%, #000 66%);
+}
+
+/* ── Verdict ───────────────────────────────────────────────────────── */
+.verdict { padding-block: clamp(3rem, 7vw, 4.6rem); }
+.verdict__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.2rem, 3vw, 2.2rem); }
+.vcell { display: flex; flex-direction: column; gap: .5rem; }
+.vcell h3 { font-size: 1.3rem; }
+.vcell p { font-size: .9rem; color: var(--text-2); }
+
+.note {
+  border-left: 2px solid var(--accent);
+  background: var(--wash);
+  border-radius: 0 10px 10px 0;
+  padding: .9rem 1.1rem;
+  font-size: .88rem;
+  color: var(--text-2);
+  margin-top: 1.2rem;
+}
+.note b { color: var(--text); font-weight: 500; }
+.note--warn { border-left-color: var(--alert); background: color-mix(in srgb, var(--alert) 7%, transparent); }
+
+.foot { padding-block: 2.4rem 3.4rem; color: var(--text-3); font-size: .82rem; }
+
+.ctl { display: flex; align-items: center; gap: .5rem; font-size: .74rem; color: var(--text-3); }
+.ctl input[type="range"] { width: 7.5rem; accent-color: var(--accent); }
+.ctl output { color: var(--accent); font-variant-numeric: tabular-nums; min-width: 2.6rem; }
+
+@media (max-width: 900px) {
+  .verdict__grid { grid-template-columns: 1fr; }
+  .fillgrid { grid-template-columns: 1fr; }
+  .axis { grid-template-columns: 1fr; }
+}
+
+/* ── The reduce-motion contract, same shape as the site's ──────────── */
+/* Reduce means no vestibular motion, not a dead page. The type settles at
+   one resting instance and stops tracking the pointer; colour still
+   transitions, and the fallback sweep below stops travelling. */
+html.calm .live .g { transition: none !important; }
+html.calm .hero { cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<script>
+  /* The site sets this in <head> before first paint. */
+  document.documentElement.classList.add('js');
+</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="shell top__grid">
+    <div class="top__lead">
+      <p class="eyebrow">Prototype · idea 03 · loc-phan.com</p>
+      <h1>Live <i>Type</i></h1>
+      <p class="top__deck">Per-glyph variable-font response to the pointer. Built far enough to answer two questions the idea could not: whether the axes it wants are actually on the page, and what happens to the line when every letter changes width at once.</p>
+    </div>
+    <div class="tools">
+      <button class="tbtn" id="themeBtn" type="button" aria-pressed="false">Dark</button>
+      <button class="tbtn" id="calmBtn" type="button" aria-pressed="false">Reduce motion</button>
+    </div>
+  </div>
+</header>
+
+<nav class="shell jump" aria-label="Sections">
+  <a href="#p1"><i>01</i> The effect</a>
+  <a href="#p2"><i>02</i> What ships</a>
+  <a href="#p3"><i>03</i> Holding the line</a>
+  <a href="#p4"><i>04</i> No pointer</a>
+  <a href="#verdict"><i>—</i> Verdict</a>
+</nav>
+
+<main>
+
+<!-- ═══ 01 · The effect ════════════════════════════════════════════ -->
+<section class="bay shell" id="p1">
+  <div class="bay__head">
+    <p class="eyebrow">01 · The effect</p>
+    <h2>Letters that <em>lean in</em></h2>
+    <p class="bay__pitch">Each glyph reads its distance to the pointer and resolves its own weight. Move across the name slowly: the response is a travelling swell, not a hover state. Nothing here is an image or a canvas — it is the live font, one <code>font-variation-settings</code> per letter.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage__bar">
+      <p class="eyebrow">Live · move across the name</p>
+      <div class="tools">
+        <button class="tbtn" id="isoBtn" type="button" aria-pressed="true">Iso-width path</button>
+        <button class="tbtn" id="lockBtn" type="button" aria-pressed="true">Lock advances</button>
+        <label class="ctl">Reach
+          <input type="range" id="reach" min="80" max="420" step="10" value="220">
+          <output id="reachOut">220</output>
+        </label>
+        <label class="ctl">Peak
+          <input type="range" id="peak" min="500" max="900" step="10" value="900">
+          <output id="peakOut">900</output>
+        </label>
+      </div>
+    </div>
+    <div class="stage__body">
+      <p class="live hero" id="heroLine">Loc Phan</p>
+      <div class="readout">
+        <span><b>Nearest glyph</b> <span class="val" id="roGlyph">—</span></span>
+        <span><b>wght</b> <span class="val" id="roWght">400</span></span>
+        <span><b>opsz</b> <span class="val" id="roOpsz">24</span></span>
+        <span><b>Restyled this frame</b> <span class="val" id="roTouch">0</span> / 7 glyphs</span>
+        <span><b>Calibrated slope</b> opsz = 24 + <span class="val" id="roSlope">—</span> × (wght − 400)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cost">
+    <span><b>Cost</b> ~60 lines of JS, no dependencies</span>
+    <span><b>Loop</b> folds into the site's existing pointer rAF</span>
+    <span><b>Writes</b> skipped when the rounded weight has not changed</span>
+    <span><b>A11y</b> the split line keeps one accessible name; the spans are <code>aria-hidden</code></span>
+    <span><b>No pointer</b> the swell runs itself — once on arrival, on a loop where there is no pointer at all</span>
+  </div>
+</section>
+
+<!-- ═══ 02 · What ships ════════════════════════════════════════════ -->
+<section class="bay shell" id="p2">
+  <div class="bay__head">
+    <p class="eyebrow">02 · The axis audit</p>
+    <h2>The font on the page is <em>not</em> the font in the pitch</h2>
+    <p class="bay__pitch">The idea assumes WONK and SOFT are already paid for. They are not. <code>assets/fonts/fraunces-latin.woff2</code> carries two axes — <code>opsz</code> and <code>wght</code> — and the other two were instanced out when the subset was made. Below, every axis is live from the Google build so you can see what each one actually buys.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage__bar">
+      <p class="eyebrow">Specimens · both ends of each axis</p>
+      <p class="eyebrow" style="color: var(--accent)">measured from the real files</p>
+    </div>
+    <div class="stage__body">
+      <div class="axes">
+
+        <div class="axis">
+          <div class="axis__id">
+            <span class="axis__tag">wght <span class="tag tag--yes">ships</span></span>
+            <span class="axis__note">100 → 900. Continuous, every glyph. The whole effect can be built on this alone.</span>
+          </div>
+          <div class="axis__spec">
+            <span style="font-variation-settings: 'wght' 100, 'opsz' 24">Phan<i>100</i></span>
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 24">Phan<i>400</i></span>
+            <span style="font-variation-settings: 'wght' 900, 'opsz' 24">Phan<i>900</i></span>
+          </div>
+        </div>
+
+        <div class="axis">
+          <div class="axis__id">
+            <span class="axis__tag">opsz <span class="tag tag--yes">ships</span></span>
+            <span class="axis__note">9 → 144. Continuous, every glyph. Swings contrast and serif shape harder than weight does — and it is already on the page.</span>
+          </div>
+          <div class="axis__spec">
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 9">Phan<i>9</i></span>
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 48">Phan<i>48</i></span>
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 144">Phan<i>144</i></span>
+          </div>
+        </div>
+
+        <div class="axis">
+          <div class="axis__id">
+            <span class="axis__tag">WONK <span class="tag tag--no">absent</span></span>
+            <span class="axis__note">A substitution, not an interpolation: below 0.5 it swaps in alternates for <b>h m n s &amp; ñ</b> and nothing else. It snaps — there is no halfway.</span>
+          </div>
+          <div class="axis__spec">
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 48, 'WONK' 1">Phan<i>wonk 1</i></span>
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 48, 'WONK' 0">Phan<i>wonk 0</i></span>
+          </div>
+        </div>
+
+        <div class="axis">
+          <div class="axis__id">
+            <span class="axis__tag">SOFT <span class="tag tag--no">absent</span></span>
+            <span class="axis__note">0 → 100. Continuous, every glyph — it rounds the terminals. The one axis that would interpolate beautifully, and the only expensive one.</span>
+          </div>
+          <div class="axis__spec">
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 48, 'SOFT' 0">Phan<i>soft 0</i></span>
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 48, 'SOFT' 50">Phan<i>soft 50</i></span>
+            <span style="font-variation-settings: 'wght' 400, 'opsz' 48, 'SOFT' 100">Phan<i>soft 100</i></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="note note--warn">
+        <b>Two live rules are already no-ops.</b> <code>site.css</code> asks for
+        <code>font-variation-settings: "SOFT" 0, "WONK" 1</code> on <code>.loader__name</code> and on
+        <code>.wall__w</code>, the Stack wall. Neither axis exists in the shipped file, so the browser drops both. It looks correct only
+        because the subset happens to be pinned at exactly those values.
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 1.6rem" class="tblwrap">
+    <table class="cmp">
+      <caption class="eyebrow" style="text-align: left; padding: 0 .7rem .6rem">Re-subset from the same Google source, latin, woff2</caption>
+      <thead>
+        <tr><th>Axes kept</th><th class="num">Size</th><th class="num">vs today</th><th>What it gets you</th></tr>
+      </thead>
+      <tbody>
+        <tr class="is-now"><td>opsz, wght <span class="tag tag--yes">today</span></td><td class="num">67,304 B</td><td class="num">—</td><td>Two continuous axes across every glyph</td></tr>
+        <tr class="is-pick"><td>opsz, wght, <b>WONK</b></td><td class="num">67,092 B</td><td class="num">−212 B</td><td>A binary swap on six glyphs</td></tr>
+        <tr><td>opsz, wght, <b>SOFT</b></td><td class="num">120,700 B</td><td class="num">+53,396 B</td><td>Softened terminals, fully interpolating</td></tr>
+        <tr><td>all four</td><td class="num">121,020 B</td><td class="num">+53,716 B</td><td>Both of the above</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cost">
+    <span><b>Method</b> fontTools instancer over the Google latin subset, recompressed to woff2</span>
+    <span><b>Check</b> the opsz+wght rebuild lands within 116 B of the shipped file, so the rows are comparable</span>
+    <span><b>Surprise</b> keeping WONK is smaller than pinning it — a binary axis costs less than the deltas it bakes in</span>
+  </div>
+</section>
+
+<!-- ═══ 03 · Holding the line ══════════════════════════════════════ -->
+<section class="bay shell" id="p3">
+  <div class="bay__head">
+    <p class="eyebrow">03 · The problem nobody mentions</p>
+    <h2>Weight changes <em>width</em></h2>
+    <p class="bay__pitch">This is what sinks a naive build. Going from 400 to 900 makes “Loc Phan” 12.7% wider — about 50px at hero size. Animate weight alone and the line breathes, the letters shove each other, and every element after it on the line moves. All three lanes below run the same effect off the same horizontal position, so they always sit at the same weight and the only thing being compared is the discipline. Watch the dashed rule at the resting width.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage__bar">
+      <p class="eyebrow">Live · drag across all three</p>
+      <p class="eyebrow" style="color: var(--accent)">width read live, every frame</p>
+    </div>
+    <div class="stage__body">
+      <div class="lanes" id="lanes">
+
+        <div class="lane" data-lane="free">
+          <div class="lane__top">
+            <span class="lane__name">A · weight alone</span>
+            <span class="lane__num"><b>width</b> <span class="v">—</span> <span class="d drift"></span></span>
+          </div>
+          <div class="lane__rule">
+            <i class="lane__mark" aria-hidden="true"></i>
+            <span class="lane__word"><span class="live live--free">Loc Phan</span></span>
+          </div>
+        </div>
+
+        <div class="lane" data-lane="iso">
+          <div class="lane__top">
+            <span class="lane__name">B · on the iso-width path</span>
+            <span class="lane__num"><b>width</b> <span class="v">—</span> <span class="d"></span></span>
+          </div>
+          <div class="lane__rule">
+            <i class="lane__mark" aria-hidden="true"></i>
+            <span class="lane__word"><span class="live live--free">Loc Phan</span></span>
+          </div>
+        </div>
+
+        <div class="lane" data-lane="lock">
+          <div class="lane__top">
+            <span class="lane__name">C · iso-width path + locked advances</span>
+            <span class="lane__num"><b>width</b> <span class="v">—</span> <span class="d"></span></span>
+          </div>
+          <div class="lane__rule">
+            <i class="lane__mark" aria-hidden="true"></i>
+            <span class="lane__word"><span class="live">Loc Phan</span></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>The trick in lane B.</b> Weight widens a glyph; optical size narrows it, so the two can be made to
+    cancel. The slope that cancels them is not a constant — it moves with the face, the size and the
+    string — so the page measures it at boot instead of hard-coding one: it bisects for the <code>opsz</code>
+    that brings the line at peak weight back to its resting width, then walks that line. Move the whole
+    word to 900 along it and the width holds to under <b>0.1%</b>, against <b>+10.4%</b> for weight alone.
+  </div>
+
+  <div class="note">
+    <b>Why lane C still exists.</b> A pointer falloff does not move every letter at once, and the slope
+    only cancels for the word as a whole — so under a real sweep lane B still drifts about <b>+2%</b>.
+    Locking each box at its resting advance is what takes that to zero. The two work together: locking
+    alone would hold the line while letters fat enough to overflow their boxes collided with their
+    neighbours, and the iso-width path is what keeps them from overflowing — mean glyph growth at peak
+    drops from <b>10.3%</b> to <b>2.9%</b>, and only <em>P</em> still reaches past its box at all.
+  </div>
+
+  <div class="cost">
+    <span><b>Measured</b> every number here is read off the live font at the size it renders</span>
+    <span><b>Locking</b> each box is measured once at rest and re-measured on resize and on <code>fonts.ready</code></span>
+    <span><b>Kerning</b> splitting into spans drops kerning pairs; the line carries −.03em tracking to compensate</span>
+  </div>
+</section>
+
+<!-- ═══ 04 · No pointer ════════════════════════════════════════════ -->
+<section class="bay shell" id="p4">
+  <div class="bay__head">
+    <p class="eyebrow">04 · The related note</p>
+    <h2>On a phone, the colour <em>never arrives</em></h2>
+    <p class="bay__pitch">The hero's gradient is revealed by a mask that chases the pointer, so with no pointer the flat copy stays on top and the colour never shows. The arrival sweep hides this on the hero — but it only runs on <code>#heroTitle</code>, so the contact heading, which uses the same mechanism, is flat forever on touch. Under <code>html.calm</code> the mask is disabled outright and the gradient never shows anywhere.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage__bar">
+      <p class="eyebrow">Live · both cells use the site's own CSS</p>
+      <div class="tools">
+        <button class="tbtn" id="touchBtn" type="button" aria-pressed="false">Pretend: no pointer</button>
+      </div>
+    </div>
+    <div class="stage__body">
+      <div class="fillgrid">
+
+        <div class="fillcell">
+          <div class="fillcell__head">
+            <span class="lane__name">Today</span>
+            <span class="tag tag--no" id="todayState">colour visible</span>
+          </div>
+          <div class="fillbox" id="fillNow">
+            <span class="fillname" data-fill>Let&rsquo;s talk</span>
+          </div>
+          <p class="axis__note">Mask follows the pointer. With no pointer it parks off-element and the flat copy covers the gradient completely.</p>
+        </div>
+
+        <div class="fillcell">
+          <div class="fillcell__head">
+            <span class="lane__name">Proposed</span>
+            <span class="tag tag--yes">always alive</span>
+          </div>
+          <div class="fillbox" id="fillFix">
+            <span class="fillname" data-fill>Let&rsquo;s talk</span>
+          </div>
+          <p class="axis__note">Same CSS. When no pointer has been seen, a slow sweep drives <code>--lx</code> instead — so the colour reads on touch, and the same hook gives the contact heading the arrival pass the hero already gets.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="cost">
+    <span><b>Cost</b> ~12 lines: one idle branch in the existing pointer loop</span>
+    <span><b>Calm</b> the sweep holds at its midpoint rather than travelling, so the colour still shows</span>
+    <span><b>Scope</b> applies to every <code>[data-fill]</code>, not just the hero</span>
+  </div>
+</section>
+
+<!-- ═══ Verdict ════════════════════════════════════════════════════ -->
+<section class="bay verdict shell" id="verdict" style="border-bottom: 0">
+  <div class="bay__head">
+    <p class="eyebrow">Where this lands</p>
+    <h2>Build it on the axes you <em>already paid for</em></h2>
+    <p class="bay__pitch">The effect is worth having and costs nothing to ship. The premise underneath it was wrong in a useful direction: the two axes the idea wanted are the two that are missing, and the two that are already on the page are the better pair anyway.</p>
+  </div>
+  <div class="verdict__grid">
+    <div class="vcell">
+      <p class="eyebrow">Ship</p>
+      <h3>wght + opsz</h3>
+      <p>Both already in the file, both continuous across every glyph, and together they walk the iso-width path that keeps the line from breathing. Zero new bytes. This is the whole effect.</p>
+    </div>
+    <div class="vcell">
+      <p class="eyebrow">Free, but small</p>
+      <h3>WONK, if you re-subset</h3>
+      <p>Restoring it is 212 bytes <em>cheaper</em> than the file you serve today. But it snaps rather than interpolates and only touches h, m, n, s and &amp; — in “Loc Phan” that is two letters. Worth folding into the next font rebuild; not worth one on its own.</p>
+    </div>
+    <div class="vcell">
+      <p class="eyebrow">Skip</p>
+      <h3>SOFT</h3>
+      <p>The nicest axis to animate and the only one with a real price: +53 KB, nearly doubling the display font, for a softening most visitors will never consciously see. Not against a site that ships three self-hosted faces and no framework.</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Independently of idea 03:</b> the <code>[data-fill]</code> dead spot in section 04 is a live bug on
+    the page today, not a design question. The contact heading never shows its gradient on a touch device,
+    and no heading shows it under reduced motion. That one is worth fixing whether or not any of this ships.
+  </div>
+</section>
+
+</main>
+
+<footer class="foot shell">
+  <p>Prototype only — nothing here is wired into index.html. Palette, type roles and the reduce-motion contract are pulled from assets/css/site.css so the demo reads true. Fraunces is served from Google Fonts with all four axes, which is the one thing that differs from production — and the point of section 02.</p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var root  = document.documentElement;
+  var $     = function (s, c) { return (c || document).querySelector(s); };
+  var $$    = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+
+  /* ── Theme + calm, mirroring the live site's two toggles ────────── */
+  var themeBtn = $('#themeBtn');
+  var calmBtn  = $('#calmBtn');
+  var prefersDark = matchMedia('(prefers-color-scheme: dark)');
+  var prefersCalm = matchMedia('(prefers-reduced-motion: reduce)');
+  var calm = prefersCalm.matches;
+
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    return t ? t === 'dark' : prefersDark.matches;
+  }
+  function paintThemeBtn() {
+    themeBtn.textContent = isDark() ? 'Light' : 'Dark';
+    themeBtn.setAttribute('aria-pressed', String(isDark()));
+  }
+  themeBtn.addEventListener('click', function () {
+    root.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+    paintThemeBtn();
+  });
+  prefersDark.addEventListener('change', paintThemeBtn);
+  paintThemeBtn();
+
+  function applyCalm() {
+    root.classList.toggle('calm', calm);
+    calmBtn.setAttribute('aria-pressed', String(calm));
+    calmBtn.textContent = calm ? 'Motion on' : 'Reduce motion';
+    if (calm) rest();          // settle everything at its resting instance
+  }
+  calmBtn.addEventListener('click', function () { calm = !calm; applyCalm(); });
+  prefersCalm.addEventListener('change', function (e) { calm = e.matches; applyCalm(); });
+
+  /* ── The resting instance, and the iso-width path ───────────────── */
+  // Weight widens a glyph; optical size narrows it. Walk both together and
+  // the two cancel, so the line can travel its whole weight range without
+  // changing width. The slope that cancels them is not a constant — it
+  // moves with the face, the size and the string — so it is measured here
+  // rather than guessed, once, against the font that actually loaded.
+  var REST_W = 400, REST_O = 24;
+
+  function vs(wght, opsz) {
+    return '"wght" ' + wght + ', "opsz" ' + opsz.toFixed(1) + ', "SOFT" 0, "WONK" 1';
+  }
+
+  var probe = document.createElement('span');
+  probe.setAttribute('aria-hidden', 'true');
+  probe.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;' +
+                        'white-space:pre;font-optical-sizing:none';
+  document.body.appendChild(probe);
+
+  function calibrate(set) {
+    var cs = getComputedStyle(set.el);
+    probe.style.fontFamily    = cs.fontFamily;
+    probe.style.fontSize      = cs.fontSize;
+    probe.style.fontWeight    = cs.fontWeight;
+    probe.style.letterSpacing = cs.letterSpacing;
+    probe.textContent = set.el.getAttribute('aria-label').replace(/ /g, '');
+
+    function width(w, o) {
+      probe.style.fontVariationSettings = vs(w, o);
+      return probe.getBoundingClientRect().width;
+    }
+
+    // Width falls monotonically as opsz rises, so bisect for the value that
+    // brings the peak-weight line back to its resting width.
+    var rest = width(REST_W, REST_O), lo = REST_O, hi = 144, mid = REST_O;
+    if (width(set.peak, hi) < rest) {
+      for (var i = 0; i < 20; i++) {
+        mid = (lo + hi) / 2;
+        if (width(set.peak, mid) > rest) lo = mid; else hi = mid;
+      }
+    } else {
+      mid = hi;                       // the axis cannot fully cancel; go as far as it does
+    }
+    set.isoSlope = (mid - REST_O) / (set.peak - REST_W);
+    set.isoOpsz  = mid;
+  }
+
+  function opszFor(set, wght) {
+    return set.iso ? REST_O + set.isoSlope * (wght - REST_W) : REST_O;
+  }
+
+  /* ── Split a line into per-glyph spans ──────────────────────────── */
+  // The container keeps one accessible name and the spans are hidden from
+  // the tree, so the line still reads as a word rather than as eight
+  // letters. Selection and copy are unaffected.
+  function split(el) {
+    var text = el.textContent;
+    el.setAttribute('aria-label', text);
+    el.textContent = '';
+    var glyphs = [];
+    text.split('').forEach(function (ch) {
+      if (ch === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+      var s = document.createElement('span');
+      s.className = 'g';
+      s.textContent = ch;
+      s.setAttribute('aria-hidden', 'true');
+      s.dataset.ch = ch;
+      el.appendChild(s);
+      glyphs.push(s);
+    });
+    return glyphs;
+  }
+
+  /* ── Lock each box to the advance its glyph has at rest ─────────── */
+  // Measured, never computed: the font is the authority on its own metrics,
+  // and the measurement has to be redone whenever the type re-lays out.
+  function lockAdvances(set) {
+    if (!set.locked) return;
+    set.glyphs.forEach(function (s) {
+      s.style.width = '';
+      s.style.fontVariationSettings = vs(REST_W, REST_O);
+    });
+    var widths = set.glyphs.map(function (s) { return s.getBoundingClientRect().width; });
+    set.glyphs.forEach(function (s, i) { s.style.width = widths[i] + 'px'; });
+  }
+
+  /* ── Every reactive line on the page ────────────────────────────── */
+  var sets = [];
+
+  function addSet(el, opts) {
+    var set = {
+      el: el,
+      glyphs: split(el),
+      iso: opts.iso,
+      locked: opts.locked,
+      peak: opts.peak || 900,
+      reach: opts.reach || 220,
+      lane: opts.lane || null,
+      base: 0,
+      isoSlope: 0,
+      isoOpsz: REST_O,
+      last: []
+    };
+    sets.push(set);
+    return set;
+  }
+
+  var lanesEl = $('#lanes');
+  var heroSet = addSet($('#heroLine'), { iso: true, locked: true });
+  $$('#lanes .lane').forEach(function (lane) {
+    var kind = lane.dataset.lane;
+    addSet($('.live', lane), {
+      iso: kind !== 'free',
+      locked: kind === 'lock',
+      lane: lane
+    });
+  });
+
+  /* ── Controls ───────────────────────────────────────────────────── */
+  var isoBtn = $('#isoBtn'), lockBtn = $('#lockBtn');
+  var reach = $('#reach'), reachOut = $('#reachOut');
+  var peak  = $('#peak'),  peakOut  = $('#peakOut');
+
+  isoBtn.addEventListener('click', function () {
+    heroSet.iso = !heroSet.iso;
+    isoBtn.setAttribute('aria-pressed', String(heroSet.iso));
+  });
+  lockBtn.addEventListener('click', function () {
+    heroSet.locked = !heroSet.locked;
+    lockBtn.setAttribute('aria-pressed', String(heroSet.locked));
+    heroSet.el.classList.toggle('live--free', !heroSet.locked);
+    if (heroSet.locked) { heroSet.el.classList.remove('live--free'); lockAdvances(heroSet); }
+  });
+  reach.addEventListener('input', function () {
+    heroSet.reach = +reach.value; reachOut.value = reach.value;
+  });
+  peak.addEventListener('input', function () {
+    heroSet.peak = +peak.value; peakOut.value = peak.value;
+    calibrate(heroSet);
+    if (roSlope) roSlope.textContent = heroSet.isoSlope.toFixed(3);
+  });
+
+  /* ── Pointer ────────────────────────────────────────────────────── */
+  var ptr = { x: -9999, y: -9999, has: false };
+  addEventListener('pointermove', function (e) {
+    ptr.x = e.clientX; ptr.y = e.clientY; ptr.has = true;
+  }, { passive: true });
+
+  // An effect that only answers a mouse is dead on a phone — which is the
+  // whole complaint in section 04, so this one does not make it either. With
+  // no pointer the swell runs itself across the line: once on arrival, and
+  // on a device that has no pointer at all, on a slow loop. Under calm it
+  // does not travel.
+  var coarse = matchMedia('(hover: none)');
+  var born = 0;
+  function virtualPointer(set, now) {
+    if (!born) born = now;
+    var age = now - born;
+    var span = 2600;
+    var p;
+    if (coarse.matches) p = ((age % 5200) / span);           // loops, half the cycle resting
+    else if (age < span) p = age / span;                     // one arrival pass, then rest
+    else return null;
+    if (p > 1) return null;
+    var r = set.el.getBoundingClientRect();
+    return { x: r.left + (-0.15 + p * 1.3) * r.width, y: r.top + r.height / 2 };
+  }
+
+  /* ── Paint ──────────────────────────────────────────────────────── */
+  var roGlyph = $('#roGlyph'), roWght = $('#roWght'), roOpsz = $('#roOpsz');
+  var roTouch = $('#roTouch'), roSlope = $('#roSlope');
+
+  function paintSet(set, force, now) {
+    var wrote = 0, bestD = Infinity, bestI = -1, bestW = REST_W, bestO = REST_O;
+
+    // Lanes only ever answer a real pointer; the hero also runs itself.
+    var src = ptr;
+    if (!ptr.has && !calm && !set.lane && now) {
+      var v = virtualPointer(set, now);
+      if (v) src = { x: v.x, y: v.y, has: true };
+    }
+
+    // The three comparison lanes read horizontal distance only, so the same
+    // pointer drives all of them to the same weight at once. Otherwise the
+    // nearest lane is always the heaviest and the comparison measures the
+    // mouse instead of the three disciplines.
+    var xOnly = !!set.lane, gate = true;
+    if (xOnly) {
+      var lb = lanesEl.getBoundingClientRect();
+      gate = ptr.has && ptr.y > lb.top - 70 && ptr.y < lb.bottom + 70;
+    }
+
+    for (var i = 0; i < set.glyphs.length; i++) {
+      var s = set.glyphs[i];
+      var r = s.getBoundingClientRect();
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var d = xOnly ? (gate ? Math.abs(ptr.x - cx) : Infinity)
+                    : Math.hypot(src.x - cx, src.y - cy);
+
+      var t = calm || !src.has ? 0 : clamp(1 - d / set.reach, 0, 1);
+      t = t * t * (3 - 2 * t);                       // smoothstep
+      var w = Math.round(REST_W + t * (set.peak - REST_W));
+      var o = opszFor(set, w);
+
+      if (d < bestD) { bestD = d; bestI = i; bestW = w; bestO = o; }
+
+      // Skip the write when the rounded weight has not moved: restyling a
+      // glyph costs a layout, so the cheapest frame is the one that writes
+      // nothing at all.
+      if (force || set.last[i] !== w) {
+        s.style.fontVariationSettings = vs(w, o);
+        set.last[i] = w;
+        wrote++;
+      }
+    }
+
+    if (set === heroSet) {
+      roGlyph.textContent = bestI < 0 ? '—' : set.glyphs[bestI].dataset.ch;
+      roWght.textContent  = bestW;
+      roOpsz.textContent  = bestO.toFixed(1);
+      roTouch.textContent = wrote;
+    }
+
+    if (set.lane) {
+      var word = $('.lane__word', set.lane);
+      var wpx = word.getBoundingClientRect().width;
+      if (!set.base) {
+        set.base = wpx;
+        $('.lane__mark', set.lane).style.left = wpx + 'px';
+      }
+      var drift = (wpx / set.base - 1) * 100;
+      $('.lane__num .v', set.lane).textContent = wpx.toFixed(1) + 'px';
+      var d = $('.lane__num .d', set.lane);
+      d.textContent = (drift >= 0 ? '+' : '') + drift.toFixed(2) + '%';
+      d.className = 'd ' + (Math.abs(drift) > 0.5 ? 'drift' : 'hold');
+    }
+  }
+
+  function rest() {
+    sets.forEach(function (set) {
+      set.glyphs.forEach(function (s, i) {
+        s.style.fontVariationSettings = vs(REST_W, REST_O);
+        set.last[i] = REST_W;
+      });
+    });
+  }
+
+  /* ── The no-pointer fallback ────────────────────────────────────── */
+  // The site drives --lx/--ly off the pointer only, so a device that never
+  // sends one never reveals the gradient. Feeding the same variables from a
+  // slow travelling sweep costs nothing and keeps the colour alive.
+  var fillNow = $('[data-fill]', $('#fillNow'));
+  var fillFix = $('[data-fill]', $('#fillFix'));
+  var touchBtn = $('#touchBtn'), todayState = $('#todayState');
+  var pretendTouch = false;
+
+  $$('[data-fill]').forEach(function (el) { el.dataset.text = el.textContent; });
+
+  touchBtn.addEventListener('click', function () {
+    pretendTouch = !pretendTouch;
+    touchBtn.setAttribute('aria-pressed', String(pretendTouch));
+    todayState.textContent = pretendTouch ? 'flat forever' : 'colour visible';
+    todayState.className = 'tag ' + (pretendTouch ? 'tag--no' : 'tag--yes');
+  });
+
+  function paintFill(el, x, y) {
+    var r = el.getBoundingClientRect();
+    el.style.setProperty('--lx', (x - r.left) + 'px');
+    el.style.setProperty('--ly', (y - r.top) + 'px');
+    el.style.setProperty('--fx', clamp(((x - r.left) / r.width) * 100, 0, 100) + '%');
+    el.style.setProperty('--fy', clamp(((y - r.top) / r.height) * 100, 0, 100) + '%');
+  }
+
+  function paintFills(now) {
+    var live = ptr.has && !pretendTouch;
+
+    if (live) paintFill(fillNow, ptr.x, ptr.y);
+    else { fillNow.style.setProperty('--lx', '-400px'); fillNow.style.setProperty('--ly', '-400px'); }
+
+    if (live) { paintFill(fillFix, ptr.x, ptr.y); return; }
+
+    // No pointer: sweep instead. Under calm it holds at the midpoint rather
+    // than travelling, so the colour still reads without anything moving.
+    var r = fillFix.getBoundingClientRect();
+    var p = calm ? 0.5 : (now % 3600) / 3600;
+    paintFill(fillFix, r.left + (-0.2 + p * 1.4) * r.width, r.top + r.height * 0.5);
+  }
+
+  /* ── One loop for the page, paused when out of sight ────────────── */
+  var seen = {};
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { seen[e.target.id] = e.isIntersecting; });
+    }, { rootMargin: '140px' });
+    $$('main > section').forEach(function (s) { io.observe(s); });
+  } else {
+    $$('main > section').forEach(function (s) { seen[s.id] = true; });
+  }
+
+  function inView(set) {
+    var sec = set.el.closest('section');
+    return !sec || seen[sec.id] !== false;
+  }
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    for (var i = 0; i < sets.length; i++) if (inView(sets[i])) paintSet(sets[i], false, now);
+    if (seen.p4 !== false) paintFills(now);
+  }
+
+  /* ── Boot ───────────────────────────────────────────────────────── */
+  function relayout() {
+    sets.forEach(function (set) {
+      set.base = 0;                 // the resting width is measured again
+      calibrate(set);               // and so is the slope that holds it
+      lockAdvances(set);
+      set.last = [];
+    });
+  }
+
+  function boot() {
+    relayout();
+    roSlope.textContent = heroSet.isoSlope.toFixed(3);
+    applyCalm();
+    sets.forEach(function (set) { paintSet(set, true); });
+    requestAnimationFrame(frame);
+  }
+
+  // Metrics are only true once the real face has loaded; measuring against
+  // the fallback serif locks every box to the wrong width.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot);
+  else addEventListener('load', boot);
+
+  var rt = 0;
+  addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(relayout, 120);
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
