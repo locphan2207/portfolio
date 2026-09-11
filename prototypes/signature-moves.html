@@ -236,11 +236,54 @@ a { color: inherit; }
 .cost b { font-weight: 500; color: var(--text-2); }
 
 /* ═══ 01 · System diagram ══════════════════════════════════════════ */
-.sys { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.4rem, 3vw, 2.6rem); align-items: start; }
+.sys {
+  display: grid;
+  grid-template-columns: minmax(0, 45%) minmax(0, 1fr);
+  gap: clamp(1.2rem, 2.6vw, 2.4rem);
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
 
-.sys__cards { display: flex; flex-direction: column; gap: clamp(1rem, 2.4vw, 1.6rem); }
+/* Pinned rail. The wrap is given enough height to cover the rail's travel,
+   the stage sticks inside it, and vertical progress drives translateX — the
+   same device the side-projects section uses. The height comes off the rail,
+   so adding a card needs no magic number. */
+.railwrap { position: relative; }
+.railstage {
+  position: sticky;
+  top: 0;
+  /* Tall enough to read as a pinned panel, short enough not to strand the
+     content in the middle of an empty screen. */
+  height: min(100svh, 680px);
+  display: flex;
+  flex-direction: column;
+}
+.railstage > .stage__body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+}
+
+.railtrack { min-width: 0; overflow: hidden; }
+.railcards {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(.8rem, 1.7vw, 1.25rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.railmeter { margin-top: .9rem; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.railmeter i { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(var(--rail-p, 0)); }
 
 .wcard {
+  flex: 0 0 clamp(244px, 26vw, 312px);
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
   border: 1px solid var(--line);
   border-left: 2px solid transparent;
   border-radius: 14px;
@@ -258,11 +301,20 @@ a { color: inherit; }
 .wcard.is-live.is-alert .wcard__idx { color: var(--alert); }
 .wcard h3 { font-size: 1.24rem; margin-bottom: .45rem; }
 .wcard p { font-size: .9rem; color: var(--text-2); line-height: 1.58; }
+.tags { display: flex; flex-wrap: wrap; gap: .3rem; list-style: none; padding: 0; margin: auto 0 0; padding-top: .9rem; }
+.tags li {
+  font-size: .63rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-3); border: 1px solid var(--line); border-radius: 6px; padding: .18rem .42rem;
+  transition: color .4s var(--ease), border-color .4s var(--ease);
+}
+.wcard.is-live .tags li { color: var(--text-2); border-color: var(--line-2); }
 
-.sys__panel { position: sticky; top: 1.2rem; display: flex; flex-direction: column; gap: .9rem; }
+.sys__panel { display: flex; flex-direction: column; gap: .9rem; }
 
 .sys__figure { margin: 0; }
 .sys__svg { display: block; width: 100%; max-width: 100%; height: auto; color: var(--text-2); }
+
+[data-hint="swipe"] { display: none; }
 
 .sys__steps { display: flex; gap: .35rem; flex-wrap: wrap; }
 .sys__steps button {
@@ -317,6 +369,8 @@ a { color: inherit; }
    scale and the long names stop fitting inside their boxes. */
 .n-label tspan.alt { display: none; }
 #storeLabel tspan.mig, #storeLabel tspan.migAlt { display: none; }
+/* The longest label in the drawing; it needs its own size to stay inside. */
+#storeLabel tspan.mig { font-size: 11.5px; }
 .sys.mig #storeLabel tspan.base, .sys.mig #storeLabel tspan.alt { display: none; }
 .sys.mig #storeLabel tspan.mig { display: inline; }
 
@@ -433,27 +487,26 @@ a { color: inherit; }
 .foot { padding-block: 1.6rem 3rem; font-size: .76rem; color: var(--text-3); border-top: 1px solid var(--line); }
 
 /* ── Responsive ────────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  /* Flex, not a one-column grid: a grid item's containing block is its own
-     row, so a sticky panel there has nowhere to travel. A flex item is
-     bounded by the whole container, which is what lets it pin. */
-  .sys { display: flex; flex-direction: column; }
-  .sys__cards { padding-top: 1.1rem; }
-
-  .sys__panel {
-    order: -1;
-    position: sticky;
-    top: 0;
-    z-index: 3;
-    gap: .55rem;
-    /* Opaque, or the cards scroll through the diagram behind it. */
-    background: var(--raise);
-    padding-block: .7rem;
-    border-bottom: 1px solid var(--line);
-    /* Bleed to the stage edges, or cards show through beside the panel. */
+/* Too narrow or too short to hold the diagram and a card at once, so the
+   pinning comes off and the rail becomes an ordinary swipeable scroller —
+   same markup, the browser doing the scrolling. */
+@media (max-width: 900px), (max-height: 719px) {
+  .railwrap { height: auto !important; }
+  .railstage { position: static; height: auto; }
+  .railstage > .stage__body { display: block; }
+  .sys { display: flex; flex-direction: column; align-items: stretch; gap: 1rem; }
+  .sys__panel { gap: .55rem; }
+  .railcards { transform: none !important; }
+  .railtrack {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
     margin-inline: calc(var(--stage-pad) * -1);
     padding-inline: var(--stage-pad);
   }
+  .wcard { flex-basis: min(78vw, 320px); scroll-snap-align: center; }
+  [data-hint="scroll"] { display: none; }
+  [data-hint="swipe"] { display: inline; }
   .sys__cap { min-height: 0; font-size: .82rem; padding-top: .55rem; }
 
   /* The drawing scales to roughly half, so the type inside it is set in
@@ -479,6 +532,31 @@ a { color: inherit; }
 }
 
 /* ── Calm: the site's own reduce-motion contract ───────────────────── */
+html.calm .railwrap,
+html:not(.js) .railwrap { height: auto !important; }
+html.calm .railstage,
+html:not(.js) .railstage { position: static; height: auto; }
+html.calm .railstage > .stage__body,
+html:not(.js) .railstage > .stage__body { display: block; }
+html.calm .sys,
+html:not(.js) .sys { display: flex; flex-direction: column; align-items: stretch; gap: 1rem; }
+html.calm .railcards,
+html:not(.js) .railcards { transform: none !important; }
+html.calm .railtrack,
+html:not(.js) .railtrack {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  margin-inline: calc(var(--stage-pad) * -1);
+  padding-inline: var(--stage-pad);
+}
+html.calm .wcard,
+html:not(.js) .wcard { flex-basis: min(78vw, 320px); scroll-snap-align: center; }
+html.calm [data-hint="scroll"],
+html:not(.js) [data-hint="scroll"] { display: none; }
+html.calm [data-hint="swipe"],
+html:not(.js) [data-hint="swipe"] { display: inline; }
+
 html.calm .edge.on .flow { animation: none; stroke-dasharray: 3 5; stroke-dashoffset: 0; }
 html.calm .node.alert .pulse { animation: none; opacity: .4; }
 html.calm .deck:hover, html.calm .deck:focus-visible { transform: none; }
@@ -490,6 +568,13 @@ html.calm * { scroll-behavior: auto; }
   html:not(.motion) .edge.on .flow { stroke-dasharray: 3 5; stroke-dashoffset: 0; opacity: 1; }
 }
 </style>
+
+<script>
+  /* The site sets this in <head> before first paint. Every scroll-driven
+     layout here is gated on it, so without it the page correctly renders
+     its no-JS fallback — which is what it was doing before this line. */
+  document.documentElement.classList.add('js');
+</script>
 
 </head>
 <body>
@@ -521,12 +606,13 @@ html.calm * { scroll-behavior: auto; }
   <div class="bay__head">
     <p class="eyebrow">Idea 01 · Work section</p>
     <h2>The system that <em>draws itself</em></h2>
-    <p class="bay__pitch">Your best work is invisible by nature, so draw it. Scroll the cards — the architecture on the right lights the node each one is about, and animates the traffic it carries. Step 03 is the one to watch: the datastore splits and the writes fork.</p>
+    <p class="bay__pitch">Your best work is invisible by nature, so draw it. The diagram holds still on the left while scrolling runs the cards past it, right to left — the same device your side-projects section already uses, so the page only teaches one scroll behaviour. Each card lights the node it is about. Step 03 is the one to watch: the datastore splits and the writes fork.</p>
   </div>
 
-  <div class="stage">
+  <div class="railwrap" id="railwrap">
+   <div class="stage railstage" id="railstage">
     <div class="stage__bar">
-      <p class="eyebrow">Live · scroll the cards or pick a step</p>
+      <p class="eyebrow">Live · <i data-hint="scroll">scroll to run the system</i><i data-hint="swipe">swipe the cards</i></p>
       <div class="legend" aria-hidden="true">
         <span><i class="live"></i> active traffic</span>
         <span><i></i> request path</span>
@@ -536,39 +622,8 @@ html.calm * { scroll-behavior: auto; }
     <div class="stage__body">
       <div class="sys" id="sys">
 
-        <div class="sys__cards" id="wcards">
-          <article class="wcard" data-step="1">
-            <span class="wcard__idx">01</span>
-            <h3>The web app front end</h3>
-            <p>Angular and AngularDart features in a web app my team owns and other teams build on. The craft is landing change incrementally — behind flags, in pieces, without breaking what already works.</p>
-          </article>
-          <article class="wcard" data-step="2">
-            <span class="wcard__idx">02</span>
-            <h3>A large-scale datastore</h3>
-            <p>Designed and built from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
-          </article>
-          <article class="wcard" data-step="3">
-            <span class="wcard__idx">03</span>
-            <h3>A live schema migration</h3>
-            <p>Split one overloaded table into a normalized schema in production, with no downtime and no broken consumers. It is sequencing, backfills, and dual writes held long enough that the old path is safe to delete.</p>
-          </article>
-          <article class="wcard" data-step="4">
-            <span class="wcard__idx">04</span>
-            <h3>RPC APIs</h3>
-            <p>Service contracts that stay stable while everything behind them moves. Versioning and error semantics picked so the caller has an easy time — because the caller is another team, and their outage is my outage.</p>
-          </article>
-          <article class="wcard" data-step="5">
-            <span class="wcard__idx">05</span>
-            <h3>Model training and serving</h3>
-            <p>A workflow that trains a model, hosts it, and answers live inference requests behind an endpoint. Reproducible training runs, safe rollout, a latency budget, and a sane answer for when the model is wrong.</p>
-          </article>
-          <article class="wcard" data-step="6" data-alert="1">
-            <span class="wcard__idx">Also</span>
-            <h3>The on-call rotation</h3>
-            <p>I carry the pager for the system my team maintains. You write the runbook, you add the log line, you make failure legible at 3 a.m. It is the fastest way I know to learn a system all the way down.</p>
-          </article>
-        </div>
-
+        <!-- The diagram leads, on the left: it is the thing the section is
+             for, and it holds still while the cards run past it. -->
         <div class="sys__panel">
           <div class="sys__steps" id="steps" role="group" aria-label="Jump to a step">
             <button type="button" data-go="1">01</button>
@@ -700,21 +755,64 @@ html.calm * { scroll-behavior: auto; }
               </g>
             </svg>
             <figcaption class="sys__cap" id="sysCap" aria-live="polite">
-              <b>Scroll the cards.</b> Each one lights the part of the system it is about.
+              <b>Scroll on.</b> The cards run past and each one lights the part of the system it is about.
             </figcaption>
           </figure>
         </div>
 
+        <div class="railtrack" id="railtrack">
+          <ol class="railcards" id="wcards">
+          <li class="wcard" data-step="1">
+            <span class="wcard__idx">01</span>
+            <h3>The web app front end</h3>
+            <p>Angular and AngularDart features in a web app my team owns and other teams build on. The craft is landing change incrementally — behind flags, in pieces, without breaking what already works.</p>
+            <ul class="tags"><li>Angular</li><li>AngularDart</li><li>TypeScript</li></ul>
+          </li>
+          <li class="wcard" data-step="2">
+            <span class="wcard__idx">02</span>
+            <h3>A large-scale datastore</h3>
+            <p>Designed and built from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
+            <ul class="tags"><li>Schema design</li><li>SQL</li><li>Capacity</li></ul>
+          </li>
+          <li class="wcard" data-step="3">
+            <span class="wcard__idx">03</span>
+            <h3>A live schema migration</h3>
+            <p>Split one overloaded table into a normalized schema in production, with no downtime and no broken consumers. It is sequencing, backfills, and dual writes held long enough that the old path is safe to delete.</p>
+            <ul class="tags"><li>Zero downtime</li><li>Backfill</li><li>Dual writes</li></ul>
+          </li>
+          <li class="wcard" data-step="4">
+            <span class="wcard__idx">04</span>
+            <h3>RPC APIs</h3>
+            <p>Service contracts that stay stable while everything behind them moves. Versioning and error semantics picked so the caller has an easy time — because the caller is another team, and their outage is my outage.</p>
+            <ul class="tags"><li>RPC</li><li>Protocol buffers</li><li>Versioning</li></ul>
+          </li>
+          <li class="wcard" data-step="5">
+            <span class="wcard__idx">05</span>
+            <h3>Model training and serving</h3>
+            <p>A workflow that trains a model, hosts it, and answers live inference requests behind an endpoint. Reproducible training runs, safe rollout, a latency budget, and a sane answer for when the model is wrong.</p>
+            <ul class="tags"><li>Python</li><li>Model serving</li><li>Live inference</li></ul>
+          </li>
+          <li class="wcard" data-step="6" data-alert="1">
+            <span class="wcard__idx">Also</span>
+            <h3>The on-call rotation</h3>
+            <p>I carry the pager for the system my team maintains. You write the runbook, you add the log line, you make failure legible at 3 a.m. It is the fastest way I know to learn a system all the way down.</p>
+            <ul class="tags"><li>On-call</li><li>Debugging</li><li>Runbooks</li></ul>
+          </li>
+          </ol>
+          <div class="railmeter" aria-hidden="true"><i id="railMeter"></i></div>
+        </div>
+
       </div>
     </div>
+   </div>
   </div>
 
   <div class="cost">
-    <span><b>Cost</b> ~140 lines of CSS + ~60 of JS</span>
-    <span><b>Deps</b> none — inline SVG, one IntersectionObserver</span>
-    <span><b>Calm</b> flows freeze to static dashes, nothing translates</span>
-    <span><b>Narrow</b> pins above the cards, short labels, ~24vh</span>
-    <span><b>A11y</b> svg carries an aria-label; captions announce politely</span>
+    <span><b>Cost</b> ~190 lines of CSS + ~90 of JS</span>
+    <span><b>Deps</b> none — inline SVG, one scroll handler</span>
+    <span><b>Calm</b> no pinning at all; the rail becomes a swiper</span>
+    <span><b>Narrow or short</b> same swiper, diagram above it</span>
+    <span><b>A11y</b> step buttons drive the rail from the keyboard</span>
   </div>
 </section>
 
@@ -830,20 +928,20 @@ html.calm * { scroll-behavior: auto; }
 <!-- ═══ Verdict ════════════════════════════════════════════════════ -->
 <section class="bay verdict shell" id="verdict" style="border-bottom: 0">
   <div class="bay__head">
-    <p class="eyebrow">Where I'd land</p>
-    <h2>Ship <em>01</em>, then 07, then 06</h2>
-    <p class="bay__pitch">All three fit the site's existing budget: no libraries, no new fonts, no scroll hijacking, and every one degrades to something readable under reduce-motion.</p>
+    <p class="eyebrow">Where this landed</p>
+    <h2>Building <em>01</em> and 06</h2>
+    <p class="bay__pitch">Both fit the site's existing budget: no libraries, no new fonts, and each degrades to something readable under reduce-motion. 07 stays here as a prototype rather than going on the page.</p>
   </div>
   <div class="verdict__grid">
     <div class="vcell">
       <p class="eyebrow">01 · System diagram</p>
       <h3>The signature</h3>
-      <p>The only one nobody can copy, because it is your system. It fills the dead right column, and it turns the unshowable work into the thing people look at. Biggest build of the three, and worth it.</p>
+      <p>The only one nobody can copy, because it is your system. It turns the unshowable work into the thing people look at, and it reuses the pinned-rail device the side-projects section already owns rather than adding a second scroll behaviour.</p>
     </div>
     <div class="vcell">
       <p class="eyebrow">07 · Project visuals</p>
-      <h3>The quick win</h3>
-      <p>The cards are visibly empty today. This fills them without going back on the no-screenshots call, and Data Block earns a genuine smile. Half a day.</p>
+      <h3>Parked</h3>
+      <p>Not going on the page for now. It stays here in working order, so the side-project cards can pick it up later if their emptiness starts to bother you.</p>
     </div>
     <div class="vcell">
       <p class="eyebrow">06 · Stack wall</p>
@@ -895,7 +993,12 @@ html.calm * { scroll-behavior: auto; }
     root.classList.toggle('motion', !calm);
     calmBtn.setAttribute('aria-pressed', String(calm));
   }
-  calmBtn.addEventListener('click', function () { calm = !calm; applyCalm(); });
+  calmBtn.addEventListener('click', function () {
+    calm = !calm;
+    applyCalm();
+    // Calm hands scrolling back to the browser, which changes the layout.
+    if (typeof remeasure === 'function') remeasure();
+  });
   applyCalm();
 
   function tok(name) {
@@ -966,62 +1069,102 @@ html.calm * { scroll-behavior: auto; }
     });
   }
 
-  // Keep every card's visibility, not just the ones that changed this tick,
-  // and pick the winner across all of them — a single entry arriving late is
-  // otherwise enough to leave the diagram on the wrong step.
-  var ratios = {};
-  var lockUntil = 0;
-  var panel = $('.sys__panel');
-  var io = null;
+  /* Vertical scroll runs the cards right to left while the stage holds
+     still — the same device as the side-projects rail, so the page only
+     ever teaches one scroll behaviour. Travel is measured off the rail, so
+     adding a card needs no magic number, and anywhere the pinning cannot
+     hold, the browser gets scrolling back and the rail becomes a swiper. */
 
-  function onCards(entries) {
-    entries.forEach(function (e) {
-      ratios[e.target.dataset.step] = e.isIntersecting ? e.intersectionRatio : 0;
-    });
-    if (Date.now() < lockUntil) return;
-    var bestStep = 0, bestRatio = 0;
-    Object.keys(ratios).forEach(function (k) {
-      if (ratios[k] > bestRatio) { bestRatio = ratios[k]; bestStep = Number(k); }
-    });
-    if (bestStep) setStep(bestStep);
+  // Scroll spent standing still on the last card before the stage lets go,
+  // as a fraction of the viewport. Rail travel is mapped one pixel to one
+  // pixel, so this is dwell on the end of the run, not a slower run.
+  var RAIL_DWELL = 0.16;
+
+  var wrap  = $('#railwrap');
+  var stage = $('#railstage');
+  var track = $('#railtrack');
+  var rail  = $('#wcards');
+  var meter = $('#railMeter');
+  // Pinning needs a viewport that can hold the diagram and a card at once.
+  var wide  = matchMedia('(min-width: 901px) and (min-height: 720px)');
+  var travel = 0;
+
+  function isPinned() { return wide.matches && !calm; }
+
+  function measureRail() {
+    if (!isPinned()) {
+      wrap.style.height = '';
+      rail.style.transform = '';
+      travel = 0;
+      return;
+    }
+    // Measure off the last card rather than scrollWidth: a flex row drops its
+    // trailing padding from that. Both rects carry the live transform, so the
+    // distance between them comes out free of it.
+    var railBox = rail.getBoundingClientRect();
+    var lastBox = rail.lastElementChild.getBoundingClientRect();
+    var tail = parseFloat(getComputedStyle(rail).paddingRight) || 0;
+    travel = Math.max(0, Math.round(lastBox.right - railBox.left + tail - track.clientWidth));
+
+    // The rail can simply fit on a wide enough screen. Nothing to travel
+    // then, so give the section its natural height back rather than park a
+    // motionless stage in a screen of reserved space.
+    if (travel < wcards[0].offsetWidth) travel = 0;
+    if (!travel) { wrap.style.height = ''; rail.style.transform = ''; return; }
+
+    wrap.style.height = Math.round(stage.offsetHeight + travel + innerHeight * RAIL_DWELL) + 'px';
   }
 
-  // Stacked, the diagram pins to the top of the viewport and the cards read
-  // underneath it, so the band that decides the active card has to start
-  // below the panel rather than at 20% of the screen.
-  function watchCards() {
-    if (!('IntersectionObserver' in window)) return;
-    if (io) io.disconnect();
-    var stacked = innerWidth <= 900;
-    var top = stacked ? -(Math.round(panel.getBoundingClientRect().height) + 10) + 'px' : '-20%';
-    io = new IntersectionObserver(onCards, {
-      rootMargin: top + ' 0px ' + (stacked ? '-22%' : '-30%') + ' 0px',
-      threshold: [0, 0.2, 0.45, 0.7, 0.95]
-    });
-    ratios = {};
-    wcards.forEach(function (c) { io.observe(c); });
+  function driveRail() {
+    var last = wcards.length - 1;
+    var p;
+    if (isPinned() && travel) {
+      // One pixel of scroll, one pixel of rail: the run ends the moment the
+      // last card lands, and the dwell height holds it there before release.
+      p = clamp(-wrap.getBoundingClientRect().top / travel, 0, 1);
+      rail.style.transform = 'translate3d(' + (-p * travel).toFixed(1) + 'px,0,0)';
+    } else if (track.scrollWidth > track.clientWidth + 4) {
+      p = clamp(track.scrollLeft / (track.scrollWidth - track.clientWidth), 0, 1);
+    } else {
+      return;
+    }
+    if (meter) meter.style.setProperty('--rail-p', p.toFixed(4));
+    // Read the step off the same progress the rail runs on, so the first card
+    // lands on 01 and the last on 06. Measuring at a reading edge instead
+    // would stall short: the rail runs out of cards before it runs out of room.
+    if (last > 0) setStep(1 + Math.round(p * last));
   }
-  watchCards();
-
-  var reflow;
-  addEventListener('resize', function () {
-    clearTimeout(reflow);
-    reflow = setTimeout(watchCards, 180);
-  }, { passive: true });
 
   stepBtns.forEach(function (b) {
     b.addEventListener('click', function () {
       var n = Number(b.dataset.go);
-      // Hold the observer off while the programmatic scroll is in flight,
-      // or the cards it sweeps past will overwrite the step you asked for.
-      lockUntil = Date.now() + (calm ? 0 : 1200);
-      setStep(n);
-      var card = wcards[n - 1];
-      if (card) card.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' });
+      var last = wcards.length - 1;
+      var p = last > 0 ? (n - 1) / last : 0;
+      var smooth = calm ? 'auto' : 'smooth';
+      if (isPinned() && travel) {
+        // Rail travel is linear in scroll, so the wanted card converts
+        // straight back to a page offset.
+        scrollTo({ top: scrollY + wrap.getBoundingClientRect().top + p * travel, behavior: smooth });
+      } else {
+        track.scrollTo({ left: p * (track.scrollWidth - track.clientWidth), behavior: smooth });
+        setStep(n);
+      }
     });
   });
 
+  function remeasure() { measureRail(); driveRail(); }
+  var reflow;
   setStep(1);
+  remeasure();
+  addEventListener('scroll', driveRail, { passive: true });
+  track.addEventListener('scroll', driveRail, { passive: true });
+  addEventListener('resize', function () {
+    clearTimeout(reflow);
+    reflow = setTimeout(remeasure, 150);
+  }, { passive: true });
+  wide.addEventListener('change', remeasure);
+  // Webfonts land after first paint and change every card's width.
+  addEventListener('load', remeasure);
 
   /* ═══ 06 · Stack wall ═══════════════════════════════════════════ */
   // d = how deep, 1–5. A first guess read off the site copy, not gospel.
