@@ -1,0 +1,1266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; font: 14px system-ui, sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Signature Moves</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..800,0,1;1,9..144,300..800,0,1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Signature Moves — three prototypes for loc-phan.com
+   Palette and type are lifted verbatim from assets/css/site.css so the
+   demos can be judged as if they were already on the page.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Tokens: light is the bare :root, dark redefines only values ───── */
+:root {
+  --paper:  #FBF8F1;
+  --raise:  #FFFFFF;
+  --sink:   #F1EADE;
+  --text:   #1B1813;
+  --text-2: #544D42;
+  --text-3: #6D6458;
+  --line:   rgb(40 30 16 / .16);
+  --line-2: rgb(40 30 16 / .30);
+  --accent:   #0E5560;
+  --accent-2: #1E4C7A;
+  --accent-3: #16624A;
+  --accent-4: #6A6317;
+  --alert:  #A8371A;
+  --wash:   rgb(14 85 96 / .07);
+  --shadow: 0 26px 60px -30px rgb(60 42 20 / .34);
+
+  --sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+
+  --shell: 1180px;
+  --gut: clamp(1.1rem, 4vw, 2.6rem);
+  --ease: cubic-bezier(.22, .61, .36, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:  #16130F;
+    --raise:  #1D1915;
+    --sink:   #26211B;
+    --text:   #F3EDE2;
+    --text-2: #B3A795;
+    --text-3: #A2957F;
+    --line:   rgb(255 240 214 / .12);
+    --line-2: rgb(255 240 214 / .22);
+    --accent:   #52C6D8;
+    --accent-2: #6FA0E0;
+    --accent-3: #4FCFA6;
+    --accent-4: #C9C066;
+    --alert:  #FF8A5C;
+    --wash:   rgb(82 198 216 / .09);
+    --shadow: 0 30px 70px -30px rgb(0 0 0 / .85);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:  #16130F;
+  --raise:  #1D1915;
+  --sink:   #26211B;
+  --text:   #F3EDE2;
+  --text-2: #B3A795;
+  --text-3: #A2957F;
+  --line:   rgb(255 240 214 / .12);
+  --line-2: rgb(255 240 214 / .22);
+  --accent:   #52C6D8;
+  --accent-2: #6FA0E0;
+  --accent-3: #4FCFA6;
+  --accent-4: #C9C066;
+  --alert:  #FF8A5C;
+  --wash:   rgb(82 198 216 / .09);
+  --shadow: 0 30px 70px -30px rgb(0 0 0 / .85);
+  color-scheme: dark;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+  letter-spacing: -.022em;
+  line-height: 1.06;
+  text-wrap: balance;
+  margin: 0;
+}
+
+p { margin: 0; }
+em { font-family: var(--serif); font-style: italic; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+}
+
+.eyebrow {
+  font-size: .69rem;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────── */
+.top {
+  padding-block: clamp(2.2rem, 6vw, 3.6rem) clamp(1.6rem, 4vw, 2.4rem);
+  border-bottom: 1px solid var(--line);
+}
+.top__grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.6rem 2rem;
+}
+.top__lead { max-width: 40ch; display: flex; flex-direction: column; gap: .7rem; }
+.top h1 { font-size: clamp(2.5rem, 7vw, 4.1rem); }
+.top h1 i { font-style: normal; color: var(--accent); }
+.top__deck { color: var(--text-2); font-size: 1.02rem; max-width: 46ch; }
+
+.tools { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.tbtn {
+  font: inherit;
+  font-size: .78rem;
+  letter-spacing: .04em;
+  color: var(--text-2);
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .48rem 1rem;
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.tbtn:hover { color: var(--text); border-color: var(--line-2); }
+.tbtn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--wash); }
+
+.jump {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  padding-block: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.jump a {
+  text-decoration: none;
+  font-size: .82rem;
+  color: var(--text-2);
+  display: inline-flex;
+  gap: .55rem;
+  align-items: baseline;
+  transition: color .2s var(--ease);
+}
+.jump a:hover { color: var(--accent); }
+.jump a i { font-style: normal; font-size: .68rem; letter-spacing: .14em; color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+/* ── Bay: one prototype ────────────────────────────────────────────── */
+.bay { padding-block: clamp(3.4rem, 9vw, 6rem); border-bottom: 1px solid var(--line); }
+.bay__head { display: flex; flex-direction: column; gap: .85rem; max-width: 62ch; margin-bottom: clamp(1.8rem, 4vw, 2.6rem); }
+.bay__head h2 { font-size: clamp(1.9rem, 4.4vw, 3rem); }
+.bay__head h2 em { color: var(--accent); }
+.bay__pitch { color: var(--text-2); font-size: 1.04rem; }
+
+/* Stage — a bench, not a card: hairline frame with a working label bar */
+.stage {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--raise);
+  overflow: hidden;
+}
+.stage__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: .7rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--sink);
+}
+.stage__body { padding: clamp(1.1rem, 3vw, 2rem); }
+
+.cost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem 1.6rem;
+  margin-top: 1.1rem;
+  font-size: .78rem;
+  color: var(--text-3);
+}
+.cost b { font-weight: 500; color: var(--text-2); }
+
+/* ═══ 01 · System diagram ══════════════════════════════════════════ */
+.sys { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.4rem, 3vw, 2.6rem); align-items: start; }
+
+.sys__cards { display: flex; flex-direction: column; gap: clamp(1rem, 2.4vw, 1.6rem); }
+
+.wcard {
+  border: 1px solid var(--line);
+  border-left: 2px solid transparent;
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  background: var(--paper);
+  transition: border-color .45s var(--ease), background .45s var(--ease), transform .45s var(--ease-out);
+}
+.wcard.is-live { border-color: var(--line-2); border-left-color: var(--accent); background: var(--raise); }
+.wcard.is-live.is-alert { border-left-color: var(--alert); }
+.wcard__idx {
+  font-size: .68rem; letter-spacing: .15em; color: var(--text-3);
+  font-variant-numeric: tabular-nums; display: block; margin-bottom: .45rem;
+}
+.wcard.is-live .wcard__idx { color: var(--accent); }
+.wcard.is-live.is-alert .wcard__idx { color: var(--alert); }
+.wcard h3 { font-size: 1.24rem; margin-bottom: .45rem; }
+.wcard p { font-size: .9rem; color: var(--text-2); line-height: 1.58; }
+
+.sys__panel { position: sticky; top: 1.2rem; display: flex; flex-direction: column; gap: .9rem; }
+
+.sys__figure { margin: 0; }
+.sys__svg { display: block; width: 100%; max-width: 100%; height: auto; color: var(--text-2); }
+
+.sys__steps { display: flex; gap: .35rem; flex-wrap: wrap; }
+.sys__steps button {
+  font: inherit; font-size: .7rem; letter-spacing: .1em; font-variant-numeric: tabular-nums;
+  color: var(--text-3); background: transparent;
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: .3rem .55rem; cursor: pointer;
+  transition: all .2s var(--ease);
+}
+.sys__steps button:hover { color: var(--text); border-color: var(--line-2); }
+.sys__steps button[aria-current="true"] { color: var(--accent); border-color: var(--accent); background: var(--wash); }
+
+.sys__cap {
+  font-size: .84rem; color: var(--text-2); min-height: 2.9em;
+  border-top: 1px solid var(--line); padding-top: .7rem;
+}
+.sys__cap b { font-weight: 500; color: var(--text); font-family: var(--serif); font-size: 1rem; }
+
+/* Diagram parts. Everything rests visible and quiet; active lights up. */
+.n-box { fill: var(--raise); stroke: var(--line-2); stroke-width: 1; transition: stroke .4s var(--ease), fill .4s var(--ease); }
+.n-label { fill: var(--text-3); font-family: var(--sans); font-size: 11.5px; font-weight: 500; transition: fill .4s var(--ease); }
+.n-tag { fill: var(--text-3); font-family: var(--sans); font-size: 8.5px; letter-spacing: .1em; opacity: .7; transition: fill .4s var(--ease), opacity .4s var(--ease); }
+
+.node.on .n-box { stroke: var(--accent); fill: var(--wash); }
+.node.on .n-label { fill: var(--text); }
+.node.on .n-tag { fill: var(--accent); opacity: 1; }
+.node.alert .n-box { stroke: var(--alert); }
+.node.alert .n-tag { fill: var(--alert); }
+
+.edge-base { fill: none; stroke: var(--line-2); stroke-width: 1; }
+.edge-base.dash { stroke-dasharray: 3 4; }
+.flow { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 4 46; stroke-dashoffset: 50; opacity: 0; transition: opacity .35s var(--ease); }
+.edge.on .flow { opacity: 1; animation: flow 2s linear infinite; }
+.edge.alert .flow { stroke: var(--alert); }
+@keyframes flow { from { stroke-dashoffset: 50; } to { stroke-dashoffset: 0; } }
+
+.e-label { fill: var(--text-3); font-family: var(--sans); font-size: 9px; letter-spacing: .03em; opacity: 0; transition: opacity .35s var(--ease); }
+.edge.on .e-label { opacity: 1; fill: var(--accent); }
+.edge.alert.on .e-label { fill: var(--alert); }
+
+/* Migration: the store splits into two plates for step 03 only */
+#plateOld { opacity: 0; transition: opacity .5s var(--ease); }
+.sys.mig #plateOld { opacity: 1; }
+.sys.mig #plateOld .n-box { stroke: var(--accent); fill: var(--wash); }
+.sys.mig.retired #plateOld { opacity: .42; }
+.sys.mig.retired #plateOld .n-box { stroke-dasharray: 4 3; stroke: var(--line-2); fill: none; }
+#retireNote { opacity: 0; transition: opacity .5s var(--ease); fill: var(--text-3); font-family: var(--sans); font-size: 8.5px; letter-spacing: .04em; }
+.sys.mig.retired #retireNote { opacity: 1; }
+#storeLabel tspan.alt { display: none; }
+.sys.mig #storeLabel tspan.base { display: none; }
+.sys.mig #storeLabel tspan.alt { display: inline; }
+
+.pulse { fill: none; stroke: var(--alert); stroke-width: 1.2; opacity: 0; }
+.node.alert .pulse { animation: ping 1.9s var(--ease-out) infinite; }
+@keyframes ping {
+  0%   { opacity: .55; transform: scale(.96); }
+  70%  { opacity: 0;   transform: scale(1.09); }
+  100% { opacity: 0;   transform: scale(1.09); }
+}
+
+.legend { display: flex; gap: 1.1rem; flex-wrap: wrap; font-size: .7rem; color: var(--text-3); letter-spacing: .04em; }
+.legend span { display: inline-flex; align-items: center; gap: .4rem; }
+.legend i { width: 18px; height: 0; border-top: 1px solid var(--line-2); display: inline-block; }
+.legend i.dash { border-top-style: dashed; }
+.legend i.live { border-top: 2px solid var(--accent); }
+
+/* ═══ 06 · Stack wall ══════════════════════════════════════════════ */
+.wall {
+  display: flex; flex-wrap: wrap;
+  align-items: baseline;
+  /* Row gap resolves against the container, not the huge child type, so it
+     has to be stated in absolute terms or the rows collide. */
+  gap: clamp(.5rem, 1.7vw, 1.15rem) .5rem;
+  padding-block: .4rem;
+}
+.wall button {
+  font-family: var(--serif);
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.02;
+  background: none; border: 0; padding: 0;
+  cursor: pointer;
+  color: var(--tone, var(--text));
+  transition: opacity .32s var(--ease), color .32s var(--ease), transform .32s var(--ease-out);
+}
+.wall button[data-dom="A"] { --tone: var(--accent); }
+.wall button[data-dom="B"] { --tone: var(--accent-2); }
+.wall button[data-dom="C"] { --tone: var(--accent-3); }
+.wall button[data-dom="D"] { --tone: var(--accent-4); }
+
+.wall button[data-d="5"] { font-size: clamp(2rem, 5.4vw, 3.9rem); }
+.wall button[data-d="4"] { font-size: clamp(1.4rem, 3.5vw, 2.5rem); }
+.wall button[data-d="3"] { font-size: clamp(1.05rem, 2.2vw, 1.6rem); }
+.wall button[data-d="2"] { font-size: clamp(.92rem, 1.5vw, 1.12rem); }
+.wall button[data-d="1"] { font-size: .82rem; }
+
+.wall.flat button { font-size: 1.18rem !important; }
+
+.wall.picking button { opacity: .16; }
+.wall.picking button.lit { opacity: 1; }
+.wall.picking button.self { transform: translateY(-2px); }
+
+.wallfoot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 1rem 2rem; flex-wrap: wrap;
+  margin-top: 1.3rem; padding-top: .9rem; border-top: 1px solid var(--line);
+}
+.readout { font-size: .84rem; color: var(--text-2); min-height: 1.6em; }
+.readout b { font-weight: 500; color: var(--text); }
+.readout .dot { display: inline-block; width: .5em; height: .5em; border-radius: 50%; background: var(--tone, var(--accent)); margin-right: .45em; vertical-align: baseline; }
+.keyrow { display: flex; gap: .9rem; flex-wrap: wrap; font-size: .72rem; color: var(--text-3); letter-spacing: .04em; }
+.keyrow span { display: inline-flex; align-items: center; gap: .38rem; }
+.keyrow em { width: .52em; height: .52em; border-radius: 50%; display: inline-block; font-style: normal; }
+
+/* ═══ 07 · Project card visuals ════════════════════════════════════ */
+.decks { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(.9rem, 2vw, 1.3rem); }
+
+.deck {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color .35s var(--ease), transform .45s var(--ease-out), box-shadow .45s var(--ease);
+}
+.deck:hover, .deck:focus-visible { border-color: var(--line-2); transform: translateY(-3px); box-shadow: var(--shadow); }
+
+.deck__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  max-width: 100%;
+  background: var(--sink);
+  border-bottom: 1px solid var(--line);
+}
+.deck__media canvas { display: block; width: 100%; height: 100%; }
+
+.deck__body { padding: .95rem 1.05rem 1.1rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
+.deck__idx { font-size: .66rem; letter-spacing: .15em; color: var(--tone, var(--accent)); font-variant-numeric: tabular-nums; }
+.deck h3 { font-size: 1.14rem; }
+.deck p { font-size: .83rem; color: var(--text-2); line-height: 1.55; }
+.deck__tags { display: flex; flex-wrap: wrap; gap: .3rem; list-style: none; padding: 0; margin: 0; }
+.deck__tags li {
+  font-size: .63rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-3); border: 1px solid var(--line); border-radius: 6px; padding: .18rem .4rem;
+}
+.deck__cta { margin-top: auto; padding-top: .3rem; font-size: .78rem; color: var(--tone, var(--accent)); display: inline-flex; align-items: center; gap: .3rem; }
+
+.deck[data-tone="1"] { --tone: var(--accent-4); }
+.deck[data-tone="2"] { --tone: var(--accent-2); }
+.deck[data-tone="3"] { --tone: var(--accent-3); }
+.deck[data-tone="4"] { --tone: var(--accent); }
+
+/* ── Verdict ───────────────────────────────────────────────────────── */
+.verdict { padding-block: clamp(3rem, 7vw, 4.6rem); }
+.verdict__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.2rem, 3vw, 2.2rem); margin-top: 1.8rem; }
+.vcell { display: flex; flex-direction: column; gap: .5rem; padding-top: .9rem; border-top: 2px solid var(--accent); }
+.vcell:nth-child(2) { border-top-color: var(--accent-2); }
+.vcell:nth-child(3) { border-top-color: var(--accent-3); }
+.vcell h3 { font-size: 1.1rem; }
+.vcell p { font-size: .88rem; color: var(--text-2); }
+.foot { padding-block: 1.6rem 3rem; font-size: .76rem; color: var(--text-3); border-top: 1px solid var(--line); }
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sys { grid-template-columns: 1fr; }
+  .sys__panel { position: static; order: -1; }
+  .decks { grid-template-columns: repeat(2, 1fr); }
+  .verdict__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .decks { grid-template-columns: 1fr; }
+  .top__grid { align-items: flex-start; }
+}
+
+/* ── Calm: the site's own reduce-motion contract ───────────────────── */
+html.calm .edge.on .flow { animation: none; stroke-dasharray: 3 5; stroke-dashoffset: 0; }
+html.calm .node.alert .pulse { animation: none; opacity: .4; }
+html.calm .deck:hover, html.calm .deck:focus-visible { transform: none; }
+html.calm .wall.picking button.self { transform: none; }
+html.calm * { scroll-behavior: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  html:not(.motion) .edge.on .flow { stroke-dasharray: 3 5; stroke-dashoffset: 0; opacity: 1; }
+}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="shell top__grid">
+    <div class="top__lead">
+      <p class="eyebrow">Prototypes · loc-phan.com</p>
+      <h1>Signature <i>Moves</i></h1>
+      <p class="top__deck">Three ideas from the brainstorm, built far enough to judge. Same palette, same two faces, same reduce-motion contract as the live site — so what you see here is what would ship.</p>
+    </div>
+    <div class="tools">
+      <button class="tbtn" id="themeBtn" type="button" aria-pressed="false">Dark</button>
+      <button class="tbtn" id="calmBtn" type="button" aria-pressed="false">Reduce motion</button>
+    </div>
+  </div>
+</header>
+
+<nav class="shell jump" aria-label="Prototypes">
+  <a href="#p1"><i>01</i> System diagram</a>
+  <a href="#p6"><i>06</i> Stack wall</a>
+  <a href="#p7"><i>07</i> Project visuals</a>
+  <a href="#verdict"><i>—</i> Verdict</a>
+</nav>
+
+<main>
+
+<!-- ═══ Prototype 01 ═══════════════════════════════════════════════ -->
+<section class="bay shell" id="p1">
+  <div class="bay__head">
+    <p class="eyebrow">Idea 01 · Work section</p>
+    <h2>The system that <em>draws itself</em></h2>
+    <p class="bay__pitch">Your best work is invisible by nature, so draw it. Scroll the cards — the architecture on the right lights the node each one is about, and animates the traffic it carries. Step 03 is the one to watch: the datastore splits and the writes fork.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage__bar">
+      <p class="eyebrow">Live · scroll the cards or pick a step</p>
+      <div class="legend" aria-hidden="true">
+        <span><i class="live"></i> active traffic</span>
+        <span><i></i> request path</span>
+        <span><i class="dash"></i> alerting</span>
+      </div>
+    </div>
+    <div class="stage__body">
+      <div class="sys" id="sys">
+
+        <div class="sys__cards" id="wcards">
+          <article class="wcard" data-step="1">
+            <span class="wcard__idx">01</span>
+            <h3>The web app front end</h3>
+            <p>Angular and AngularDart features in a web app my team owns and other teams build on. The craft is landing change incrementally — behind flags, in pieces, without breaking what already works.</p>
+          </article>
+          <article class="wcard" data-step="2">
+            <span class="wcard__idx">02</span>
+            <h3>A large-scale datastore</h3>
+            <p>Designed and built from the ground up: schema, access patterns, indexes, and the room to grow into. The decisions that are expensive to undo all get made while the tables are still empty.</p>
+          </article>
+          <article class="wcard" data-step="3">
+            <span class="wcard__idx">03</span>
+            <h3>A live schema migration</h3>
+            <p>Split one overloaded table into a normalized schema in production, with no downtime and no broken consumers. It is sequencing, backfills, and dual writes held long enough that the old path is safe to delete.</p>
+          </article>
+          <article class="wcard" data-step="4">
+            <span class="wcard__idx">04</span>
+            <h3>RPC APIs</h3>
+            <p>Service contracts that stay stable while everything behind them moves. Versioning and error semantics picked so the caller has an easy time — because the caller is another team, and their outage is my outage.</p>
+          </article>
+          <article class="wcard" data-step="5">
+            <span class="wcard__idx">05</span>
+            <h3>Model training and serving</h3>
+            <p>A workflow that trains a model, hosts it, and answers live inference requests behind an endpoint. Reproducible training runs, safe rollout, a latency budget, and a sane answer for when the model is wrong.</p>
+          </article>
+          <article class="wcard" data-step="6" data-alert="1">
+            <span class="wcard__idx">Also</span>
+            <h3>The on-call rotation</h3>
+            <p>I carry the pager for the system my team maintains. You write the runbook, you add the log line, you make failure legible at 3 a.m. It is the fastest way I know to learn a system all the way down.</p>
+          </article>
+        </div>
+
+        <div class="sys__panel">
+          <div class="sys__steps" id="steps" role="group" aria-label="Jump to a step">
+            <button type="button" data-go="1">01</button>
+            <button type="button" data-go="2">02</button>
+            <button type="button" data-go="3">03</button>
+            <button type="button" data-go="4">04</button>
+            <button type="button" data-go="5">05</button>
+            <button type="button" data-go="6">06</button>
+          </div>
+
+          <figure class="sys__figure">
+            <svg class="sys__svg" viewBox="0 0 440 512" role="img"
+                 aria-label="Architecture of the system: users reach an Angular web app, which calls an RPC gateway alongside other teams; the gateway writes to a datastore and queries a model server fed by training; the datastore and model server page an on-call engineer.">
+
+              <!-- edges first so nodes paint over their ends -->
+              <g class="edge" data-edge="users-web">
+                <path class="edge-base" d="M220 68 V120" pathLength="100"/>
+                <path class="flow" d="M220 68 V120" pathLength="100"/>
+                <text class="e-label" x="228" y="98">requests</text>
+              </g>
+
+              <g class="edge" data-edge="peers-rpc">
+                <path class="edge-base" d="M372 164 C372 202 330 216 289 230" pathLength="100"/>
+                <path class="flow" d="M372 164 C372 202 330 216 289 230" pathLength="100"/>
+                <text class="e-label" x="330" y="196">versioned calls</text>
+              </g>
+
+              <g class="edge" data-edge="web-rpc">
+                <path class="edge-base" d="M220 164 V216" pathLength="100"/>
+                <path class="flow" d="M220 164 V216" pathLength="100"/>
+                <text class="e-label" x="228" y="194">RPC</text>
+              </g>
+
+              <g class="edge" data-edge="rpc-store">
+                <path class="edge-base" d="M220 260 C220 300 106 296 106 330" pathLength="100"/>
+                <path class="flow" d="M220 260 C220 300 106 296 106 330" pathLength="100"/>
+                <text class="e-label" x="150" y="288" text-anchor="end">writes</text>
+              </g>
+
+              <g class="edge" data-edge="rpc-model">
+                <path class="edge-base" d="M220 260 C220 300 330 296 330 330" pathLength="100"/>
+                <path class="flow" d="M220 260 C220 300 330 296 330 330" pathLength="100"/>
+                <text class="e-label" x="252" y="292">infers</text>
+              </g>
+
+              <g class="edge" data-edge="train-model">
+                <path class="edge-base" d="M330 430 V374" pathLength="100"/>
+                <path class="flow" d="M330 430 V374" pathLength="100"/>
+                <text class="e-label" x="338" y="406">deploys</text>
+              </g>
+
+              <!-- the fork that only exists during the migration -->
+              <g class="edge" data-edge="fork-old">
+                <path class="flow" d="M220 260 C200 280 140 286 74 290" pathLength="100"/>
+              </g>
+              <g class="edge" data-edge="fork-new">
+                <path class="flow" d="M220 260 C220 302 106 302 106 330" pathLength="100"/>
+                <text class="e-label" x="186" y="312">dual writes</text>
+              </g>
+
+              <g class="edge" data-edge="store-pager">
+                <path class="edge-base dash" d="M106 374 V430" pathLength="100"/>
+                <path class="flow" d="M106 374 V430" pathLength="100"/>
+                <text class="e-label" x="98" y="406" text-anchor="end">pages</text>
+              </g>
+
+              <g class="edge" data-edge="model-pager">
+                <path class="edge-base dash" d="M330 374 C330 420 230 452 163 452" pathLength="100"/>
+                <path class="flow" d="M330 374 C330 420 230 452 163 452" pathLength="100"/>
+              </g>
+
+              <!-- nodes -->
+              <g class="node" data-node="users">
+                <rect class="n-box" x="164" y="24" width="112" height="44" rx="10"/>
+                <text class="n-label" x="220" y="51" text-anchor="middle">Users</text>
+              </g>
+
+              <g class="node" data-node="web">
+                <rect class="n-box" x="154" y="120" width="132" height="44" rx="10"/>
+                <text class="n-tag" x="164" y="137">01</text>
+                <text class="n-label" x="220" y="150" text-anchor="middle">Angular web app</text>
+              </g>
+
+              <g class="node" data-node="peers">
+                <rect class="n-box" x="317" y="120" width="110" height="44" rx="10"/>
+                <text class="n-tag" x="325" y="137">04</text>
+                <text class="n-label" x="372" y="150" text-anchor="middle">Other teams</text>
+              </g>
+
+              <g class="node" data-node="rpc">
+                <rect class="n-box" x="154" y="216" width="132" height="44" rx="10"/>
+                <text class="n-tag" x="164" y="233">04</text>
+                <text class="n-label" x="220" y="246" text-anchor="middle">RPC gateway</text>
+              </g>
+
+              <!-- the old plate sits behind the datastore, migration only -->
+              <g class="node" id="plateOld">
+                <rect class="n-box" x="14" y="290" width="120" height="34" rx="9"/>
+                <text class="n-label" x="74" y="312" text-anchor="middle">orders_wide</text>
+                <text id="retireNote" x="14" y="283">safe to delete</text>
+              </g>
+
+              <g class="node" data-node="store">
+                <rect class="n-box" x="36" y="330" width="140" height="44" rx="10"/>
+                <text class="n-tag" x="44" y="347">02 / 03</text>
+                <text class="n-label" id="storeLabel" x="106" y="360" text-anchor="middle"><tspan class="base">Datastore</tspan><tspan class="alt">orders + line_items</tspan></text>
+              </g>
+
+              <g class="node" data-node="model">
+                <rect class="n-box" x="260" y="330" width="140" height="44" rx="10"/>
+                <text class="n-tag" x="268" y="347">05</text>
+                <text class="n-label" x="330" y="360" text-anchor="middle">Model server</text>
+              </g>
+
+              <g class="node" data-node="train">
+                <rect class="n-box" x="270" y="430" width="120" height="44" rx="10"/>
+                <text class="n-label" x="330" y="457" text-anchor="middle">Training</text>
+              </g>
+
+              <g class="node" data-node="pager">
+                <rect class="pulse" x="51" y="430" width="110" height="44" rx="10" style="transform-origin: 106px 452px;"/>
+                <rect class="n-box" x="51" y="430" width="110" height="44" rx="10"/>
+                <text class="n-tag" x="59" y="447">06</text>
+                <text class="n-label" x="106" y="460" text-anchor="middle">Pager</text>
+              </g>
+            </svg>
+            <figcaption class="sys__cap" id="sysCap" aria-live="polite">
+              <b>Scroll the cards.</b> Each one lights the part of the system it is about.
+            </figcaption>
+          </figure>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="cost">
+    <span><b>Cost</b> ~140 lines of CSS + ~60 of JS</span>
+    <span><b>Deps</b> none — inline SVG, one IntersectionObserver</span>
+    <span><b>Calm</b> flows freeze to static dashes, nothing translates</span>
+    <span><b>A11y</b> svg carries an aria-label; captions announce politely</span>
+  </div>
+</section>
+
+<!-- ═══ Prototype 06 ═══════════════════════════════════════════════ -->
+<section class="bay shell" id="p6">
+  <div class="bay__head">
+    <p class="eyebrow">Idea 06 · Stack section</p>
+    <h2>Chips out, <em>depth</em> in</h2>
+    <p class="bay__pitch">Same words that are in the chips today, but size carries how deep you actually go and color carries the domain. Hover or tap a term to isolate its domain. Hit <b>Flatten</b> to see the version you have now — that comparison is the whole argument.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage__bar">
+      <p class="eyebrow">Live · hover to isolate, click to pin</p>
+      <div class="tools">
+        <button class="tbtn" id="flatBtn" type="button" aria-pressed="false">Flatten</button>
+      </div>
+    </div>
+    <div class="stage__body">
+      <div class="wall" id="wall"></div>
+      <div class="wallfoot">
+        <p class="readout" id="readout">Front end, back end, ML, and how you work — one mass instead of four chip trays.</p>
+        <div class="keyrow" aria-hidden="true">
+          <span><em style="background: var(--accent)"></em> Front end</span>
+          <span><em style="background: var(--accent-2)"></em> Back end &amp; data</span>
+          <span><em style="background: var(--accent-3)"></em> ML &amp; pipelines</span>
+          <span><em style="background: var(--accent-4)"></em> How I work</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cost">
+    <span><b>Cost</b> ~50 lines of CSS + ~30 of JS</span>
+    <span><b>Deps</b> none</span>
+    <span><b>Note</b> depth values are my first guess from the site copy — you'd tune them</span>
+    <span><b>A11y</b> each term is a real button, so it tabs and pins from the keyboard</span>
+  </div>
+</section>
+
+<!-- ═══ Prototype 07 ═══════════════════════════════════════════════ -->
+<section class="bay shell" id="p7">
+  <div class="bay__head">
+    <p class="eyebrow">Idea 07 · Side projects</p>
+    <h2>Cards that <em>show the thing</em></h2>
+    <p class="bay__pitch">No screenshots — you dropped those on purpose. Each card draws a visual that is true to what the project does: an epidemic curve, a recipe coming together, a month of moods, and Data Block actually running its own physics. Hover the last one and move your mouse.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage__bar">
+      <p class="eyebrow">Live · hover or focus a card</p>
+      <p class="eyebrow" style="color: var(--accent)">4 canvases, one shared rAF</p>
+    </div>
+    <div class="stage__body">
+      <div class="decks">
+
+        <a class="deck" data-tone="1" data-viz="curve" href="https://github.com/locphan2207/track-covid19" target="_blank" rel="noopener">
+          <div class="deck__media"><canvas aria-hidden="true"></canvas></div>
+          <div class="deck__body">
+            <span class="deck__idx">01</span>
+            <h3>Track Covid19</h3>
+            <p>A weekend build from the 2020 lockdown: case stats, a world heat map, and history curves per country.</p>
+            <ul class="deck__tags"><li>React</li><li>Redux</li><li>Recharts</li></ul>
+            <span class="deck__cta">Source ↗</span>
+          </div>
+        </a>
+
+        <a class="deck" data-tone="2" data-viz="recipe" href="https://github.com/locphan2207/Food-Stories" target="_blank" rel="noopener">
+          <div class="deck__media"><canvas aria-hidden="true"></canvas></div>
+          <div class="deck__body">
+            <span class="deck__idx">02</span>
+            <h3>Food Stories</h3>
+            <p>A recipe app built in the shape of Kitchen Stories — Rails on the back, React and Redux on the front.</p>
+            <ul class="deck__tags"><li>Rails</li><li>React</li><li>PostgreSQL</li></ul>
+            <span class="deck__cta">Source ↗</span>
+          </div>
+        </a>
+
+        <a class="deck" data-tone="3" data-viz="mood" href="https://github.com/locphan2207/Emotion-Diary" target="_blank" rel="noopener">
+          <div class="deck__media"><canvas aria-hidden="true"></canvas></div>
+          <div class="deck__body">
+            <span class="deck__idx">03</span>
+            <h3>Emotion Diary</h3>
+            <p>A cross-platform mobile app for tracking how you feel, built on React Native with Firebase.</p>
+            <ul class="deck__tags"><li>React Native</li><li>Firebase</li><li>Mobile</li></ul>
+            <span class="deck__cta">Source ↗</span>
+          </div>
+        </a>
+
+        <a class="deck" data-tone="4" data-viz="blocks" href="https://locphan2207.github.io/Data-block/" target="_blank" rel="noopener">
+          <div class="deck__media"><canvas aria-hidden="true"></canvas></div>
+          <div class="deck__body">
+            <span class="deck__idx">04</span>
+            <h3>Data Block</h3>
+            <p>You shield a character from blocks of data falling out of the sky. Collision, gravity and force are hand-rolled.</p>
+            <ul class="deck__tags"><li>JavaScript</li><li>D3.js</li><li>Physics</li></ul>
+            <span class="deck__cta">Play it ↗</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="cost">
+    <span><b>Cost</b> ~150 lines of JS, one loop for all four</span>
+    <span><b>Deps</b> none — 2D canvas, colors read from your CSS tokens</span>
+    <span><b>Calm</b> each canvas paints one static frame and stops</span>
+    <span><b>Perf</b> offscreen canvases are skipped, not just hidden</span>
+  </div>
+</section>
+
+<!-- ═══ Verdict ════════════════════════════════════════════════════ -->
+<section class="bay verdict shell" id="verdict" style="border-bottom: 0">
+  <div class="bay__head">
+    <p class="eyebrow">Where I'd land</p>
+    <h2>Ship <em>01</em>, then 07, then 06</h2>
+    <p class="bay__pitch">All three fit the site's existing budget: no libraries, no new fonts, no scroll hijacking, and every one degrades to something readable under reduce-motion.</p>
+  </div>
+  <div class="verdict__grid">
+    <div class="vcell">
+      <p class="eyebrow">01 · System diagram</p>
+      <h3>The signature</h3>
+      <p>The only one nobody can copy, because it is your system. It fills the dead right column, and it turns the unshowable work into the thing people look at. Biggest build of the three, and worth it.</p>
+    </div>
+    <div class="vcell">
+      <p class="eyebrow">07 · Project visuals</p>
+      <h3>The quick win</h3>
+      <p>The cards are visibly empty today. This fills them without going back on the no-screenshots call, and Data Block earns a genuine smile. Half a day.</p>
+    </div>
+    <div class="vcell">
+      <p class="eyebrow">06 · Stack wall</p>
+      <h3>The cheap one</h3>
+      <p>Smallest diff on the page and it removes the most generic block you have. The only open question is whether you're comfortable publishing a depth ranking.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot shell">
+  <p>Prototypes only — nothing here is wired into index.html. Palette, type and the reduce-motion contract are pulled from assets/css/site.css so the demos read true.</p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var $  = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+
+  /* ── Theme + calm, mirroring the live site's two toggles ────────── */
+  var themeBtn = $('#themeBtn');
+  var calmBtn  = $('#calmBtn');
+  var prefersDark = matchMedia('(prefers-color-scheme: dark)');
+
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    return t ? t === 'dark' : prefersDark.matches;
+  }
+  function paintThemeBtn() {
+    var d = isDark();
+    themeBtn.textContent = d ? 'Light' : 'Dark';
+    themeBtn.setAttribute('aria-pressed', String(d));
+  }
+  themeBtn.addEventListener('click', function () {
+    root.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+    paintThemeBtn();
+    refreshTones();
+  });
+  prefersDark.addEventListener('change', function () { paintThemeBtn(); refreshTones(); });
+  paintThemeBtn();
+
+  var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function applyCalm() {
+    root.classList.toggle('calm', calm);
+    root.classList.toggle('motion', !calm);
+    calmBtn.setAttribute('aria-pressed', String(calm));
+  }
+  calmBtn.addEventListener('click', function () { calm = !calm; applyCalm(); });
+  applyCalm();
+
+  function tok(name) {
+    return getComputedStyle(root).getPropertyValue(name).trim();
+  }
+
+  /* ═══ 01 · System diagram ═══════════════════════════════════════ */
+  // Each step names the nodes it lights and the edges it runs traffic on.
+  var STEPS = {
+    1: { nodes: ['users', 'web'], edges: ['users-web', 'web-rpc'],
+         cap: '<b>Front end.</b> Angular and AngularDart, in front of every request that reaches the team.' },
+    2: { nodes: ['rpc', 'store'], edges: ['rpc-store'],
+         cap: '<b>Datastore.</b> Schema, access patterns and indexes, decided while the tables are still empty.' },
+    3: { nodes: ['rpc', 'store'], edges: ['fork-old', 'fork-new'], mig: true,
+         cap: '<b>Live migration.</b> One overloaded table becomes two. Both paths take writes until the old one is safe to delete.' },
+    4: { nodes: ['web', 'rpc', 'peers'], edges: ['web-rpc', 'peers-rpc'],
+         cap: '<b>RPC APIs.</b> Contracts another team depends on — their outage is your outage.' },
+    5: { nodes: ['rpc', 'model', 'train'], edges: ['rpc-model', 'train-model'],
+         cap: '<b>Model serving.</b> Reproducible training, safe rollout, and a latency budget on every inference.' },
+    6: { nodes: ['store', 'model', 'pager'], edges: ['store-pager', 'model-pager'], alert: true,
+         cap: '<b>On-call.</b> When any of it breaks at 3&nbsp;a.m., the pager is yours.' }
+  };
+
+  var sys      = $('#sys');
+  var sysCap   = $('#sysCap');
+  var wcards   = $$('.wcard');
+  var stepBtns = $$('#steps button');
+  var nodes    = $$('.node[data-node]');
+  var edges    = $$('.edge');
+  var current  = 0;
+  var retireTimer = null;
+
+  function setStep(n) {
+    if (n === current || !STEPS[n]) return;
+    current = n;
+    var s = STEPS[n];
+
+    nodes.forEach(function (g) {
+      var on = s.nodes.indexOf(g.dataset.node) > -1;
+      g.classList.toggle('on', on);
+      g.classList.toggle('alert', !!(on && s.alert));
+    });
+    edges.forEach(function (g) {
+      var on = s.edges.indexOf(g.dataset.edge) > -1;
+      g.classList.toggle('on', on);
+      g.classList.toggle('alert', !!(on && s.alert));
+    });
+
+    clearTimeout(retireTimer);
+    sys.classList.toggle('mig', !!s.mig);
+    sys.classList.remove('retired');
+    if (s.mig) {
+      // The narrative beat inside the beat: dual writes run, then the old
+      // table is cut loose. That sequencing is the whole point of the story.
+      retireTimer = setTimeout(function () {
+        if (current === 3) sys.classList.add('retired');
+      }, calm ? 600 : 2400);
+    }
+
+    sysCap.innerHTML = s.cap;
+    wcards.forEach(function (c) {
+      var live = Number(c.dataset.step) === n;
+      c.classList.toggle('is-live', live);
+      c.classList.toggle('is-alert', live && !!c.dataset.alert);
+    });
+    stepBtns.forEach(function (b) {
+      b.setAttribute('aria-current', String(Number(b.dataset.go) === n));
+    });
+  }
+
+  // Keep every card's visibility, not just the ones that changed this tick,
+  // and pick the winner across all of them — a single entry arriving late is
+  // otherwise enough to leave the diagram on the wrong step.
+  var ratios = {};
+  var lockUntil = 0;
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        ratios[e.target.dataset.step] = e.isIntersecting ? e.intersectionRatio : 0;
+      });
+      if (Date.now() < lockUntil) return;
+      var bestStep = 0, bestRatio = 0;
+      Object.keys(ratios).forEach(function (k) {
+        if (ratios[k] > bestRatio) { bestRatio = ratios[k]; bestStep = Number(k); }
+      });
+      if (bestStep) setStep(bestStep);
+    }, { rootMargin: '-20% 0px -30% 0px', threshold: [0, 0.2, 0.45, 0.7, 0.95] });
+    wcards.forEach(function (c) { io.observe(c); });
+  }
+
+  stepBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var n = Number(b.dataset.go);
+      // Hold the observer off while the programmatic scroll is in flight,
+      // or the cards it sweeps past will overwrite the step you asked for.
+      lockUntil = Date.now() + (calm ? 0 : 1200);
+      setStep(n);
+      var card = wcards[n - 1];
+      if (card) card.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' });
+    });
+  });
+
+  setStep(1);
+
+  /* ═══ 06 · Stack wall ═══════════════════════════════════════════ */
+  // d = how deep, 1–5. A first guess read off the site copy, not gospel.
+  var STACK = [
+    ['TypeScript', 'A', 5], ['Angular', 'A', 5], ['RPC APIs', 'B', 5], ['On-call', 'D', 5],
+    ['AngularDart', 'A', 4], ['SQL', 'B', 4], ['Schema design', 'B', 4], ['React', 'A', 4],
+    ['Protocol buffers', 'B', 4], ['React Native', 'A', 4], ['Incremental migration', 'D', 4],
+    ['Design docs', 'D', 4], ['Code review', 'D', 4], ['JavaScript', 'A', 4],
+    ['Python', 'B', 3], ['Node.js', 'B', 3], ['Model training', 'C', 3], ['Model hosting', 'C', 3],
+    ['Live inference', 'C', 3], ['CSS', 'A', 3],
+    ['Batch pipelines', 'C', 2], ['Redis', 'B', 2], ['Django', 'B', 2]
+  ];
+  var DOMAINS = { A: 'Front end', B: 'Back end & data', C: 'ML & pipelines', D: 'How I work' };
+  var TONES   = { A: '--accent', B: '--accent-2', C: '--accent-3', D: '--accent-4' };
+
+  var wall = $('#wall');
+  var readout = $('#readout');
+  var pinned = null;
+
+  STACK.forEach(function (row) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = row[0];
+    b.dataset.dom = row[1];
+    b.dataset.d = String(row[2]);
+    wall.appendChild(b);
+  });
+  var words = $$('button', wall);
+
+  function showDomain(dom, self) {
+    wall.classList.toggle('picking', !!dom);
+    words.forEach(function (b) {
+      b.classList.toggle('lit', !dom || b.dataset.dom === dom);
+      b.classList.toggle('self', b === self);
+    });
+    if (!dom) {
+      readout.innerHTML = pinned
+        ? 'Pinned: <b>' + DOMAINS[pinned] + '</b> — click it again to clear.'
+        : 'Front end, back end, ML, and how you work — one mass instead of four chip trays.';
+      return;
+    }
+    var swatch = '<span class="dot" style="--tone: var(' + TONES[dom] + ')"></span>';
+    readout.innerHTML = self
+      ? swatch + '<b>' + self.textContent + '</b> — ' + DOMAINS[dom] + ' · depth ' + self.dataset.d + ' of 5'
+      : swatch + '<b>' + DOMAINS[dom] + '</b> — pinned. Click the term again to clear.';
+  }
+
+  words.forEach(function (b) {
+    var enter = function () { showDomain(b.dataset.dom, b); };
+    var leave = function () { showDomain(pinned, null); };
+    b.addEventListener('mouseenter', enter);
+    b.addEventListener('focus', enter);
+    b.addEventListener('mouseleave', leave);
+    b.addEventListener('blur', leave);
+    b.addEventListener('click', function () {
+      pinned = pinned === b.dataset.dom ? null : b.dataset.dom;
+      showDomain(pinned || b.dataset.dom, pinned ? b : null);
+      if (!pinned) showDomain(null, null);
+    });
+  });
+  wall.addEventListener('mouseleave', function () { showDomain(pinned, null); });
+
+  var flatBtn = $('#flatBtn');
+  flatBtn.addEventListener('click', function () {
+    var flat = wall.classList.toggle('flat');
+    flatBtn.setAttribute('aria-pressed', String(flat));
+    flatBtn.textContent = flat ? 'Size by depth' : 'Flatten';
+  });
+
+  /* ═══ 07 · Project card visuals ═════════════════════════════════ */
+  // One loop drives every canvas. Offscreen ones are skipped outright —
+  // the same discipline the ink field on the live site already follows.
+  var tones = {};
+  function refreshTones() {
+    tones.a1 = tok('--accent-4'); tones.a2 = tok('--accent-2');
+    tones.a3 = tok('--accent-3'); tones.a4 = tok('--accent');
+    tones.line = tok('--line-2'); tones.dim = tok('--text-3'); tones.sink = tok('--sink');
+    viz.forEach(function (v) { if (calm) draw(v, 1); });
+  }
+
+  var viz = [];
+  $$('.deck').forEach(function (deck, i) {
+    var cv = $('canvas', deck);
+    var v = {
+      deck: deck, cv: cv, ctx: cv.getContext('2d'),
+      kind: deck.dataset.viz, tone: 'a' + (i + 1),
+      hot: 0, seen: false, w: 0, h: 0, mx: 0.5, blocks: null
+    };
+    viz.push(v);
+
+    var on  = function () { v.hot = 1; };
+    var off = function () { v.hot = 0; };
+    deck.addEventListener('mouseenter', on);
+    deck.addEventListener('focus', on);
+    deck.addEventListener('mouseleave', off);
+    deck.addEventListener('blur', off);
+    deck.addEventListener('pointermove', function (e) {
+      var r = cv.getBoundingClientRect();
+      v.mx = clamp((e.clientX - r.left) / r.width, 0, 1);
+    });
+  });
+
+  function size(v) {
+    var r = v.cv.getBoundingClientRect();
+    if (!r.width) return;
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    v.w = r.width; v.h = r.height;
+    v.cv.width  = Math.round(r.width * dpr);
+    v.cv.height = Math.round(r.height * dpr);
+    v.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function roundRect(c, x, y, w, h, r) {
+    c.beginPath();
+    if (c.roundRect) { c.roundRect(x, y, w, h, r); return; }
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  // 01 — an epidemic curve that draws in, with a scrubbing endpoint on hover
+  var CURVE = [];
+  (function () {
+    for (var i = 0; i <= 56; i++) {
+      var x = i / 56;
+      var a = Math.exp(-Math.pow((x - 0.34) / 0.13, 2));
+      var b = Math.exp(-Math.pow((x - 0.72) / 0.17, 2)) * 0.78;
+      CURVE.push(a + b);
+    }
+  })();
+
+  function drawCurve(v, t) {
+    var c = v.ctx, w = v.w, h = v.h, pad = 10;
+    var iw = w - pad * 2, ih = h - pad * 2;
+    c.clearRect(0, 0, w, h);
+
+    c.strokeStyle = tones.line; c.globalAlpha = 0.45; c.lineWidth = 1;
+    for (var g = 1; g < 4; g++) {
+      var gy = pad + (ih / 4) * g;
+      c.beginPath(); c.moveTo(pad, gy); c.lineTo(w - pad, gy); c.stroke();
+    }
+    c.globalAlpha = 1;
+
+    var p = v.hot ? 1 : clamp(t / 1400, 0, 1);
+    var last = Math.max(1, Math.floor(CURVE.length * p));
+    var px = function (i) { return pad + (i / (CURVE.length - 1)) * iw; };
+    var py = function (i) { return pad + ih - CURVE[i] * ih * 0.86; };
+
+    c.beginPath(); c.moveTo(px(0), pad + ih);
+    for (var i = 0; i < last; i++) c.lineTo(px(i), py(i));
+    c.lineTo(px(last - 1), pad + ih); c.closePath();
+    c.fillStyle = tones[v.tone]; c.globalAlpha = 0.13; c.fill(); c.globalAlpha = 1;
+
+    c.beginPath();
+    for (i = 0; i < last; i++) (i ? c.lineTo : c.moveTo).call(c, px(i), py(i));
+    c.strokeStyle = tones[v.tone]; c.lineWidth = 1.6; c.lineJoin = 'round'; c.stroke();
+
+    // hover scrubs a reading along the curve, the way the real app did
+    var k = v.hot ? Math.floor(clamp(v.mx, 0, 1) * (CURVE.length - 1)) : last - 1;
+    c.beginPath(); c.moveTo(px(k), pad); c.lineTo(px(k), pad + ih);
+    c.strokeStyle = tones[v.tone]; c.globalAlpha = 0.3; c.lineWidth = 1; c.stroke(); c.globalAlpha = 1;
+    c.beginPath(); c.arc(px(k), py(k), 3.4, 0, 6.2832);
+    c.fillStyle = tones[v.tone]; c.fill();
+  }
+
+  // 02 — mise en place: ingredient bars fill, then the plate closes
+  function drawRecipe(v, t) {
+    var c = v.ctx, w = v.w, h = v.h;
+    c.clearRect(0, 0, w, h);
+    var speed = v.hot ? 1600 : 3800;
+    var cycle = (t % speed) / speed;
+    var rows = 5, left = 14, barW = w * 0.46;
+
+    for (var i = 0; i < rows; i++) {
+      var y = 16 + i * ((h - 32) / (rows - 1));
+      var start = i / (rows + 2);
+      var p = clamp((cycle - start) * 4, 0, 1);
+      c.globalAlpha = 0.22;
+      roundRect(c, left, y - 3.5, barW, 7, 3.5);
+      c.fillStyle = tones.dim; c.fill();
+      c.globalAlpha = 1;
+      if (p > 0) {
+        roundRect(c, left, y - 3.5, barW * p * (0.55 + (i % 3) * 0.15), 7, 3.5);
+        c.fillStyle = tones[v.tone]; c.fill();
+      }
+    }
+
+    var cx = w - w * 0.24, cy = h / 2, R = Math.min(h * 0.34, w * 0.19);
+    c.beginPath(); c.arc(cx, cy, R, 0, 6.2832);
+    c.strokeStyle = tones.line; c.lineWidth = 1; c.stroke();
+    var done = clamp((cycle - 0.35) * 1.9, 0, 1);
+    c.beginPath(); c.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + done * 6.2832);
+    c.strokeStyle = tones[v.tone]; c.lineWidth = 2.4; c.lineCap = 'round'; c.stroke();
+    c.beginPath(); c.arc(cx, cy, R * 0.42 * done, 0, 6.2832);
+    c.fillStyle = tones[v.tone]; c.globalAlpha = 0.26; c.fill(); c.globalAlpha = 1;
+  }
+
+  // 03 — a month of moods, rippling
+  function drawMood(v, t) {
+    var c = v.ctx, w = v.w, h = v.h;
+    c.clearRect(0, 0, w, h);
+    var cols = 7, rows = 5;
+    var padX = 16, padY = 14;
+    var gx = (w - padX * 2) / (cols - 1), gy = (h - padY * 2) / (rows - 1);
+    var speed = v.hot ? 900 : 2600;
+    var amp = v.hot ? 1 : 0.66;
+
+    for (var r = 0; r < rows; r++) {
+      for (var i = 0; i < cols; i++) {
+        var x = padX + i * gx, y = padY + r * gy;
+        var wave = Math.sin((i * 0.7 + r * 0.45) - t / speed);
+        var m = (wave * 0.5 + 0.5) * amp;
+        var rad = 2.6 + m * 4.6;
+        c.beginPath(); c.arc(x, y, rad, 0, 6.2832);
+        c.fillStyle = tones[v.tone];
+        c.globalAlpha = 0.2 + m * 0.75;
+        c.fill();
+      }
+    }
+    c.globalAlpha = 1;
+  }
+
+  // 04 — the real thing: gravity, a paddle, and collisions you can feel
+  function drawBlocks(v, t, dt) {
+    var c = v.ctx, w = v.w, h = v.h;
+    c.clearRect(0, 0, w, h);
+
+    if (!v.blocks) {
+      v.blocks = [];
+      for (var i = 0; i < 7; i++) {
+        v.blocks.push({ x: Math.random() * w, y: -Math.random() * h, vy: 0, s: 6 + Math.random() * 10, rot: Math.random() * 3, flash: 0 });
+      }
+    }
+    var pw = w * 0.28, ph = 6;
+    var px = v.hot ? v.mx * w : (0.5 + Math.sin(t / 1400) * 0.33) * w;
+    var py = h - 16;
+
+    v.blocks.forEach(function (b) {
+      b.vy += 0.00042 * dt * 60;
+      b.y += b.vy * dt * 0.06;
+      b.rot += 0.0006 * dt;
+      b.flash *= 0.92;
+
+      if (b.y + b.s / 2 >= py - ph / 2 && b.y - b.s / 2 < py + ph && Math.abs(b.x - px) < pw / 2 + b.s / 2) {
+        b.y = py - ph / 2 - b.s / 2;
+        b.vy = -Math.abs(b.vy) * 0.52;
+        b.flash = 1;
+        b.x += (b.x - px) * 0.06;
+      }
+      if (b.y - b.s > h) { b.y = -b.s * 2; b.vy = 0; b.x = Math.random() * w; }
+
+      c.save();
+      c.translate(b.x, b.y);
+      c.rotate(b.rot);
+      roundRect(c, -b.s / 2, -b.s / 2, b.s, b.s, 2);
+      c.fillStyle = tones[v.tone];
+      c.globalAlpha = 0.28 + b.flash * 0.65;
+      c.fill();
+      c.restore();
+    });
+    c.globalAlpha = 1;
+
+    roundRect(c, px - pw / 2, py - ph / 2, pw, ph, 3);
+    c.fillStyle = tones[v.tone];
+    c.fill();
+  }
+
+  function draw(v, t, dt) {
+    if (!v.w) size(v);
+    if (!v.w) return;
+    if (v.kind === 'curve')  return drawCurve(v, t);
+    if (v.kind === 'recipe') return drawRecipe(v, t);
+    if (v.kind === 'mood')   return drawMood(v, t);
+    if (v.kind === 'blocks') return drawBlocks(v, t, dt || 16);
+  }
+
+  if ('IntersectionObserver' in window) {
+    var vio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var v = viz.filter(function (x) { return x.deck === e.target; })[0];
+        if (v) v.seen = e.isIntersecting;
+      });
+    }, { rootMargin: '120px' });
+    viz.forEach(function (v) { vio.observe(v.deck); });
+  } else {
+    viz.forEach(function (v) { v.seen = true; });
+  }
+
+  var last = 0;
+  function frame(now) {
+    var dt = last ? Math.min(now - last, 48) : 16;
+    last = now;
+    if (!calm) {
+      for (var i = 0; i < viz.length; i++) if (viz[i].seen) draw(viz[i], now, dt);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  addEventListener('resize', function () {
+    viz.forEach(function (v) { v.w = 0; });
+  }, { passive: true });
+
+  refreshTones();
+  // Paint one true frame immediately so the cards are never blank at rest.
+  viz.forEach(function (v) { v.seen = true; draw(v, 1400, 16); });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
