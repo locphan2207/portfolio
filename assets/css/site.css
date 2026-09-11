@@ -106,6 +106,7 @@
   --iris:  #4fcfa6;
   --mint:  #c9c066;
   --ink-rgb: 82 198 216;
+  --alert: #FF8A5C;
   --grain: .05;
   --aurora: .5;
   --grid: .05;
@@ -133,6 +134,7 @@
   --iris:  #16624a;
   --mint:  #6a6317;
   --ink-rgb: 14 85 96;
+  --alert: #A8371A;
   --grain: .05;
   --aurora: .42;
   --grid: .03;
@@ -210,7 +212,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ── 3. Type ────────────────────────────────────────────────────────── */
 
 .mono, .secHead__idx, .nav__idx, .tags li, .status,
-.loader__count, .scrollcue__text, .contact__k, .stack__label, .foot__note,
+.loader__count, .scrollcue__text, .contact__k, .foot__note,
 .rail i, .portrait figcaption, .menu__links i, .work__eyebrow,
 .workGroup__meta, .workGroup__co {
   font-family: var(--label);
@@ -1472,6 +1474,309 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   .card--end { width: min(60vw, 280px); }
 }
 
+/* ── 7b. Work — the system, drawn ───────────────────────────────────── */
+/* Same device as the side-projects rail below: the wrap is given enough
+   height for the run, the stage sticks inside it, and vertical progress
+   drives translateX. Travel is measured off the rail, so adding a card needs
+   no magic number. What is new here is the drawing beside the cards — it
+   holds still and lights the part of the system each card is about, which is
+   the only way this work can be shown at all. */
+
+.sysrail { position: relative; }
+.sysrail__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(1rem, 3vh, 2rem);
+  overflow: hidden;
+  padding-block: calc(var(--nav-h) + 1rem) clamp(1.5rem, 5vh, 3rem);
+}
+
+/* Context stays on screen for the whole run. */
+.sysrail__bar,
+.sysrail__meter {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+  flex: none;
+}
+.sysrail__bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .4rem 1.2rem;
+  font-family: var(--label);
+  font-size: var(--t-xs);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.sysrail__co { color: var(--text-2); }
+.sysrail__co i,
+.sysrail__hint i { font-style: normal; }
+.sysrail__co i { color: var(--text-3); }
+.sysrail__count i { font-style: normal; color: var(--ember); }
+.sysrail__hint i::after { content: " \2192"; }
+.sysrail__hint [data-hint="swipe"] { display: none; }
+
+.sysrail__body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 44%) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  /* Left edge lines up with the shell, the right runs off the screen. That
+     asymmetry is what makes the cards read as a run rather than a row. */
+  padding-left: max(var(--gut), calc((100vw - var(--shell)) / 2 + var(--gut)));
+}
+
+.sysrail__track { min-width: 0; overflow: hidden; }
+.sysrail__rail {
+  display: flex;
+  align-items: stretch;
+  gap: clamp(1.25rem, 2.4vw, 2rem);
+  will-change: transform;
+}
+/* .work__item is a grid in the static section; in the rail it is a column
+   with the tags pinned to the bottom, so every card ends on the same line. */
+.sysrail__rail .work__item {
+  flex: 0 0 clamp(250px, 24vw, 310px);
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.sysrail__rail .work__item .tags { margin-top: auto; padding-top: .5rem; }
+.sysrail__rail .work__item:hover { transform: none; }
+.sysrail__rail .work__item.is-live { border-color: var(--ember); background: var(--card-2); }
+.sysrail__rail .work__item.is-live .tags li { color: var(--text-2); border-color: var(--line-2); }
+.sysrail__rail .work__item--pager.is-live { border-color: var(--alert); }
+.sysrail__rail .work__item--pager.is-live .work__eyebrow { color: var(--alert); }
+
+.sysrail__meter { height: 2px; }
+.sysrail__meter i {
+  display: block;
+  position: relative;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.sysrail__meter i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--sweep);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--rail-p, 0));
+}
+
+/* The drawing. Everything rests visible and quiet; the active step lights. */
+.sysmap { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: clamp(.7rem, 2vh, 1.3rem); }
+.sysmap__svg { display: block; width: 100%; max-width: 100%; height: auto; }
+.sysmap__cap {
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--text-2);
+  border-top: 1px solid var(--line);
+  padding-top: .8rem;
+  min-height: 4.4em;
+}
+.sysmap__cap b {
+  font-family: var(--display);
+  font-weight: var(--head-weight);
+  font-size: var(--t-base);
+  color: var(--text);
+}
+
+.sysmap .n-box {
+  fill: var(--card);
+  stroke: var(--line-2);
+  stroke-width: 1;
+  transition: stroke .4s var(--ease), fill .4s var(--ease);
+}
+.sysmap .n-label {
+  fill: var(--text-3);
+  font-family: var(--label);
+  font-size: 14px;
+  font-weight: 500;
+  transition: fill .4s var(--ease);
+}
+.sysmap .n-tag {
+  fill: var(--text-3);
+  font-family: var(--label);
+  font-size: 10px;
+  letter-spacing: .1em;
+  opacity: .7;
+  transition: fill .4s var(--ease), opacity .4s var(--ease);
+}
+.sysmap .node.on .n-box { stroke: var(--ember); fill: rgb(var(--ink-rgb) / .07); }
+.sysmap .node.on .n-label { fill: var(--text); }
+.sysmap .node.on .n-tag { fill: var(--ember); opacity: 1; }
+.sysmap .node.alert .n-box { stroke: var(--alert); }
+.sysmap .node.alert .n-tag { fill: var(--alert); }
+
+.sysmap .edge-base { fill: none; stroke: var(--line-2); stroke-width: 1; }
+.sysmap .edge-base.dash { stroke-dasharray: 3 4; }
+/* pathLength normalises every edge to 100 units, so one dash pattern gives
+   the same pulse on a long curve and a short straight. */
+.sysmap .flow {
+  fill: none;
+  stroke: var(--ember);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 46;
+  stroke-dashoffset: 50;
+  opacity: 0;
+  transition: opacity .35s var(--ease);
+}
+.sysmap .edge.on .flow { opacity: 1; animation: sysflow 2s linear infinite; }
+.sysmap .edge.alert .flow { stroke: var(--alert); }
+@keyframes sysflow { from { stroke-dashoffset: 50; } to { stroke-dashoffset: 0; } }
+
+.sysmap .e-label {
+  fill: var(--text-3);
+  font-family: var(--label);
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity .35s var(--ease);
+}
+.sysmap .edge.on .e-label { opacity: 1; fill: var(--ember); }
+.sysmap .edge.alert.on .e-label { fill: var(--alert); }
+
+/* The migration beat: the table splits, both paths take writes, then the old
+   one is cut loose. That sequencing is the whole story the prose can't show. */
+.sysmap #plateOld { opacity: 0; transition: opacity .5s var(--ease); }
+.sysmap.mig #plateOld { opacity: 1; }
+.sysmap.mig #plateOld .n-box { stroke: var(--ember); fill: rgb(var(--ink-rgb) / .07); }
+.sysmap.mig.retired #plateOld { opacity: .42; }
+.sysmap.mig.retired #plateOld .n-box { stroke: var(--line-2); stroke-dasharray: 4 3; fill: none; }
+.sysmap #retireNote {
+  opacity: 0;
+  fill: var(--text-3);
+  font-family: var(--label);
+  font-size: 10px;
+  transition: opacity .5s var(--ease);
+}
+.sysmap.mig.retired #retireNote { opacity: 1; }
+
+/* Every label carries a long form and a short one; the short form is for the
+   narrow layout, where the drawing renders at about half this size. */
+.sysmap .n-label tspan.alt { display: none; }
+.sysmap #storeLabel tspan.mig,
+.sysmap #storeLabel tspan.migAlt { display: none; }
+/* The longest label in the drawing; it needs its own size to stay in its box. */
+.sysmap #storeLabel tspan.mig { font-size: 11.5px; }
+.sysmap.mig #storeLabel tspan.base,
+.sysmap.mig #storeLabel tspan.alt { display: none; }
+.sysmap.mig #storeLabel tspan.mig { display: inline; }
+
+.sysmap .pulse { fill: none; stroke: var(--alert); stroke-width: 1.2; opacity: 0; transform-origin: 396px 332px; }
+.sysmap .node.alert .pulse { animation: syspulse 1.9s var(--ease-out) infinite; }
+@keyframes syspulse {
+  0%        { opacity: .55; transform: scale(.96); }
+  70%, 100% { opacity: 0;   transform: scale(1.09); }
+}
+
+
+/* Narrow is a layout question, not a pinning one: the drawing moves above the
+   rail instead of beside it, and the rail still runs off vertical scroll.
+   What actually takes the pinning off is a short viewport, calm, or no JS. */
+@media (max-width: 900px) {
+  .sysrail__body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: clamp(.8rem, 2.5vh, 1.4rem);
+    padding-left: 0;
+  }
+  .sysmap { padding-inline: var(--gut); }
+  /* Stacked, the drawing and a card share one screen, so it takes a height
+     cap rather than its natural width or it outgrows the pinned stage. */
+  .sysmap__svg { max-height: min(28vh, 250px); width: auto; margin-inline: auto; }
+  .sysmap__cap { min-height: 3.6em; font-size: var(--t-xs); padding-top: .6rem; }
+  .sysrail__track { padding-inline: var(--gut); }
+  .sysrail__rail .work__item { flex-basis: min(78vw, 320px); }
+
+  /* The drawing renders at about half size here, so the type inside it is set
+     in bigger user units to land back at something readable. */
+  .sysmap .n-label { font-size: 19px; }
+  .sysmap .n-tag { display: none; }
+  .sysmap #retireNote { font-size: 13px; }
+  /* Edge labels do not survive the scale-down, and the caption says the same
+     thing in words, so they come off rather than shrink into noise. */
+  .sysmap .e-label { display: none; }
+  .sysmap .n-label tspan.base { display: none; }
+  .sysmap .n-label tspan.alt { display: inline; }
+  .sysmap.mig #storeLabel tspan.mig,
+  .sysmap.mig #storeLabel tspan.alt { display: none; }
+  .sysmap.mig #storeLabel tspan.migAlt { display: inline; }
+}
+
+/* The one case the pinned rail cannot serve: too short to hold the drawing
+   and a card at once, a reader who asked for less motion, or a page with no
+   script to drive it. Same markup, the browser doing the scrolling. */
+.sysrail.is-static .sysrail__stage,
+html.calm .sysrail__stage,
+html:not(.js) .sysrail__stage {
+  position: static;
+  height: auto;
+  overflow: visible;
+  padding-block: 0;
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+html.calm .sysrail,
+html:not(.js) .sysrail { height: auto !important; }
+.sysrail.is-static .sysrail__body,
+html.calm .sysrail__body,
+html:not(.js) .sysrail__body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding-left: 0;
+}
+.sysrail.is-static .sysmap,
+html.calm .sysmap,
+html:not(.js) .sysmap { padding-inline: var(--gut); }
+.sysrail.is-static .sysrail__track,
+html.calm .sysrail__track,
+html:not(.js) .sysrail__track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  padding-inline: var(--gut);
+}
+.sysrail.is-static .sysrail__rail,
+html.calm .sysrail__rail,
+html:not(.js) .sysrail__rail { transform: none !important; }
+.sysrail.is-static .sysrail__rail .work__item,
+html.calm .sysrail__rail .work__item,
+html:not(.js) .sysrail__rail .work__item { scroll-snap-align: center; }
+.sysrail.is-static .sysrail__meter,
+html.calm .sysrail__meter,
+html:not(.js) .sysrail__meter { display: none; }
+.sysrail.is-static .sysrail__hint [data-hint="scroll"],
+html.calm .sysrail__hint [data-hint="scroll"],
+html:not(.js) .sysrail__hint [data-hint="scroll"] { display: none; }
+.sysrail.is-static .sysrail__hint [data-hint="swipe"],
+html.calm .sysrail__hint [data-hint="swipe"],
+html:not(.js) .sysrail__hint [data-hint="swipe"] { display: inline; }
+/* Nothing is driving the flows, so show the request path at rest rather than
+   a drawing that reads as broken. */
+html.calm .sysmap .edge.on .flow,
+html:not(.js) .sysmap .edge.on .flow {
+  animation: none;
+  stroke-dasharray: 3 5;
+  stroke-dashoffset: 0;
+}
+html.calm .sysmap .node.alert .pulse,
+html:not(.js) .sysmap .node.alert .pulse { animation: none; opacity: .4; }
+
 /* ── 8. Stack ───────────────────────────────────────────────────────── */
 
 .section--stack::before {
@@ -1483,65 +1788,77 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   background: linear-gradient(90deg, transparent, var(--line-2) 30%, var(--line-2) 70%, transparent);
 }
 
-.stack {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: clamp(1.75rem, 3vw, 2.75rem);
-}
-.stack__group { display: grid; gap: 1.15rem; align-content: start; }
-.stack__label {
-  display: flex;
-  align-items: center;
-  gap: .7rem;
-  color: var(--text-3);
-  padding-bottom: .9rem;
-  border-bottom: 1px solid var(--line);
-}
-.stack__label i {
-  display: grid;
-  place-items: center;
-  width: 20px; height: 20px;
-  border-radius: 5px;
-  background: var(--card-2);
-  border: 1px solid var(--line);
-  color: var(--ember);
-  font-size: 9.5px;
-  font-style: normal;
-}
+/* One mass instead of four chip trays. Size carries how deep the thing goes,
+   colour carries the field. The point of the treatment is that an unsorted
+   list of twenty-three technologies says nothing about which ones I actually
+   live in, and a wall says it at a glance. */
+.stack { display: flex; flex-direction: column; gap: clamp(1.5rem, 3vw, 2.25rem); }
 
-.chips { display: flex; flex-wrap: wrap; gap: .45rem; }
-.chips li {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--card);
-  isolation: isolate;
-  transition: border-color .4s var(--ease), transform .5s var(--spring);
+.wall {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  /* Row gap resolves against this container, not the huge children, so it has
+     to be stated in absolute terms or the rows collide. */
+  gap: clamp(.5rem, 1.6vw, 1.1rem) clamp(.4rem, 1vw, .7rem);
 }
-.chips li span {
-  position: relative;
-  z-index: 2;
-  display: block;
-  padding: .58em 1em;
-  font-size: var(--t-sm);
-  font-weight: 500;
-  color: var(--text-2);
-  white-space: nowrap;
-  transition: color .35s var(--ease);
+.wall__w {
+  font-family: var(--display);
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+  line-height: 1.02;
+  color: var(--tone);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity .32s var(--ease), transform .32s var(--ease-out);
 }
-.chips li::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: var(--sweep);
-  transform: translateY(101%);
-  transition: transform .5s var(--ease-out);
+.wall__w[data-dom="A"] { --tone: var(--ember); }
+.wall__w[data-dom="B"] { --tone: var(--amber); }
+.wall__w[data-dom="C"] { --tone: var(--iris); }
+.wall__w[data-dom="D"] { --tone: var(--mint); }
+
+.wall__w[data-d="5"] { font-size: clamp(2rem, 5.4vw, 3.9rem); }
+.wall__w[data-d="4"] { font-size: clamp(1.4rem, 3.5vw, 2.5rem); }
+.wall__w[data-d="3"] { font-size: clamp(1.05rem, 2.2vw, 1.6rem); }
+.wall__w[data-d="2"] { font-size: clamp(.92rem, 1.5vw, 1.12rem); }
+
+/* Picking one term pulls its whole field forward and drops the rest back. */
+.wall.is-picking .wall__w { opacity: .16; }
+.wall.is-picking .wall__w.is-lit { opacity: 1; }
+.wall.is-picking .wall__w.is-self { transform: translateY(-2px); }
+
+.wall__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .8rem 2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
 }
-.chips li:hover { border-color: transparent; transform: translateY(-2px); }
-.chips li:hover::before { transform: none; }
-.chips li:hover span { color: #0b0b0e; }
+.wall__read { font-size: var(--t-sm); color: var(--text-2); min-height: 1.6em; }
+.wall__read b { font-weight: 500; color: var(--text); }
+.wall__read i { font-style: normal; color: var(--tone, var(--ember)); }
+
+.wall__key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem 1.1rem;
+  font-family: var(--label);
+  font-size: var(--t-xs);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.wall__key li { display: inline-flex; align-items: center; gap: .45em; }
+.wall__key i { width: .5em; height: .5em; border-radius: 50%; background: var(--tone); }
+.wall__key li[data-dom="A"] { --tone: var(--ember); }
+.wall__key li[data-dom="B"] { --tone: var(--amber); }
+.wall__key li[data-dom="C"] { --tone: var(--iris); }
+.wall__key li[data-dom="D"] { --tone: var(--mint); }
 
 /* ── 9. About ───────────────────────────────────────────────────────── */
 
@@ -1858,6 +2175,8 @@ html.calm .hero__title .word,
 html.calm .cta .word { transform: none !important; }
 html.calm [data-fill]::before { -webkit-mask-image: none; mask-image: none; }
 html.calm [data-skew] { transform: none !important; }
+html.calm .iconbtn:hover,
+html.calm .brand:hover .brand__mark { transform: none !important; }
 
 /* Scroll-hijacking is the big one — hand the rail back to the browser. Same
    for a page with no script: nothing would be driving the rail, so pinning
@@ -1902,9 +2221,6 @@ html:not(.js) .gallery__meter i { transform: none; opacity: .3; }
 /* Transforms that only fire on hover are user-initiated and brief, but they
    are still movement — trade them for a color response. */
 html.calm .btn:hover,
-html.calm .chips li:hover,
-html.calm .iconbtn:hover,
-html.calm .brand:hover .brand__mark { transform: none !important; }
 html.calm .btn svg,
 html.calm .card__cta svg,
 html.calm .contact__list svg,

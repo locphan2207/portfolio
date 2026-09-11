@@ -36,6 +36,9 @@
       motionBtn.title = calm ? 'Animation off' : 'Animation on';
     }
     if (!calm) { measureRail && measureRail(); driveRail && driveRail(); }
+    // The work rail unpins under calm as well as pinning under motion, so
+    // it re-measures either way rather than only on the way back.
+    if (typeof measureSys === 'function') { measureSys(); driveSys(); }
   }
   motionQuery.addEventListener('change', () => { if (!storedMotion()) applyCalm(); });
 
@@ -411,6 +414,192 @@
   }
 
 
+  /* ── Work: the system, drawn ──────────────────────────────────────── */
+  // Vertical scroll runs the cards right to left while the stage holds still,
+  // and each card lights the part of the drawing it is about. The rail is
+  // measured and driven exactly like the side-projects one below, so the page
+  // only ever teaches one scroll behaviour.
+
+  // Each step names the nodes it lights and the edges it runs traffic on.
+  const SYS_STEPS = {
+    1: { nodes: ['users', 'web'], edges: ['users-web', 'web-rpc'],
+         cap: '<b>Front end.</b> Angular and AngularDart, in front of every request that reaches the team.' },
+    2: { nodes: ['rpc', 'store'], edges: ['rpc-store'],
+         cap: '<b>Datastore.</b> Schema, access patterns and indexes, decided while the tables are still empty.' },
+    3: { nodes: ['rpc', 'store'], edges: ['fork-old', 'fork-new'], mig: true,
+         cap: '<b>Live migration.</b> One overloaded table becomes two. Both paths take writes until the old one is safe to delete.' },
+    4: { nodes: ['web', 'rpc', 'peers'], edges: ['web-rpc', 'peers-rpc'],
+         cap: '<b>RPC APIs.</b> Contracts another team depends on &mdash; their outage is my outage.' },
+    5: { nodes: ['rpc', 'model', 'train'], edges: ['rpc-model', 'train-model'],
+         cap: '<b>Model serving.</b> Reproducible training, safe rollout, and a latency budget on every inference.' },
+    6: { nodes: ['store', 'model', 'pager'], edges: ['store-pager', 'model-pager'], alert: true,
+         cap: '<b>On-call.</b> When any of it breaks at 3&nbsp;a.m., the pager is mine.' }
+  };
+
+  // Scroll spent standing still on the last card before the stage lets go.
+  const SYS_DWELL = .16;
+
+  const sysrail  = $('#sysrail');
+  const sysStage = sysrail && $('.sysrail__stage', sysrail);
+  const sysTrack = $('#sysTrack');
+  const sysRail  = $('#sysRail');
+  const sysMap   = $('#sysmap');
+  const sysCap   = $('#sysCap');
+  const sysNow   = $('#sysNow');
+  const sysMeter = sysrail && $('.sysrail__meter i', sysrail);
+  const sysCards = sysRail ? $$('.work__item', sysRail) : [];
+  const sysNodes = sysMap ? $$('.node[data-node]', sysMap) : [];
+  const sysEdges = sysMap ? $$('.edge', sysMap) : [];
+  // Pinning only needs a viewport tall enough to hold the drawing and a card
+  // at once. Width decides side-by-side or stacked, which the CSS answers.
+  const sysTall = matchMedia('(min-height: 560px)');
+
+  let sysTravel = 0, sysStep = 0, sysRetire = null;
+
+  function sysPinned() { return sysTall.matches && !calm; }
+
+  function setSysStep(n) {
+    const step = SYS_STEPS[n];
+    if (!step || n === sysStep || !sysMap) return;
+    sysStep = n;
+
+    sysNodes.forEach(g => {
+      const on = step.nodes.includes(g.dataset.node);
+      g.classList.toggle('on', on);
+      g.classList.toggle('alert', on && !!step.alert);
+    });
+    sysEdges.forEach(g => {
+      const on = step.edges.includes(g.dataset.edge);
+      g.classList.toggle('on', on);
+      g.classList.toggle('alert', on && !!step.alert);
+    });
+    sysCards.forEach(c => c.classList.toggle('is-live', Number(c.dataset.step) === n));
+
+    clearTimeout(sysRetire);
+    sysMap.classList.toggle('mig', !!step.mig);
+    sysMap.classList.remove('retired');
+    if (step.mig) {
+      // The beat inside the beat: dual writes run, then the old table is cut
+      // loose. That sequencing is the part the prose cannot show.
+      sysRetire = setTimeout(() => {
+        if (sysStep === 3) sysMap.classList.add('retired');
+      }, calm ? 600 : 2400);
+    }
+
+    if (sysCap) sysCap.innerHTML = step.cap;
+    if (sysNow) sysNow.textContent = String(n).padStart(2, '0');
+  }
+
+  function measureSys() {
+    if (!sysrail || !sysRail || !sysTrack) return;
+    if (!sysPinned()) {
+      sysrail.classList.add('is-static');
+      sysrail.style.height = '';
+      sysRail.style.transform = '';
+      sysTravel = 0;
+      return;
+    }
+    // Measure off the last card rather than scrollWidth: a flex row drops its
+    // trailing padding from that. Both rects carry the live transform, so the
+    // distance between them comes out free of it.
+    const railBox = sysRail.getBoundingClientRect();
+    const lastBox = sysRail.lastElementChild && sysRail.lastElementChild.getBoundingClientRect();
+    const tail = parseFloat(getComputedStyle(sysRail).paddingRight) || 0;
+    const reach = lastBox ? lastBox.right - railBox.left + tail : sysRail.scrollWidth;
+    sysTravel = Math.max(0, Math.round(reach - sysTrack.clientWidth));
+
+    // The cards can simply fit across. Nothing to travel then, so hand the
+    // section its natural height back rather than park a motionless stage in
+    // a screen of reserved space.
+    const first = sysCards[0];
+    if (sysTravel < (first ? first.offsetWidth : 1)) sysTravel = 0;
+    if (!sysTravel) {
+      sysrail.classList.add('is-static');
+      sysrail.style.height = '';
+      sysRail.style.transform = '';
+      return;
+    }
+
+    sysrail.classList.remove('is-static');
+    sysrail.style.height = `${sysStage.offsetHeight + sysTravel + innerHeight * SYS_DWELL}px`;
+  }
+
+  function driveSys() {
+    if (!sysrail || !sysCards.length) return;
+    const last = sysCards.length - 1;
+    let p;
+
+    if (sysPinned() && sysTravel) {
+      // One pixel of scroll, one pixel of rail: the run ends the moment the
+      // last card lands, and the dwell height holds it there before release.
+      p = clamp(-sysrail.getBoundingClientRect().top / sysTravel, 0, 1);
+      sysRail.style.transform = `translate3d(${-p * sysTravel}px, 0, 0)`;
+      if (sysMeter) sysMeter.style.setProperty('--rail-p', p.toFixed(4));
+    } else if (sysTrack && sysTrack.scrollWidth > sysTrack.clientWidth + 4) {
+      p = clamp(sysTrack.scrollLeft / (sysTrack.scrollWidth - sysTrack.clientWidth), 0, 1);
+    } else {
+      return;
+    }
+
+    // Read the step off the same progress the rail runs on, so the first card
+    // lands on 01 and the last on 06. Measuring the card nearest a reading
+    // edge would stall short: the rail runs out of cards before it runs out
+    // of room.
+    if (last > 0) setSysStep(1 + Math.round(p * last));
+  }
+
+  if (sysrail && sysRail && sysTrack) {
+    setSysStep(1);
+    measureSys();
+    driveSys();
+    sysTrack.addEventListener('scroll', driveSys, { passive: true });
+    addEventListener('resize', () => { measureSys(); driveSys(); }, { passive: true });
+    sysTall.addEventListener('change', () => { measureSys(); driveSys(); });
+    // Webfonts land after first paint and change every card's width.
+    addEventListener('load', () => { measureSys(); driveSys(); });
+  }
+
+  /* ── Stack: the wall ──────────────────────────────────────────────── */
+  // Hovering one term pulls its whole field forward. Clicking pins it, so the
+  // same thing works on a touch screen and from the keyboard.
+
+  const wall = $('#wall');
+  const wallRead = $('#wallRead');
+  const WALL_FIELDS = { A: 'Front end', B: 'Back end & data', C: 'ML & pipelines', D: 'How I work' };
+  const WALL_REST = 'Bigger is deeper. Hover a term to pull its field out of the wall.';
+
+  if (wall) {
+    const words = $$('.wall__w', wall);
+    let held = null;
+
+    const paint = (dom, self) => {
+      wall.classList.toggle('is-picking', !!dom);
+      words.forEach(b => {
+        b.classList.toggle('is-lit', !dom || b.dataset.dom === dom);
+        b.classList.toggle('is-self', b === self);
+      });
+      if (!wallRead) return;
+      if (!dom) { wallRead.textContent = WALL_REST; return; }
+      wallRead.innerHTML = self
+        ? `<b>${self.textContent}</b> &mdash; <i>${WALL_FIELDS[dom]}</i>`
+        : `<i>${WALL_FIELDS[dom]}</i> &mdash; pinned. Pick it again to clear.`;
+    };
+
+    words.forEach(b => {
+      const show = () => paint(b.dataset.dom, b);
+      const rest = () => paint(held, null);
+      b.addEventListener('pointerenter', show);
+      b.addEventListener('focus', show);
+      b.addEventListener('pointerleave', rest);
+      b.addEventListener('blur', rest);
+      b.addEventListener('click', () => {
+        held = held === b.dataset.dom ? null : b.dataset.dom;
+        paint(held, held ? b : null);
+      });
+    });
+    wall.addEventListener('pointerleave', () => paint(held, null));
+  }
+
   /* ── Pinned horizontal gallery ────────────────────────────────────── */
   // The section is given enough height for the rail's overflow, then the
   // stage sticks inside it and vertical progress drives translateX. The
@@ -530,6 +719,7 @@
     smooth += (vel - smooth) * .16;
 
     driveRail();
+    driveSys();
     if ((sweepTick = (sweepTick + 1) % 20) === 0) sweepReveals();
 
     if (!calm) {
