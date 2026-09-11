@@ -13,3 +13,12 @@ from production.
   a scroll-driven system diagram for the Work section, a depth-weighted
   typographic wall to replace the Stack chips, and generated canvas
   visuals for the side-project cards.
+
+- **`live-type.html`** — idea 03: per-glyph variable-font response to the
+  pointer. Also an audit of which Fraunces axes the site actually ships
+  (`opsz` and `wght`; `SOFT` and `WONK` were instanced out of the subset,
+  so the two `font-variation-settings` rules naming them are no-ops), what
+  restoring each would cost in bytes, and how to move weight without the
+  line changing width. The Google Fonts request here asks for axis
+  *ranges* rather than pinned values, which is what makes the missing axes
+  demonstrable at all.
