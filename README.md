@@ -52,24 +52,34 @@ python3 -m http.server 8000   # then open http://localhost:8000
   system reads as bleed in the light theme and glow in the dark one. Blobs are
   drawn from a pre-rendered sprite; building a gradient per blob per frame is
   what makes this kind of effect stutter.
-- **Rails** — two sections run on the same device, so the page only ever
+- **Rails** — every run on the page uses the same device, so the page only ever
   teaches one scroll behaviour: the section is given enough height for the
   rail's overflow, then the stage sticks inside it and vertical progress
   drives `translateX`. Travel is measured off the last card rather than
   `scrollWidth`, because a flex row drops its trailing padding from that, and
   the height is derived from the rail, so adding a card needs no magic
-  numbers.
+  numbers. Both jobs in Work are one factory (`pinnedRail`) called twice —
+  Google's adds the diagram that lights with the cards, Smarkets' is the same
+  run with nothing beside it — so the two cannot drift apart.
+  A rail whose cards already fit across hands its height back and renders as
+  an ordinary row; the floor is half a card, because a run that brings in half
+  a card is still a run and costs exactly its own length in scroll, where one
+  that brings in nothing would buy a screen of it to move a hairline.
   The side-projects rail hands scrolling back to the browser under 900px. The
-  work rail keeps running off scroll there — width only decides whether the
-  diagram sits beside the cards or above them — and unpins only where it
+  work rails keep running off scroll there — width only decides whether the
+  diagram's caption sits beside it or under it — and unpin only where they
   genuinely cannot work: a viewport too short to hold the diagram and a card
-  at once, reduced motion, or no JavaScript. Both degrade to an ordinary
+  at once, reduced motion, or no JavaScript. All degrade to an ordinary
   swipeable scroller from the same markup.
 - **System diagram** — the work at Google is invisible by nature, so the Work
   section draws it instead of describing it. Each card lights the nodes it is
   about and runs traffic on the edges it uses; `pathLength="100"` normalises
   every edge so one dash pattern gives the same pulse on a long curve and a
-  short straight. Step 03 is the only one that changes the drawing's shape:
+  short straight. The drawing sits above the run rather than beside it: side
+  by side the two halves each paid for the other — the diagram rendered in 44%
+  of the screen and the cards ran ten lines deep in the rest. Stacked, height
+  is the scarce thing, so the caption moves alongside the diagram and the
+  drawing takes whatever the cards leave rather than a fixed cap. Step 03 is the only one that changes the drawing's shape:
   the datastore splits, both paths take writes, then the old table is cut
   loose. Every node label carries a short form for the narrow layout, where
   the drawing renders at about half size and the edge labels come off — the
