@@ -30,9 +30,14 @@ python3 -m http.server 8000   # then open http://localhost:8000
   wrong palette never flashes.
 - **Color** — the whole palette lives in the two `[data-theme]` blocks at the
   top of `site.css`. The accent is petrol teal: `#0e5560` on paper, `#52c6d8`
-  on ink. `--ink-rgb` is the same color as an RGB triplet, which is what the
-  ink field paints with. Every text color is checked against WCAG AA in both
-  themes.
+  on ink. `--azure` and `--jade` are its two neighbours, a step either side of
+  it, and they are the only other hues the page has — anything that needs a
+  further tone takes `--stone`, which is the page's own ink rather than a new
+  colour. That rule is the whole system: a hue from outside the band reads as
+  a second accent competing with the first, which is how a mustard yellow
+  ended up on the stack wall. `--ink-rgb` is the accent as an RGB triplet,
+  which is what the ink field paints with. Every text color is checked against
+  WCAG AA in both themes.
 - **Type roles** — components ask for `--display`, `--body`, `--label` or
   `--accentface` and never name a face, so the whole page re-points from one
   block. Today that is Fraunces for display (SOFT 0, WONK 1) and Instrument
@@ -87,6 +92,10 @@ python3 -m http.server 8000   # then open http://localhost:8000
 - **Stack wall** — one mass instead of four chip trays. Size carries how deep
   the thing goes, colour carries the field, and picking a term pulls its whole
   field forward. The depth is a reading of the copy on this page, not a
-  metric, which is why nothing on screen claims a number.
+  metric, which is why nothing on screen claims a number. Three of the four
+  fields are technologies and take the three accent tones; the fourth is how I
+  work, which is practice rather than a technology, so it takes ink. That is
+  what keeps the wall inside the palette — four readable-apart fields without
+  a fourth hue to find.
 - **Images** — sources live in git history. `assets/img/` holds derivatives in
   WebP with JPEG fallbacks, served through `<picture>`.

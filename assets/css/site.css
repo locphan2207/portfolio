@@ -32,13 +32,19 @@
 /* ── 1. Tokens ──────────────────────────────────────────────────────── */
 
 :root {
-  /* Brand — identical in both themes so the accent never drifts */
-  --ember: #ff6a3d;
-  --amber: #ffb454;
-  --iris:  #7c6bff;
-  --mint:  #37e0b0;
+  /* Brand — one family in both themes, so the accent never has to compete
+     with a hue the page introduced somewhere else. Petrol teal is the
+     identity; azure and jade are its neighbours, a step either side of it.
+     Anything needing a fourth tone takes --stone, which is the page's own
+     ink rather than a new hue — reaching outside the band is what once put
+     a yellow on the stack wall. Each theme restates all four; these are the
+     light values, and a theme block always wins, so they never paint. */
+  --ember: #0e5560;
+  --azure: #1e4c7a;
+  --jade:  #16624a;
+  --stone: #4a433a;
 
-  --sweep: linear-gradient(100deg, var(--ember), var(--amber) 55%, var(--iris));
+  --sweep: linear-gradient(100deg, var(--ember), var(--azure) 55%, var(--jade));
 
   /* Type */
   --sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -102,9 +108,9 @@
   --card-2: rgb(255 240 214 / .06);
   --shadow: 0 30px 70px -30px rgb(0 0 0 / .85);
   --ember: #52c6d8;
-  --amber: #6fa0e0;
-  --iris:  #4fcfa6;
-  --mint:  #c9c066;
+  --azure: #6fa0e0;
+  --jade:  #4fcfa6;
+  --stone: #cdc0ac;
   --ink-rgb: 82 198 216;
   --alert: #FF8A5C;
   --grain: .05;
@@ -130,9 +136,9 @@
   --card-2: rgb(255 255 255 / .95);
   --shadow: 0 26px 60px -30px rgb(60 42 20 / .34);
   --ember: #0e5560;
-  --amber: #1e4c7a;
-  --iris:  #16624a;
-  --mint:  #6a6317;
+  --azure: #1e4c7a;
+  --jade:  #16624a;
+  --stone: #4a433a;
   --ink-rgb: 14 85 96;
   --alert: #A8371A;
   --grain: .05;
@@ -261,15 +267,15 @@ h1 em, h2 em, h3 em { font-size: var(--accent-size); letter-spacing: 0; }
 .status i {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: var(--mint);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--mint) 70%, transparent);
+  background: var(--jade);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--jade) 70%, transparent);
   animation: pulse 2.6s var(--ease-out) infinite;
 }
 .status--inline { padding: .35em .8em .35em .65em; font-size: 11px; }
 
 @keyframes pulse {
-  0%        { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mint) 60%, transparent); }
-  60%, 100% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--mint) 0%, transparent); }
+  0%        { box-shadow: 0 0 0 0 color-mix(in srgb, var(--jade) 60%, transparent); }
+  60%, 100% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--jade) 0%, transparent); }
 }
 
 /* ── 4. Layout ──────────────────────────────────────────────────────── */
@@ -289,23 +295,47 @@ h1 em, h2 em, h3 em { font-size: var(--accent-size); letter-spacing: 0; }
 .section--rail { padding-block: 0; scroll-margin-top: calc(-1 * (var(--nav-h) + 24px)); }
 
 .secHead { max-width: 46ch; margin-bottom: clamp(2.75rem, 5vw, 4.5rem); }
+
+/* The eyebrow is the only thing on screen that says which section this is,
+   and set as 12px of muted grey beside a display title four times its size
+   it read as chrome — a visitor scrolling in could not tell what they had
+   arrived at. The number moves into a filled chip, which is the wayfinding
+   the nav already uses, and the name comes up to full ink, so the pair
+   registers a beat before the title does. */
 .secHead__idx {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  color: var(--text-3);
+  gap: .85rem;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--text);
   margin-bottom: 1.6rem;
+}
+.secHead__no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Letter-spacing hangs off the last digit, so the right inset comes off
+     by exactly that much or the number sits left of centre in the chip. */
+  padding-block: .45em .4em;
+  padding-inline: .85em calc(.85em - var(--label-track));
+  border-radius: 999px;
+  background: var(--ember);
+  color: var(--ink);
 }
 .secHead__idx::after {
   content: "";
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, var(--line-2), transparent);
-  transform: scaleX(var(--rule, 0));
+  transform: scaleX(var(--rule, 1));
   transform-origin: left;
   transition: transform 1.1s var(--ease-out) .2s;
 }
-.reveal.is-in .secHead__idx { --rule: 1; }
+/* The rule draws itself in as the head arrives. Without scripting there is no
+   arrival to wait for, so it is simply already there rather than a marker
+   that never finishes. */
+html.js .reveal:not(.is-in) .secHead__idx { --rule: 0; }
 
 .secHead__title {
   text-wrap: balance;
@@ -421,12 +451,12 @@ h1 em, h2 em, h3 em { font-size: var(--accent-size); letter-spacing: 0; }
 }
 .blob--2 {
   width: 42vw; height: 42vw; top: 12%; right: -6%;
-  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--iris) 60%, transparent), transparent 68%);
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--jade) 60%, transparent), transparent 68%);
   animation: drift2 31s var(--ease-io) infinite alternate;
 }
 .blob--3 {
   width: 38vw; height: 38vw; bottom: -12%; left: 32%;
-  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--amber) 44%, transparent), transparent 70%);
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--azure) 44%, transparent), transparent 70%);
   animation: drift3 27s var(--ease-io) infinite alternate;
 }
 @keyframes drift1 { to { transform: translate3d(14vw, 10vh, 0) scale(1.18); } }
@@ -1493,10 +1523,34 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   text-transform: uppercase;
   color: var(--text-3);
 }
-.sysrail__co { color: var(--text-2); }
+/* The employer is the one piece of context that holds for the whole run, and
+   at label size it sat level with the scroll hint and the counter beside it —
+   three small grey things, none of which looked like the answer to "whose
+   work am I reading". It takes the display face and full ink; the role and
+   dates stay a label, riding alongside the name rather than matching it. */
+.sysrail__co {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .1rem .75rem;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+  text-transform: none;
+  line-height: 1.1;
+  color: var(--text);
+}
 .sysrail__co i,
 .sysrail__hint i { font-style: normal; }
-.sysrail__co i { color: var(--text-3); }
+.sysrail__co i {
+  font-family: var(--label);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--text-3);
+}
 .sysrail__count i { font-style: normal; color: var(--ember); }
 .sysrail__hint i::after { content: " \2192"; }
 .sysrail__hint [data-hint="swipe"] { display: none; }
@@ -1840,10 +1894,15 @@ html:not(.js) .sysmap .node.alert .pulse { animation: none; opacity: .4; }
   cursor: pointer;
   transition: opacity .32s var(--ease), transform .32s var(--ease-out);
 }
+/* Four fields have to read apart, and the only way that stays on palette is
+   to take them from the accent's own band: the accent, then its two
+   neighbours. The fourth field is not a technology at all, so it takes the
+   page's ink rather than a fourth hue — which is both the honest reading and
+   the reason there is no longer a yellow on this wall. */
 .wall__w[data-dom="A"] { --tone: var(--ember); }
-.wall__w[data-dom="B"] { --tone: var(--amber); }
-.wall__w[data-dom="C"] { --tone: var(--iris); }
-.wall__w[data-dom="D"] { --tone: var(--mint); }
+.wall__w[data-dom="B"] { --tone: var(--azure); }
+.wall__w[data-dom="C"] { --tone: var(--jade); }
+.wall__w[data-dom="D"] { --tone: var(--stone); }
 
 .wall__w[data-d="5"] { font-size: clamp(2rem, 5.4vw, 3.9rem); }
 .wall__w[data-d="4"] { font-size: clamp(1.4rem, 3.5vw, 2.5rem); }
@@ -1881,9 +1940,9 @@ html:not(.js) .sysmap .node.alert .pulse { animation: none; opacity: .4; }
 .wall__key li { display: inline-flex; align-items: center; gap: .45em; }
 .wall__key i { width: .5em; height: .5em; border-radius: 50%; background: var(--tone); }
 .wall__key li[data-dom="A"] { --tone: var(--ember); }
-.wall__key li[data-dom="B"] { --tone: var(--amber); }
-.wall__key li[data-dom="C"] { --tone: var(--iris); }
-.wall__key li[data-dom="D"] { --tone: var(--mint); }
+.wall__key li[data-dom="B"] { --tone: var(--azure); }
+.wall__key li[data-dom="C"] { --tone: var(--jade); }
+.wall__key li[data-dom="D"] { --tone: var(--stone); }
 
 /* ── 9. About ───────────────────────────────────────────────────────── */
 
@@ -1894,7 +1953,7 @@ html:not(.js) .sysmap .node.alert .pulse { animation: none; opacity: .4; }
   /* Ramped, not flat: the top of the frame is all empty studio backdrop, so
      the first stop sits on the surface color and the accent only reaches
      full strength across the subject. */
-  background: linear-gradient(176deg, var(--ink-3), var(--ember) 72%, var(--iris));
+  background: linear-gradient(176deg, var(--ink-3), var(--ember) 72%, var(--jade));
   box-shadow: var(--shadow);
   isolation: isolate;
 }
@@ -1940,13 +1999,20 @@ html:not(.js) .sysmap .node.alert .pulse { animation: none; opacity: .4; }
   letter-spacing: -0.055em;
   margin-bottom: clamp(2.2rem, 5vw, 3.5rem);
 }
+/* The mask is here for the slide-up, but Fraunces italic hangs its
+   descenders — the y and g of "anything" — well past a .96 line box, so a
+   mask cut to that box sheared them off flat. Pad it out to clear them and
+   take the padding straight back off in margin, so the lines keep their
+   rhythm and the heading occupies exactly the space it did before. The word
+   then has to start that much further down to stay hidden behind the deeper
+   mask, which is why the offset is measured rather than a round 120%. */
 .cta .line {
   display: block;
   overflow: hidden;
-  padding-block: .08em;
-  margin-block: -.08em;
+  padding-block: .14em .32em;
+  margin-block: -.14em -.32em;
 }
-html.js .cta:not(.is-in) .word { transform: translateY(120%); }
+html.js .cta:not(.is-in) .word { transform: translateY(calc(120% + .34em)); }
 .cta .word {
   display: inline-block;
   transition: transform 1s var(--ease-out);
@@ -2011,7 +2077,7 @@ html.js .cta:not(.is-in) .word { transform: translateY(120%); }
   fill: none; stroke: currentColor; stroke-width: 1.6;
   stroke-linecap: round; stroke-linejoin: round;
 }
-.copy.is-done { color: var(--mint); border-color: color-mix(in srgb, var(--mint) 45%, transparent); }
+.copy.is-done { color: var(--jade); border-color: color-mix(in srgb, var(--jade) 45%, transparent); }
 
 /* The portrait sits here now, paired with the links as a sign-off. It is
    sized down from the About layout: a face beside the details, not a figure
