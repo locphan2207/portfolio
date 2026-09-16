@@ -463,9 +463,14 @@
       // back rather than park a motionless stage in a screen of reserved space.
       // Half a card is the floor: a run that brings in half a card is still a
       // run and costs exactly its own length in scroll, where one that brings
-      // in nothing would buy a screen of it to move a hairline.
+      // in nothing would buy a screen of it to move a hairline. Read it off
+      // what the cards themselves hang over the edge by, not off the run: the
+      // trailing inset is the landing the last card comes to rest on, and
+      // counting it would pin a row that already fits and then spend the whole
+      // run dragging empty stage across the screen.
       const first = cards[0];
-      if (travel < (first ? first.offsetWidth / 2 : 1)) travel = 0;
+      const spill = reach - tail - track.clientWidth;
+      if (spill < (first ? first.offsetWidth / 2 : 1)) travel = 0;
       if (!travel) { unpin(); return; }
 
       wrap.style.height = `${stage.offsetHeight + travel + innerHeight * dwell}px`;
