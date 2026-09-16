@@ -1571,6 +1571,9 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 
 .sysrail__track { min-width: 0; overflow: hidden; flex: none; }
 .sysrail__rail {
+  /* One card width, read by the cards and by the landing the run stops on, so
+     the two cannot drift apart. */
+  --work-card: clamp(300px, 40vw, 520px);
   display: flex;
   align-items: stretch;
   gap: clamp(1.25rem, 2.4vw, 2rem);
@@ -1579,8 +1582,17 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
      asymmetry is what makes the cards read as a run rather than a row. The
      lead has to live on the rail rather than on the track: travel is measured
      against the track's own width, and padding there would come off the run.
-     Under 1240px the max() collapses to the plain gutter on its own. */
-  padding-inline: max(var(--gut), calc((100vw - var(--shell)) / 2 + var(--gut))) var(--gut);
+     Under 1240px the max() collapses to the plain gutter on its own.
+
+     The trailing inset is the landing, and it is measured the same way: a
+     pixel of padding here is a pixel of run. At a plain gutter the run stopped
+     the instant the last card cleared the right edge — the card arrived and
+     the section let go in the same breath, which is what made it feel yanked
+     away. Half a stage less half a card brings it to rest mid-stage instead,
+     where the projects rail below leaves its last project, and buys the end of
+     the run the scroll it was short of. */
+  padding-inline: max(var(--gut), calc((100vw - var(--shell)) / 2 + var(--gut)))
+                  max(var(--gut), calc(50vw - var(--work-card) / 2));
   will-change: transform;
 }
 
@@ -1601,7 +1613,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
    That is what buys the drawing its height back above — and it is what makes
    four Smarkets cards overflow a desktop screen at all, so the shorter job
    still reads as a run rather than a row that happens to fit. */
-.sysrail__rail .work__item { flex: 0 0 clamp(300px, 40vw, 520px); }
+.sysrail__rail .work__item { flex: 0 0 var(--work-card); }
 /* Tags pinned to the bottom, so every card in a run ends on the same line. */
 .sysrail__rail .work__item .tags { margin-top: auto; padding-top: .5rem; }
 .sysrail__rail .work__item.is-live { border-color: var(--ember); background: var(--card-2); }
@@ -1785,7 +1797,7 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
     padding-left: 0;
     padding-top: .6rem;
   }
-  .sysrail__rail .work__item { flex-basis: min(78vw, 320px); }
+  .sysrail__rail { --work-card: min(78vw, 320px); }
 
   /* The drawing renders at about half size here, so the type inside it is set
      in bigger user units to land back at something readable. */
