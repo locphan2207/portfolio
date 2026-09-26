@@ -525,7 +525,8 @@
          cap: '<b>RPC APIs.</b> Contracts another team depends on &mdash; their outage is my outage.' },
     5: { nodes: ['rpc', 'model', 'train'], edges: ['rpc-model', 'train-model'],
          cap: '<b>Model serving.</b> Reproducible training, safe rollout, and a latency budget on every inference.' },
-    6: { nodes: ['store', 'model', 'pager'], edges: ['store-pager', 'model-pager'], alert: true,
+    6: { nodes: ['web', 'rpc', 'store', 'model', 'pager'],
+         edges: ['web-pager', 'rpc-pager', 'store-pager', 'model-pager'], alert: true,
          cap: '<b>On-call.</b> When any of it breaks at 3&nbsp;a.m., the pager is mine.' }
   };
 

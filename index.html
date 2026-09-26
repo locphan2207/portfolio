@@ -282,7 +282,7 @@
         <div class="sysrail__body">
           <figure class="sysmap" id="sysmap">
             <svg class="sysmap__svg" viewBox="0 0 660 380" role="img"
-                 aria-label="The system I work on at Google: users reach an Angular web app, which calls an RPC gateway alongside other teams; the gateway writes to a datastore and queries a model server fed by training, and the datastore and model server page whoever is on call.">
+                 aria-label="The system I work on at Google: users reach an Angular web app, which calls an RPC gateway alongside other teams; the gateway writes to a datastore and queries a model server fed by training, and the web app, gateway, datastore and model server all page whoever is on call.">
 
               <!-- edges first, so the nodes paint over their ends -->
               <g class="edge" data-edge="users-web">
@@ -335,6 +335,14 @@
               <g class="edge" data-edge="model-pager">
                 <path class="edge-base dash" d="M512 244 C484 250 462 300 452 326" pathLength="100"/>
                 <path class="flow" d="M512 244 C484 250 462 300 452 326" pathLength="100"/>
+              </g>
+              <g class="edge" data-edge="web-pager">
+                <path class="edge-base dash" d="M218 182 C218 262 282 332 340 332" pathLength="100"/>
+                <path class="flow" d="M218 182 C218 262 282 332 340 332" pathLength="100"/>
+              </g>
+              <g class="edge" data-edge="rpc-pager">
+                <path class="edge-base dash" d="M396 182 V310" pathLength="100"/>
+                <path class="flow" d="M396 182 V310" pathLength="100"/>
               </g>
 
               <!-- Every label carries a short form for the narrow layout,
