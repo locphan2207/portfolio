@@ -1734,13 +1734,31 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 .sysmap .edge.on .e-label { opacity: 1; fill: var(--ember); }
 .sysmap .edge.alert.on .e-label { fill: var(--alert); }
 
-/* The migration beat: the table splits, both paths take writes, then the old
-   one is cut loose. That sequencing is the whole story the prose can't show. */
-.sysmap #plateOld { opacity: 0; transition: opacity .5s var(--ease); }
-.sysmap.mig #plateOld { opacity: 1; }
-.sysmap.mig #plateOld .n-box { stroke: var(--ember); fill: rgb(var(--ink-rgb) / .07); }
-.sysmap.mig.retired #plateOld { opacity: .42; }
-.sysmap.mig.retired #plateOld .n-box { stroke: var(--line-2); stroke-dasharray: 4 3; fill: none; }
+/* The migration beat: the datastore opens to show the old table and its
+   replacement, both paths take writes, then the old one is cut loose. That
+   sequencing is the whole story the prose can't show. */
+.sysmap .n-box--mig,
+.sysmap .tables { opacity: 0; transition: opacity .5s var(--ease); }
+.sysmap.mig [data-node="store"] .n-box:not(.n-box--mig) { opacity: 0; }
+.sysmap.mig .n-box--mig,
+.sysmap.mig .tables { opacity: 1; }
+.sysmap .t-box {
+  fill: none;
+  stroke: var(--line-2);
+  transition: stroke .4s var(--ease), opacity .4s var(--ease);
+}
+.sysmap .t-label {
+  fill: var(--text-2);
+  font-family: var(--label);
+  font-size: 11.5px;
+  font-weight: 500;
+  transition: fill .4s var(--ease), opacity .4s var(--ease);
+}
+.sysmap.mig .t-box { stroke: var(--ember); }
+.sysmap.mig .t-label { fill: var(--text); }
+.sysmap.mig.retired .table--old .t-box { stroke: var(--line-2); stroke-dasharray: 4 3; }
+.sysmap.mig.retired .table--old .t-label { fill: var(--text-3); text-decoration: line-through; }
+.sysmap.mig.retired .table--old { opacity: .55; }
 .sysmap #retireNote {
   opacity: 0;
   fill: var(--text-3);
@@ -1750,16 +1768,18 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
 }
 .sysmap.mig.retired #retireNote { opacity: 1; }
 
+/* The forks only exist while the migration runs; the plain write path steps
+   aside for them, and the old fork goes quiet once its table is retired. */
+.sysmap [data-edge^="fork"] .edge-base { opacity: 0; transition: opacity .5s var(--ease); }
+.sysmap.mig [data-edge^="fork"] .edge-base { opacity: 1; }
+.sysmap [data-edge="rpc-store"] { transition: opacity .5s var(--ease); }
+.sysmap.mig [data-edge="rpc-store"] { opacity: 0; }
+.sysmap.mig.retired [data-edge="fork-old"] .flow { opacity: 0; }
+.sysmap.mig.retired [data-edge="fork-old"] .edge-base { stroke-dasharray: 3 4; }
+
 /* Every label carries a long form and a short one; the short form is for the
    narrow layout, where the drawing renders at about half this size. */
 .sysmap .n-label tspan.alt { display: none; }
-.sysmap #storeLabel tspan.mig,
-.sysmap #storeLabel tspan.migAlt { display: none; }
-/* The longest label in the drawing; it needs its own size to stay in its box. */
-.sysmap #storeLabel tspan.mig { font-size: 11.5px; }
-.sysmap.mig #storeLabel tspan.base,
-.sysmap.mig #storeLabel tspan.alt { display: none; }
-.sysmap.mig #storeLabel tspan.mig { display: inline; }
 
 .sysmap .pulse { fill: none; stroke: var(--alert); stroke-width: 1.2; opacity: 0; transform-origin: 396px 332px; }
 .sysmap .node.alert .pulse { animation: syspulse 1.9s var(--ease-out) infinite; }
@@ -1799,14 +1819,12 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   .sysmap .n-label { font-size: 19px; }
   .sysmap .n-tag { display: none; }
   .sysmap #retireNote { font-size: 13px; }
+  .sysmap .t-label { font-size: 15px; }
   /* Edge labels do not survive the scale-down, and the caption says the same
      thing in words, so they come off rather than shrink into noise. */
   .sysmap .e-label { display: none; }
   .sysmap .n-label tspan.base { display: none; }
   .sysmap .n-label tspan.alt { display: inline; }
-  .sysmap.mig #storeLabel tspan.mig,
-  .sysmap.mig #storeLabel tspan.alt { display: none; }
-  .sysmap.mig #storeLabel tspan.migAlt { display: inline; }
 }
 
 /* The one case the pinned rail cannot serve: too short to hold the drawing
