@@ -72,10 +72,12 @@ python3 -m http.server 8000   # then open http://localhost:8000
   that brings in nothing would buy a screen of it to move a hairline.
   The side-projects rail hands scrolling back to the browser under 900px. The
   work rails keep running off scroll there — width only decides whether the
-  diagram's caption sits beside it or under it — and unpin only where they
-  genuinely cannot work: a viewport too short to hold the diagram and a card
-  at once, reduced motion, or no JavaScript. All degrade to an ordinary
-  swipeable scroller from the same markup.
+  diagram's caption sits beside it or under it — and both unpin on the same
+  terms, only where they genuinely cannot work: a viewport under 560px tall,
+  reduced motion, or no JavaScript. All degrade to an ordinary swipeable
+  scroller from the same markup. On a phone the pinned stage tightens so the
+  diagram is still a drawing: the caption comes off (the lit card under it
+  says the same thing), the gaps close and the cards widen, in both runs.
 - **System diagram** — the work at Google is invisible by nature, so the Work
   section draws it instead of describing it. Each card lights the nodes it is
   about and runs traffic on the edges it uses; `pathLength="100"` normalises

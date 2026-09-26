@@ -1827,6 +1827,26 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   .sysmap .n-label tspan.alt { display: inline; }
 }
 
+/* A phone held upright pins the run too, and there one screen has to hold the
+   bar, the drawing, a card and the meter. The card alone is half of it, and
+   left at the layout above the drawing was squeezed to a stamp. So the pinned
+   stage tightens on a short narrow screen: the caption goes, since the lit
+   card right under the drawing says the same thing at more length; the gaps
+   close up; and the cards widen and slim their padding, so the copy sets in
+   fewer lines. All of it goes to the drawing, which takes what the card
+   leaves. The Smarkets run takes the same stage and the same cards, so the
+   two jobs stay one device. Unpinned, none of this applies: the section is
+   as tall as it needs to be. */
+@media (max-width: 900px) and (max-height: 799px) {
+  html.js:not(.calm) .sysrail:not(.is-static) .sysrail__stage { gap: .75rem; padding-bottom: 1.25rem; }
+  html.js:not(.calm) .sysrail:not(.is-static) .sysrail__body { gap: .75rem; }
+  html.js:not(.calm) .sysrail:not(.is-static) .sysmap__cap { display: none; }
+  html.js:not(.calm) .sysrail:not(.is-static) .sysrail__rail .work__item {
+    flex-basis: min(86vw, 360px);
+    padding: 1.15rem;
+  }
+}
+
 /* The one case the pinned rail cannot serve: too short to hold the drawing
    and a card at once, a reader who asked for less motion, or a page with no
    script to drive it. Same markup, the browser doing the scrolling. */

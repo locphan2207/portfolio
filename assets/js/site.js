@@ -536,15 +536,14 @@
   const sysCap = $('#sysCap');
   const sysNodes = sysMap ? $$('.node[data-node]', sysMap) : [];
   const sysEdges = sysMap ? $$('.edge', sysMap) : [];
-  // Stacked, the drawing and a card share the height of one screen rather than
-  // splitting its width, so pinning asks for a taller viewport than it used to
-  // — and asks for more of one where the screen is narrow, because a narrow
-  // card is a tall card and the caption drops under the drawing there rather
-  // than beside it. Below this the drawing would be squeezed to a stamp, and
-  // the unpinned section draws it at its own size instead.
-  const sysTall = matchMedia('(min-width: 1000px) and (min-height: 700px), (min-height: 800px)');
-  // Nothing but cards in the Smarkets stage, so it pins wherever a card fits.
-  const smTall = matchMedia('(min-height: 560px)');
+  // Both runs pin wherever a card fits, on one floor, so the page never runs
+  // one job sideways and hands the other back to the browser. The drawing is
+  // no reason to ask for more: stacked, it takes whatever height the card
+  // leaves, and on a phone the CSS tightens the pinned stage so that is still
+  // a drawing rather than a stamp. A phone's browser is 640-780px tall once its
+  // toolbars are in, which is why a taller floor for the drawing left Google
+  // static there while Smarkets ran.
+  const railTall = matchMedia('(min-height: 560px)');
 
   let sysRetire = null;
 
@@ -581,12 +580,12 @@
     pinnedRail({
       wrap: $('#sysrail'), track: $('#sysTrack'), rail: $('#sysRail'),
       counter: $('#sysNow'), dwell: SYS_DWELL,
-      canPin: () => sysTall.matches && !calm, onStep: setSysStep
+      canPin: () => railTall.matches && !calm, onStep: setSysStep
     }),
     pinnedRail({
       wrap: $('#smrail'), track: $('#smTrack'), rail: $('#smRail'),
       counter: $('#smNow'), dwell: SYS_DWELL,
-      canPin: () => smTall.matches && !calm
+      canPin: () => railTall.matches && !calm
     })
   ];
 
@@ -597,8 +596,7 @@
   measureSys();
   driveSys();
   addEventListener('resize', () => { measureSys(); driveSys(); }, { passive: true });
-  sysTall.addEventListener('change', () => { measureSys(); driveSys(); });
-  smTall.addEventListener('change', () => { measureSys(); driveSys(); });
+  railTall.addEventListener('change', () => { measureSys(); driveSys(); });
   // Webfonts land after first paint and change every card's width.
   addEventListener('load', () => { measureSys(); driveSys(); });
 
