@@ -536,13 +536,15 @@
   const sysCap = $('#sysCap');
   const sysNodes = sysMap ? $$('.node[data-node]', sysMap) : [];
   const sysEdges = sysMap ? $$('.edge', sysMap) : [];
-  // Stacked, the drawing and a card share the height of one screen rather than
-  // splitting its width, so pinning asks for a taller viewport than it used to
-  // — and asks for more of one where the screen is narrow, because a narrow
-  // card is a tall card and the caption drops under the drawing there rather
-  // than beside it. Below this the drawing would be squeezed to a stamp, and
-  // the unpinned section draws it at its own size instead.
-  const sysTall = matchMedia('(min-width: 1000px) and (min-height: 700px), (min-height: 800px)');
+  // Stacked, the drawing and a card share the height of one screen, and the
+  // drawing takes whatever the card leaves. On a wide screen the caption sits
+  // beside it and carries the step, so the run pins on the same floor as the
+  // Smarkets one — a laptop browser window is well under 700px tall once the
+  // toolbars are in, and gating there left Google static while the job below
+  // it ran. A narrow screen asks for more: a narrow card is a tall card and the
+  // caption drops under the drawing, so below 800px the drawing would be
+  // squeezed to a stamp and the unpinned section draws it at its own size.
+  const sysTall = matchMedia('(min-width: 1000px) and (min-height: 560px), (min-height: 800px)');
   // Nothing but cards in the Smarkets stage, so it pins wherever a card fits.
   const smTall = matchMedia('(min-height: 560px)');
 
