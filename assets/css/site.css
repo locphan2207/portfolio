@@ -1754,7 +1754,6 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   font-weight: 500;
   transition: fill .4s var(--ease), opacity .4s var(--ease);
 }
-.sysmap .t-label tspan.alt { display: none; }
 .sysmap.mig .t-box { stroke: var(--ember); }
 .sysmap.mig .t-label { fill: var(--text); }
 .sysmap.mig.retired .table--old .t-box { stroke: var(--line-2); stroke-dasharray: 4 3; }
@@ -1821,8 +1820,6 @@ html.js:not(.is-ready) .hero__title .word { transform: translateY(120%); }
   .sysmap .n-tag { display: none; }
   .sysmap #retireNote { font-size: 13px; }
   .sysmap .t-label { font-size: 15px; }
-  .sysmap .t-label tspan.base { display: none; }
-  .sysmap .t-label tspan.alt { display: inline; }
   /* Edge labels do not survive the scale-down, and the caption says the same
      thing in words, so they come off rather than shrink into noise. */
   .sysmap .e-label { display: none; }
